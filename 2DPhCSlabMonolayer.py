@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 resolution = 32 # pixels / a 
 
 # Geometrical parameters 
-h = 0.5       # Thickness of one layer 
-radius = 0.2       # Radius of the hole 
+h = 0.5        # Thickness of one layer 
+radius = 0.2   # Radius of the hole 
 Lz = h + 7     # Length of the unit cell along the z-direction 
 
 # Number of bands 
