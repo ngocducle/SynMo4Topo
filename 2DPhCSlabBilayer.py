@@ -7,11 +7,11 @@ import matplotlib.pyplot as plt
 resolution = 16 # pixels / a 
 
 # Geometrical parameters 
-h = 0.25            # Thickness of one layer 
-radius = 0.2             # Radius of the hole 
-dist = 0.00            # Distance between two layers 
-delta1 = 0.3             # Relative displacement along the x-direction 
-delta2 = 0.4             # Relative displacement along the y-direction 
+h = 0.25             # Thickness of one layer 
+radius = 0.2         # Radius of the hole 
+dist = 0.00          # Distance between two layers 
+delta1 = 0.3         # Relative displacement along the x-direction 
+delta2 = 0.4         # Relative displacement along the y-direction 
 Lz = 2*h + dist + 5  # Size of the cell along the z-direction
 
 # Number of bands 
