@@ -169,7 +169,7 @@ plt.savefig('2Dmonolayer-h_' + str(h) + '-r_' + str(radius) \
     + '-epsilon-z.png') 
 plt.show() 
 
-# Print the photonic band of band TE to a file
+# Print the photonic band of all bands to a file
 with open('2Dmonolayer-h_' + str(h) + '-r_' + str(radius) \
     + '-All.txt', 'w') as file:
 
