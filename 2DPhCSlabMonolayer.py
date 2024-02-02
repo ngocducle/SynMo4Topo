@@ -65,7 +65,7 @@ ms = mpb.ModeSolver(geometry = geometry,
                     num_bands = num_bands 
                     )
 
-#ms.run() 
+ms.run() 
 
 ms.run_te()
 te_freqs = ms.all_freqs 
