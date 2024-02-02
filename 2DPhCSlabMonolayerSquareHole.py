@@ -89,13 +89,20 @@ ms = mpb.ModeSolver(geometry = geometry,
                     num_bands = num_bands 
                     )
 
-#ms.run() 
+ms.run() 
+freqs = ms.all_freqs 
 
-ms.run_te()
-te_freqs = ms.all_freqs 
+# TE and TM modes are not well-defined for slabs 
+# we no longer need to calculate TE and TM
+# For a structure having a sigma_z parity, TE gives 
+# the same results as zeven, and TM gives the same results as zodd 
+# I comment them to save simulation time 
 
-ms.run_tm() 
-tm_freqs = ms.all_freqs 
+#ms.run_te()
+#te_freqs = ms.all_freqs 
+
+#ms.run_tm() 
+#tm_freqs = ms.all_freqs 
 
 ms.run_zeven()
 zeven_freqs = ms.all_freqs 
@@ -170,66 +177,97 @@ plt.savefig('2Dmonolayer-h_' + str(h) + '-b_' + str(b) \
     + '-epsilon-z.png') 
 plt.show() 
 
-
-# Print the photonic band of band TE to a file
-with open('2Dmonolayer-h_' + str(h) + '-b_' + str(b) \
-    + '-TE.txt', 'w') as file:
+# Print the photonic band of all bands to a file
+with open('2Dmonolayer-h_' + str(h) + '-r_' + str(radius) \
+    + '-All.txt', 'w') as file:
 
     for n in range(len(k_points)):
         file.write('%.8f   ' % n)    
-        file.writelines('%.8f    ' % w for w in te_freqs[n])
+        file.writelines('%.8f    ' % w for w in freqs[n])
         file.write('\n') 
 
 number = np.arange(len(k_points)) 
 
-# Plot the TE bands 
+# Plot the bands 
 fig, ax = plt.subplots() 
-ax.plot(number, te_freqs)      
+ax.plot(number, freqs)      
 #plt.vlines(0, 0, 0.2, linestyle = 'dashed', color = 'black')
 plt.vlines(N_k+1, 0, 1.0, linestyle = 'dashed', color='black') 
 plt.vlines(2 * (N_k+1), 0, 1.0, linestyle = 'dashed', color='black') 
 #plt.vlines(3 * (N_k+1), 0, 0.2, linestyle = 'dashed', color='black') 
 plt.xlim(0, 3 * (N_k+1)) 
-plt.ylim(0, 0.8)   
+plt.ylim(0, 0.5)   
 tick_locs = [i * (N_k+1) for i in range(4)] 
 tick_labs = [r'$\Gamma$', 'X', 'M', r'$\Gamma$'] 
 #tick_labs = [r'$\Gamma \prime$', r'X $\prime$', 'M', r'$\Gamma \prime$'] 
 ax.set_xticks(tick_locs)
 ax.set_xticklabels(tick_labs, size = 16) 
 ax.set_ylabel(r'$\omega a / (2 \pi c)$',fontsize = 14) 
-plt.title('TE band',fontsize = 14) 
-plt.savefig('2Dmonolayer-h_' + str(h) + '-b_' + str(b) \
-    + '-TE.png') 
+plt.title('All bands',fontsize = 14) 
+plt.savefig('2Dmonolayer-h_' + str(h) + '-r_' + str(radius) \
+    + '-All.png') 
 plt.show() 
+
+
+# Print the photonic band of band TE to a file
+#with open('2Dmonolayer-h_' + str(h) + '-b_' + str(b) \
+#    + '-TE.txt', 'w') as file:
+#
+#    for n in range(len(k_points)):
+#        file.write('%.8f   ' % n)    
+#        file.writelines('%.8f    ' % w for w in te_freqs[n])
+#        file.write('\n') 
+#
+#number = np.arange(len(k_points)) 
+#
+# Plot the TE bands 
+#fig, ax = plt.subplots() 
+#ax.plot(number, te_freqs)      
+#plt.vlines(0, 0, 0.2, linestyle = 'dashed', color = 'black')
+#plt.vlines(N_k+1, 0, 1.0, linestyle = 'dashed', color='black') 
+#plt.vlines(2 * (N_k+1), 0, 1.0, linestyle = 'dashed', color='black') 
+#plt.vlines(3 * (N_k+1), 0, 0.2, linestyle = 'dashed', color='black') 
+#plt.xlim(0, 3 * (N_k+1)) 
+#plt.ylim(0, 0.8)   
+#tick_locs = [i * (N_k+1) for i in range(4)] 
+#tick_labs = [r'$\Gamma$', 'X', 'M', r'$\Gamma$'] 
+#tick_labs = [r'$\Gamma \prime$', r'X $\prime$', 'M', r'$\Gamma \prime$'] 
+#ax.set_xticks(tick_locs)
+#ax.set_xticklabels(tick_labs, size = 16) 
+#ax.set_ylabel(r'$\omega a / (2 \pi c)$',fontsize = 14) 
+#plt.title('TE band',fontsize = 14) 
+#plt.savefig('2Dmonolayer-h_' + str(h) + '-b_' + str(b) \
+#    + '-TE.png') 
+#plt.show() 
 
 # Print the photonic band of band TM to a file
-with open('2Dmonolayer-h_' + str(h) + '-b_' + str(b) \
-    +'-TM.txt', 'w') as file:
-
-    for n in range(len(k_points)):
-        file.write('%.8f   ' % n)    
-        file.writelines('%.8f    ' % w for w in tm_freqs[n])
-        file.write('\n') 
-
+#with open('2Dmonolayer-h_' + str(h) + '-b_' + str(b) \
+#    +'-TM.txt', 'w') as file:
+#
+#    for n in range(len(k_points)):
+#        file.write('%.8f   ' % n)    
+#        file.writelines('%.8f    ' % w for w in tm_freqs[n])
+#        file.write('\n') 
+#
 # Plot the TM bands 
-fig, ax = plt.subplots() 
-ax.plot(number, tm_freqs)       
+#fig, ax = plt.subplots() 
+#ax.plot(number, tm_freqs)       
 #plt.vlines(0, 0, 0.2, linestyle = 'dashed', color = 'black')
-plt.vlines(N_k+1, 0, 1.0, linestyle = 'dashed', color = 'black') 
-plt.vlines(2 * (N_k+1), 0, 1.0, linestyle = 'dashed', color = 'black') 
+#plt.vlines(N_k+1, 0, 1.0, linestyle = 'dashed', color = 'black') 
+#plt.vlines(2 * (N_k+1), 0, 1.0, linestyle = 'dashed', color = 'black') 
 #plt.vlines(3 * (N_k+1), 0, 0.2, linestyle = 'dashed', color = 'black') 
-plt.xlim(0,3 * (N_k+1)) 
-plt.ylim(0, 0.8)   
-tick_locs = [i * (N_k+1) for i in range(4)] 
-tick_labs = [r'$\Gamma$', 'X', 'M', r'$\Gamma$'] 
+#plt.xlim(0,3 * (N_k+1)) 
+#plt.ylim(0, 0.8)   
+#tick_locs = [i * (N_k+1) for i in range(4)] 
+#tick_labs = [r'$\Gamma$', 'X', 'M', r'$\Gamma$'] 
 #tick_labs = [r'$\Gamma \prime$', r'X $\prime$', 'M', r'$\Gamma \prime$'] 
-ax.set_xticks(tick_locs)
-ax.set_xticklabels(tick_labs, size = 16) 
-ax.set_ylabel(r'$\omega a / (2 \pi c)$', fontsize = 14) 
-plt.title('TM band', fontsize = 14) 
-plt.savefig('2Dmonolayer-h_' + str(h) + '-b_' + str(b) \
-    + '-TM.png') 
-plt.show() 
+#ax.set_xticks(tick_locs)
+#ax.set_xticklabels(tick_labs, size = 16) 
+#ax.set_ylabel(r'$\omega a / (2 \pi c)$', fontsize = 14) 
+#plt.title('TM band', fontsize = 14) 
+#plt.savefig('2Dmonolayer-h_' + str(h) + '-b_' + str(b) \
+#    + '-TM.png') 
+#plt.show() 
 
 # Print the photonic band of band z-even to a file
 with open('2Dmonolayer-h_' + str(h) + '-b_' + str(b) \
