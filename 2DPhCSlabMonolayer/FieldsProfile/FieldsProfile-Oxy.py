@@ -19,6 +19,14 @@ h = 0.3      # Thickness of one layer
 radius = 0.4 # Radius of the hole
 Lz = 5       # Length of the unit cell along the z-direction 
 
+### The value of z where we take a slice to plot the field
+zvalue = -0.10  
+print('z = '+str(zvalue)) 
+
+if abs(zvalue) > 0.5*Lz:
+    print('Error! zvalue must be in the interval abs(zvalue) <= 0.5Lz')
+    exit() 
+
 ### Number of bands 
 num_bands = 20 
 
@@ -91,14 +99,32 @@ converted_eps = md.convert(eps)
 
 print('The shape of converted_eps: '+str(np.shape(converted_eps)))
 
-### The epsilon profile in the Oxy plane (z = 0)
+### ATTENTION! Be careful that the structure is also copied num_periods
+# time along the z-axis 
+
+### The epsilon profile in the Oxy plane (parallel to the plane Oxy: z = 0)
+# Array of zvalues to plot eps
+shape_eps = np.shape(converted_eps)
+len_zarray_eps = int(shape_eps[2] / num_periods)
+zarray_eps = np.linspace(-0.5*Lz,0.5*Lz,len_zarray_eps) 
+
+for i in range(len_zarray_eps-1): 
+    if ((zarray_eps[i] <= zvalue) and (zvalue < zarray_eps[i+1])):
+        zindex_eps = i 
+        break 
+    else:
+        zindex_eps = len_zarray_eps - 1
+
 # The index of the slice in the z-axis
-zindex = int(Lz * resolution_eps * num_periods / 2) 
-print('zindex = '+str(zindex))
+print('zindex_eps = '+str(zindex_eps))
 
 # The slice Oxy at z = 0
-eps_Oxy = converted_eps[...,zindex]
-print('The shape of eps_Oxy: '+str(np.shape(eps_Oxy)))
+eps_Oxy = converted_eps[:,:,zindex_eps] 
+print('The shape of eps_Oxy: '+str(np.shape(eps_Oxy))) 
+
+# The numerical errors produce noise, the contour of the noise hides
+# the field pattern, so we round eps_Oxy to 4 decimals 
+eps_Oxy = np.round(eps_Oxy,4) 
 
 # The meshgrid of (x,y)
 Nx = resolution_eps * num_periods 
@@ -108,23 +134,34 @@ Ylim = 0.5 * num_periods
 X, Y = np.meshgrid( np.linspace(-Xlim,Xlim,Nx), np.linspace(-Ylim,Ylim,Ny) ) 
 
 ### Get the fields  
-resolution_field = 81
+resolution_field = 81 
 md = mpb.MPBData(rectify = True, 
                  resolution = resolution_field, 
                  periods = num_periods) 
 
 # Define the arrays for X and Y to plot the fields
+Nx = resolution_field * num_periods
+Ny = resolution_field * num_periods
+
 Xfield, Yfield = np.meshgrid( 
     np.linspace(-Xlim, Xlim, Nx),
     np.linspace(-Ylim, Ylim, Ny) 
     )
 
-# Index for z: the z-coordinate of the slice  
-#zindex = int(Lz * resolution.z / 2) # z in the vicinity of 0 
-zindex = 45   
-print('zindex = '+str(zindex)) 
+# Index for z: the z-coordinate of the slice 
+# Array of the z-coordinate for field pattern (different from array of 
+# dielectric constant)
+zarray_field_len = int(Lz*resolution.z) 
+zarray_field = np.linspace(-0.5*Lz,0.5*Lz,zarray_field_len)  
 
-#converted = []
+for i in range(zarray_field_len-1):
+    if (zarray_field[i] <= zvalue) and (zvalue < zarray_field[i+1]):
+        zindex_field = i 
+        break
+    else:
+        zindex_field = zarray_field_len - 1 
+  
+print('zindex_field = '+str(zindex_field)) 
 
 # efields and hfields contain num_bands array (datasheets?), 
 # each corresponds to one band. 
@@ -146,74 +183,28 @@ for f in efields:
     print('The shape of f: '+str(np.shape(f))) 
 
     # Take the slice (band,x,y) for Ex at z
-    Ex = f[:,:,zindex,0]  
+    Ex = f[:,:,zindex_field,0]  
 
     # Save the data Ex to converted
-    #converted.append(md.convert(Ex)) 
     Efieldx.append(md.convert(Ex))  
 
     # Get the y component of the E-fields 
     print('The shape of f: '+str(np.shape(f))) 
 
     # Take the slice (band,x,y) for Ey at z
-    Ey = f[:,:,zindex,1]   
+    Ey = f[:,:,zindex_field,1]   
 
     # Save the data Ey to converted
-    #converted.append(md.convert(Ey))
     Efieldy.append(md.convert(Ey))  
 
     # Get the z component of the E-fields 
     print('The shape of f: '+str(np.shape(f))) 
 
     # Take the slice (band,x,y) for Ez at z
-    Ez = f[:,:,zindex,2] 
+    Ez = f[:,:,zindex_field,2] 
 
-    # Save the data Hz to converted
-    #converted.append(md.convert(Ez))
+    # Save the data Ez to converted
     Efieldz.append(md.convert(Ez))  
-
-
-# Plot the field-profile
-#for i, Ex in enumerate(converted):
-#    fig, ax = plt.subplots() 
-#    plt.contour(X,Y,eps_Oxy.T,cmap='binary') 
-    #plt.imshow(np.real(Ex).T,interpolation='spline36',cmap='RdBu',alpha=0.9)
-#    plt.pcolormesh(X,Y,np.real(Ex).T,shading='gouraud',cmap='RdBu')
-#    plt.colorbar() 
-#    plt.xticks(fontsize = 14)
-#    plt.yticks(fontsize = 14) 
-#    ax.set_xlabel('x/a',fontsize=14)
-#    ax.set_ylabel('y/a',fontsize=14) 
-#    plt.title('Ex Band '+str(i+1)+': z = 0', fontsize = 14) 
-#    ax.set_aspect('equal') 
-
-#for i, Ey in enumerate(converted):
-#    fig, ax = plt.subplots() 
-#    plt.contour(X,Y,eps_Oxy.T,cmap='binary') 
-    #plt.imshow(np.real(Ey).T,interpolation='spline36',cmap='RdBu',alpha=0.9)
-#    plt.pcolormesh(X,Y,np.real(Ey).T,shading='gouraud',cmap='RdBu')
-#    plt.colorbar() 
-#    plt.xticks(fontsize = 14)
-#    plt.yticks(fontsize = 14) 
-#    ax.set_xlabel('x/a',fontsize=14)
-#    ax.set_ylabel('y/a',fontsize=14) 
-#    plt.title('Ey Band '+str(i+1)+': z = 0', fontsize = 14) 
-#    ax.set_aspect('equal') 
-
-#for i, Ez in enumerate(converted): 
-#    fig, ax = plt.subplots()   
-#    plt.contour(X,Y,eps_Oxy.T,cmap='binary') 
-    #plt.imshow(np.real(Ez).T,interpolation='spline36',cmap='RdBu',alpha=0.9)
-#    plt.pcolormesh(X,Y,np.real(Ez).T,shading='gouraud',cmap='RdBu')
-#    plt.colorbar() 
-#    plt.xticks(fontsize = 14)
-#    plt.yticks(fontsize = 14) 
-#    ax.set_xlabel('x/a',fontsize=14)
-#    ax.set_ylabel('y/a',fontsize=14) 
-#    plt.title('Ez Band '+str(i+1)+': z = 0', fontsize = 14) 
-#    ax.set_aspect('equal') 
-
-#    plt.show()
 
 for i in range(8):
     Ex = np.real(Efieldx[i])
@@ -259,7 +250,7 @@ for i in range(8):
                  shrink=0.4, 
                  ax=axs)      
  
-    fig.suptitle('Band '+str(i+1), fontsize=14)  
+    fig.suptitle('z = '+str(zvalue)+': Band '+str(i+1), fontsize=14)  
     plt.savefig('E_Oxy_Band'+str(i+1)+'.png')
 
 #plt.show()   
@@ -276,74 +267,28 @@ for f in hfields:
     print('The shape of f: '+str(np.shape(f))) 
 
     # Take the slice (band,x,y) for Hx at z
-    Hx = f[:,:,zindex,0]  
+    Hx = f[:,:,zindex_field,0]  
 
     # Save the data Hx to converted
-    #converted.append(md.convert(Hx)) 
     Hfieldx.append(md.convert(Hx))  
 
     # Get the y component of the H-fields 
     print('The shape of f: '+str(np.shape(f))) 
 
     # Take the slice (band,x,y) for Hy at z
-    Hy = f[:,:,zindex,1]   
+    Hy = f[:,:,zindex_field,1]   
 
     # Save the data Hy to converted
-    #converted.append(md.convert(Hy))
     Hfieldy.append(md.convert(Hy))  
 
     # Get the z component of the H-fields 
     print('The shape of f: '+str(np.shape(f))) 
 
     # Take the slice (band,x,y) for Hz at z
-    Hz = f[:,:,zindex,2] 
+    Hz = f[:,:,zindex_field,2] 
 
     # Save the data Hz to converted
-    #converted.append(md.convert(Hz))
     Hfieldz.append(md.convert(Hz))  
-
-
-# Plot the field-profile
-#for i, Hx in enumerate(converted):
-#    fig, ax = plt.subplots() 
-#    plt.contour(X,Y,eps_Oxy.T,cmap='binary') 
-    #plt.imshow(np.real(Hx).T,interpolation='spline36',cmap='RdBu',alpha=0.9)
-#    plt.pcolormesh(X,Y,np.real(Hx).T,shading='gouraud',cmap='RdBu')
-#    plt.colorbar() 
-#    plt.xticks(fontsize = 14)
-#    plt.yticks(fontsize = 14) 
-#    ax.set_xlabel('x/a',fontsize=14)
-#    ax.set_ylabel('y/a',fontsize=14) 
-#    plt.title('Hx Band '+str(i+1)+': z = 0', fontsize = 14) 
-#    ax.set_aspect('equal') 
-
-#for i, Hy in enumerate(converted):
-#    fig, ax = plt.subplots() 
-#    plt.contour(X,Y,eps_Oxy.T,cmap='binary') 
-    #plt.imshow(np.real(Hy).T,interpolation='spline36',cmap='RdBu',alpha=0.9)
-#    plt.pcolormesh(X,Y,np.real(Hy).T,shading='gouraud',cmap='RdBu')
-#    plt.colorbar() 
-#    plt.xticks(fontsize = 14)
-#    plt.yticks(fontsize = 14) 
-#    ax.set_xlabel('x/a',fontsize=14)
-#    ax.set_ylabel('y/a',fontsize=14) 
-#    plt.title('Hy Band '+str(i+1)+': z = 0', fontsize = 14) 
-#    ax.set_aspect('equal') 
-
-#for i, Hz in enumerate(converted): 
-#    fig, ax = plt.subplots()   
-#    plt.contour(X,Y,eps_Oxy.T,cmap='binary') 
-    #plt.imshow(np.real(Hz).T,interpolation='spline36',cmap='RdBu',alpha=0.9)
-#    plt.pcolormesh(X,Y,np.real(Hz).T,shading='gouraud',cmap='RdBu')
-#    plt.colorbar() 
-#    plt.xticks(fontsize = 14)
-#    plt.yticks(fontsize = 14) 
-#    ax.set_xlabel('x/a',fontsize=14)
-#    ax.set_ylabel('y/a',fontsize=14) 
-#    plt.title('Hz Band '+str(i+1)+': z = 0', fontsize = 14) 
-#    ax.set_aspect('equal') 
-
-#    plt.show()
 
 for i in range(8):
     Hx = np.real(Hfieldx[i])
@@ -389,7 +334,7 @@ for i in range(8):
                  shrink=0.4, 
                  ax=axs)      
  
-    fig.suptitle('Band '+str(i+1), fontsize=14)  
+    fig.suptitle('z = '+str(zvalue)+': Band '+str(i+1), fontsize=14)  
     plt.savefig('H_Oxy_Band'+str(i+1)+'.png') 
 
 plt.show()   
