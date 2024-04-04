@@ -3,21 +3,21 @@ import meep as mp
 from meep import mpb
 import matplotlib.pyplot as plt
 
-# Resolution 
+### Resolution 
 resolution = mp.Vector3(16,16,16)   # pixels/a
 
-# Geometrical parameters
+### Geometrical parameters
 h = 0.40     # Thickness of the slab
 radius = 0.4 # Radius of the hole
 Lz = 5.0     # The height of the unit cell along the z-direction
 
-# Number of bands
+### Number of bands
 num_bands = 18 
 
-# Number of k-points to interpolate between 2 high-symmetry points
+### Number of k-points to interpolate between 2 high-symmetry points
 Nk = 19 
 
-# Define the materials
+### Define the materials
 Si = mp.Medium(index = 3.54)
 SiO2 = mp.Medium(index = 1.46)
 Dielectric = mp.Medium(epsilon = 12.0)
@@ -25,14 +25,14 @@ Air = mp.Medium(epsilon = 1.0)
 
 Environment = Air 
 
-# Define the lattice
+### Define the lattice
 geometry_lattice = mp.Lattice(
     size = mp.Vector3(1.0,1.0,Lz),
     basis1 = mp.Vector3(1.0,0.0),
     basis2 = mp.Vector3(0.0,1.0)
 )
 
-# Define the geometry
+### Define the geometry
 geometry = [
     mp.Block(
         center = mp.Vector3(0.0,0.0,0.0),
@@ -74,4 +74,13 @@ k_points = [
 
 # Interpolate to get the points on the lines
 k_points = mp.interpolate(Nk,k_points)
+
+### Run the simulation
+ms = mpb.ModeSolver(
+    geometry = geometry,
+    geometry_lattice = geometry_lattice,
+    k_points = k_points,
+    resolution = resolution,
+    num_bands = num_bands
+)
 
