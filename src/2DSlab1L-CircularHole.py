@@ -84,3 +84,12 @@ ms = mpb.ModeSolver(
     num_bands = num_bands
 )
 
+ms.run()
+freqs = ms.all_freqs
+
+ms.run_zeven()
+zeven_freqs = ms.all_freqs 
+
+ms.run_zodd()
+zodd_freqs = ms.all_freqs
+
