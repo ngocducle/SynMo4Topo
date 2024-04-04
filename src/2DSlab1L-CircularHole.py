@@ -17,3 +17,11 @@ num_bands = 18
 # Number of k-points to interpolate between 2 high-symmetry points
 Nk = 19 
 
+# Define the materials
+Si = mp.Medium(index = 3.54)
+SiO2 = mp.Medium(index = 1.46)
+Dielectric = mp.Medium(epsilon = 12.0)
+Air = mp.Medium(epsilon = 1.0)
+
+Environment = Air 
+
