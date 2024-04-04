@@ -5,7 +5,7 @@ from meep import mpb
 import sys
 sys.path.insert(0,'../src/')
 from ModeSolvers import _2DSlab1LCircularHole
-from PlotBandStructure import PlotBand_BrillouinZone
+from PlotBandStructure import *
 from ExportData import PrintBandStructure
 
 ### The light polarization
@@ -51,10 +51,17 @@ freqs = ms.all_freqs
 number = np.arange(len(ms.k_points))
 
 ### The title and the name of the files 
-namesave = '2DSlab1L-CircularHole-h_'+str(h)+'-r_'+str(radius)+'-'+polarization 
+namesave = '2DSlab1L-CircularHole-h_'+str(h)+'-r_'+str(radius) \
+    +'-'+polarization+'-'+kSpace 
 
 ### Print the band structure to file
 PrintBandStructure(freqs,number,namesave)
 
 ### Plot the band structure
-PlotBand_BrillouinZone(number,freqs,Nk,namesave)
+if kSpace == 'BZ':
+    PlotBand_BrillouinZone(number,freqs,Nk,namesave)
+elif kSpace == 'M':
+    PlotBand_M(number,freqs,Nk,namesave)
+else:
+    print('ERROR! The k-point has not been in the allowed list yet')
+    exit()
