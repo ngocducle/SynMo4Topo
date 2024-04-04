@@ -6,6 +6,7 @@ import sys
 sys.path.insert(0,'../src/')
 from ModeSolvers import _2DSlab1LCircularHole
 from PlotBandStructure import PlotBand_BrillouinZone
+from ExportData import PrintBandStructure
 
 ### The light polarization
 # Choose between: 'all', 'zeven', 'zodd' 
@@ -51,7 +52,9 @@ number = np.arange(len(ms.k_points))
 
 ### The title and the name of the files 
 namesave = '2DSlab1L-CircularHole-h_'+str(h)+'-r_'+str(radius)+'-'+polarization 
-print(namesave)
+
+### Print the band structure to file
+PrintBandStructure(freqs,number,namesave)
 
 ### Plot the band structure
 PlotBand_BrillouinZone(number,freqs,Nk,namesave)
