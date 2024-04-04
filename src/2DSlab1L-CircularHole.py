@@ -7,6 +7,10 @@ import matplotlib.pyplot as plt
 # Choose between: 'all', 'zeven', 'zodd' 
 polarization = 'all'
 
+### The part of the momentum space to plot the band structure
+# Choose between: 'BZ', 'M' 
+kSpace = 'BZ'
+
 ### Resolution 
 resolution = mp.Vector3(8,8,8)   # pixels/a
 
@@ -60,21 +64,23 @@ geometry = [
 ]
 
 ### Define the k-points
-# For the band structure in the whole Brillouin zone
-k_points = [
-    mp.Vector3(0.0,0.0,0.0),    # Gamma
-    mp.Vector3(0.5,0.0,0.0),    # X
-    mp.Vector3(0.5,0.5,0.0),    # M 
-    mp.Vector3(0.0,0.0,0.0)     # Gamma 
-]
-
-# For the band in the vicinity of the M-point
-#k_points = [
-#    mp.Vector3(0.3,0.3,0.0),    # Gamma'
-#    mp.Vector3(0.5,0.3,0.0),    # X
-#    mp.Vector3(0.5,0.5,0.0),    # M 
-#    mp.Vector3(0.3,0.3,0.0)     # Gamma 
-#]
+if kSpace == 'BZ':  # The whole Brillouin zone
+    k_points = [
+        mp.Vector3(0.0,0.0,0.0),    # Gamma
+        mp.Vector3(0.5,0.0,0.0),    # X
+        mp.Vector3(0.5,0.5,0.0),    # M 
+        mp.Vector3(0.0,0.0,0.0)     # Gamma 
+    ]
+elif kSpace == 'M': # In the vicinity of the M-point
+    k_points = [
+        mp.Vector3(0.3,0.3,0.0),    # Gamma'
+        mp.Vector3(0.5,0.3,0.0),    # X
+        mp.Vector3(0.5,0.5,0.0),    # M 
+        mp.Vector3(0.3,0.3,0.0)     # Gamma 
+    ]
+else:
+    print('ERROR! The k-point has not been in the allowed list yet')
+    exit()
 
 # Interpolate to get the points on the lines
 k_points = mp.interpolate(Nk,k_points)
