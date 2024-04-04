@@ -3,6 +3,10 @@ import meep as mp
 from meep import mpb
 import matplotlib.pyplot as plt
 
+### The mode of the simulation, corresponding to the polarization
+# Choose between: 'all', 'zeven', 'zodd' 
+mode = 'zodd'
+
 ### Resolution 
 resolution = mp.Vector3(16,16,16)   # pixels/a
 
@@ -15,7 +19,7 @@ Lz = 5.0     # The height of the unit cell along the z-direction
 num_bands = 18 
 
 ### Number of k-points to interpolate between 2 high-symmetry points
-Nk = 19 
+Nk = 9 
 
 ### Define the materials
 Si = mp.Medium(index = 3.54)
@@ -84,12 +88,21 @@ ms = mpb.ModeSolver(
     num_bands = num_bands
 )
 
-ms.run()
+if mode == 'all':
+    ms.run()
+elif mode == 'zeven':
+    ms.run_zeven()
+elif mode == 'zodd':
+    ms.run_zodd()
+else:
+    print('ERROR! The mode does not belong to the allowed list')
+    exit()
+
 freqs = ms.all_freqs
 
-ms.run_zeven()
-zeven_freqs = ms.all_freqs 
+number = np.arange(len(k_points))
 
-ms.run_zodd()
-zodd_freqs = ms.all_freqs
-
+### Plot the bands 
+fig, ax = plt.subplots()
+ax.plot(number, freqs)
+plt.show()
