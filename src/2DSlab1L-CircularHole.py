@@ -55,3 +55,13 @@ geometry = [
     )
 ]
 
+### Define the k-points
+# For the band structure in the whole Brillouin zone
+k_points = [
+    mp.Vector3(0.0,0.0,0.0),    # Gamma
+    mp.Vector3(0.5,0.0,0.0),    # X
+    mp.Vector3(0.5,0.5,0.0),    # M 
+    mp.Vector3(0.0,0.0,0.0)     # Gamma 
+]
+
+k_points = mp.interpolate(Nk,k_points)
