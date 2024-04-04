@@ -25,3 +25,10 @@ Air = mp.Medium(epsilon = 1.0)
 
 Environment = Air 
 
+# Define the lattice
+geometry_lattice = mp.Lattice(
+    size = mp.Vector3(1.0,1.0,Lz),
+    basis1 = mp.Vector3(1.0,0.0),
+    basis2 = mp.Vector3(0.0,1.0)
+)
+
