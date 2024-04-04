@@ -3,9 +3,9 @@ import meep as mp
 from meep import mpb
 import matplotlib.pyplot as plt
 
-### The mode of the simulation, corresponding to the polarization
+### The light polarization
 # Choose between: 'all', 'zeven', 'zodd' 
-mode = 'all'
+polarization = 'all'
 
 ### Resolution 
 resolution = mp.Vector3(8,8,8)   # pixels/a
@@ -106,11 +106,11 @@ def PlotBand_BrillouinZone(number,freqs,namesave):
     plt.show()
 
 ##### The main program goes here
-if mode == 'all':
+if polarization == 'all':
     ms.run()
-elif mode == 'zeven':
+elif polarization == 'zeven':
     ms.run_zeven()
-elif mode == 'zodd':
+elif polarization == 'zodd':
     ms.run_zodd()
 else:
     print('ERROR! The mode does not belong to the allowed list')
@@ -123,7 +123,7 @@ freqs = ms.all_freqs
 number = np.arange(len(k_points))
 
 ### The title and the name of the files 
-namesave = '2DSlab1L-CircularHole-h_'+str(h)+'-r_'+str(radius)+'-'+mode 
+namesave = '2DSlab1L-CircularHole-h_'+str(h)+'-r_'+str(radius)+'-'+polarization 
 print(namesave)
 
 ### Plot the band structure
