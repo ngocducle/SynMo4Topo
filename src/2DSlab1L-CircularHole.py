@@ -2,6 +2,7 @@ import numpy as np
 import meep as mp 
 from meep import mpb
 import matplotlib.pyplot as plt
+from PlotBandStructure import PlotBand_BrillouinZone
 
 ### The light polarization
 # Choose between: 'all', 'zeven', 'zodd' 
@@ -20,7 +21,7 @@ radius = 0.4 # Radius of the hole
 Lz = 5.0     # The height of the unit cell along the z-direction
 
 ### Number of bands
-num_bands = 18 
+num_bands = 8 
 
 ### Number of k-points to interpolate between 2 high-symmetry points
 Nk = 9 
@@ -99,23 +100,6 @@ def _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace):
     ### Return the mode solver
     return ModeSolver
 
-##### FUNCTION: plot the band structure
-def PlotBand_BrillouinZone(number,freqs,namesave):
-    fig, ax = plt.subplots()
-    ax.plot(number, freqs)
-    plt.vlines(Nk+1,0.0,1.0,linestyle='dashed',color='black')
-    plt.vlines(2*(Nk+1),0.0,1.0,linestyle='dashed',color='black')
-    plt.xlim(0,3*(Nk+1))
-    plt.ylim(0,0.5)
-    tick_locs = [i*(Nk+1) for i in range(4)]
-    tick_labs = [r'$\Gamma$','X','M',r'$\Gamma$']
-    ax.set_xticks(tick_locs)
-    ax.set_xticklabels(tick_labs,size=16)
-    ax.set_ylabel(r'$\omega a / (2 \pi c)$', fontsize = 14)
-    plt.title(namesave,fontsize=14)
-    plt.savefig(namesave+'.png')
-    plt.show()
-
 ##### The MAIN program continues here
 ### Define the mode solver
 ms = _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace)
@@ -142,4 +126,4 @@ namesave = '2DSlab1L-CircularHole-h_'+str(h)+'-r_'+str(radius)+'-'+polarization
 print(namesave)
 
 ### Plot the band structure
-PlotBand_BrillouinZone(number,freqs,namesave)
+PlotBand_BrillouinZone(number,freqs,Nk,namesave)
