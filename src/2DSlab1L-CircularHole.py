@@ -25,76 +25,81 @@ num_bands = 18
 ### Number of k-points to interpolate between 2 high-symmetry points
 Nk = 9 
 
-### Define the materials
-Si = mp.Medium(index = 3.54)
-SiO2 = mp.Medium(index = 1.46)
-Dielectric = mp.Medium(epsilon = 12.0)
-Air = mp.Medium(epsilon = 1.0)
+##### FUNCTION: ModeSolver 2D photonic crystal slab monolayer with circular holes
+def _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace):
+    ### Define the k-points
+    if kSpace == 'BZ':  # The whole Brillouin zone
+        k_points = [
+            mp.Vector3(0.0,0.0,0.0),    # Gamma
+            mp.Vector3(0.5,0.0,0.0),    # X
+            mp.Vector3(0.5,0.5,0.0),    # M 
+            mp.Vector3(0.0,0.0,0.0)     # Gamma 
+        ]
+    elif kSpace == 'M': # In the vicinity of the M-point
+        k_points = [
+            mp.Vector3(0.3,0.3,0.0),    # Gamma'
+            mp.Vector3(0.5,0.3,0.0),    # X
+            mp.Vector3(0.5,0.5,0.0),    # M 
+            mp.Vector3(0.3,0.3,0.0)     # Gamma 
+        ]
+    else:
+        print('ERROR! The k-point has not been in the allowed list yet')
+        exit()
 
-Environment = Air 
+    # Interpolate to get the points on the lines
+    k_points = mp.interpolate(Nk,k_points)
 
-### Define the lattice
-geometry_lattice = mp.Lattice(
-    size = mp.Vector3(1.0,1.0,Lz),
-    basis1 = mp.Vector3(1.0,0.0),
-    basis2 = mp.Vector3(0.0,1.0)
-)
+    ### Define the materials
+    Si = mp.Medium(index = 3.54)
+    SiO2 = mp.Medium(index = 1.46)
+    Dielectric = mp.Medium(epsilon = 12.0)
+    Air = mp.Medium(epsilon = 1.0)
 
-### Define the geometry
-geometry = [
-    mp.Block(
-        center = mp.Vector3(0.0,0.0,0.0),
-        size = mp.Vector3(mp.inf,mp.inf,mp.inf),
-        material = Environment
-    ),
+    Environment = Air 
 
-    mp.Block(
-        center = mp.Vector3(0.0,0.0,0.0),
-        size = mp.Vector3(1.0,1.0,h),
-        material = Si
-    ),
-
-    mp.Cylinder(
-        center = mp.Vector3(0.0,0.0,0.0),
-        radius = radius,
-        height = h,
-        axis = mp.Vector3(0,0,1),
-        material = Environment
+    ### Define the lattice
+    geometry_lattice = mp.Lattice(
+        size = mp.Vector3(1.0,1.0,Lz),
+        basis1 = mp.Vector3(1.0,0.0),
+        basis2 = mp.Vector3(0.0,1.0)
     )
-]
 
-### Define the k-points
-if kSpace == 'BZ':  # The whole Brillouin zone
-    k_points = [
-        mp.Vector3(0.0,0.0,0.0),    # Gamma
-        mp.Vector3(0.5,0.0,0.0),    # X
-        mp.Vector3(0.5,0.5,0.0),    # M 
-        mp.Vector3(0.0,0.0,0.0)     # Gamma 
+    ### Define the geometry
+    geometry = [
+        mp.Block(
+            center = mp.Vector3(0.0,0.0,0.0),
+            size = mp.Vector3(mp.inf,mp.inf,mp.inf),
+            material = Environment
+        ),
+
+        mp.Block(
+            center = mp.Vector3(0.0,0.0,0.0),
+            size = mp.Vector3(1.0,1.0,h),
+            material = Si
+        ),
+
+        mp.Cylinder(
+            center = mp.Vector3(0.0,0.0,0.0),
+            radius = radius,
+            height = h,
+            axis = mp.Vector3(0,0,1),
+            material = Environment
+        )
     ]
-elif kSpace == 'M': # In the vicinity of the M-point
-    k_points = [
-        mp.Vector3(0.3,0.3,0.0),    # Gamma'
-        mp.Vector3(0.5,0.3,0.0),    # X
-        mp.Vector3(0.5,0.5,0.0),    # M 
-        mp.Vector3(0.3,0.3,0.0)     # Gamma 
-    ]
-else:
-    print('ERROR! The k-point has not been in the allowed list yet')
-    exit()
 
-# Interpolate to get the points on the lines
-k_points = mp.interpolate(Nk,k_points)
+    ### The ModeSolver
+    ModeSolver = mpb.ModeSolver(
+        geometry = geometry,
+        geometry_lattice = geometry_lattice,
+        k_points = k_points,
+        resolution = resolution,
+        num_bands = num_bands
+    )
 
-### Run the simulation
-ms = mpb.ModeSolver(
-    geometry = geometry,
-    geometry_lattice = geometry_lattice,
-    k_points = k_points,
-    resolution = resolution,
-    num_bands = num_bands
-)
+    ### Return the mode solver
+    return ModeSolver
 
-### The function to plot the band structure:  
+##### FUNCTION: plot the band structure
 def PlotBand_BrillouinZone(number,freqs,namesave):
     fig, ax = plt.subplots()
     ax.plot(number, freqs)
@@ -111,7 +116,11 @@ def PlotBand_BrillouinZone(number,freqs,namesave):
     plt.savefig(namesave+'.png')
     plt.show()
 
-##### The main program goes here
+##### The MAIN program continues here
+### Define the mode solver
+ms = _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace)
+
+### Run the simulation
 if polarization == 'all':
     ms.run()
 elif polarization == 'zeven':
@@ -126,7 +135,7 @@ else:
 freqs = ms.all_freqs
 
 ### The number of elements in k_points
-number = np.arange(len(k_points))
+number = np.arange(len(ms.k_points))
 
 ### The title and the name of the files 
 namesave = '2DSlab1L-CircularHole-h_'+str(h)+'-r_'+str(radius)+'-'+polarization 
