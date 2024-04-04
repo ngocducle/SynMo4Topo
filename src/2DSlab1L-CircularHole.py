@@ -32,3 +32,26 @@ geometry_lattice = mp.Lattice(
     basis2 = mp.Vector3(0.0,1.0)
 )
 
+# Define the geometry
+geometry = [
+    mp.Block(
+        center = mp.Vector3(0.0,0.0,0.0),
+        size = mp.Vector3(mp.inf,mp.inf,mp.inf),
+        material = Environment
+    ),
+
+    mp.Block(
+        center = mp.Vector3(0.0,0.0,0.0),
+        size = mp.Vector3(1.0,1.0,h),
+        material = Si
+    ),
+
+    mp.Cylinder(
+        center = mp.Vector3(0.0,0.0,0.0),
+        radius = radius,
+        height = h,
+        axis = mp.Vector3(0,0,1),
+        material = Environment
+    )
+]
+
