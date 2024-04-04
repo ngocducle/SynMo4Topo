@@ -1,6 +1,9 @@
 import numpy as np
 import meep as mp 
 from meep import mpb
+
+import sys
+sys.path.insert(0,'../src/')
 from ModeSolvers import _2DSlab1LCircularHole
 from PlotBandStructure import PlotBand_BrillouinZone
 
