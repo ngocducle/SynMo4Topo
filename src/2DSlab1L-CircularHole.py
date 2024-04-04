@@ -64,4 +64,14 @@ k_points = [
     mp.Vector3(0.0,0.0,0.0)     # Gamma 
 ]
 
+# For the band in the vicinity of the M-point
+#k_points = [
+#    mp.Vector3(0.3,0.3,0.0),    # Gamma'
+#    mp.Vector3(0.5,0.3,0.0),    # X
+#    mp.Vector3(0.5,0.5,0.0),    # M 
+#    mp.Vector3(0.3,0.3,0.0)     # Gamma 
+#]
+
+# Interpolate to get the points on the lines
 k_points = mp.interpolate(Nk,k_points)
+
