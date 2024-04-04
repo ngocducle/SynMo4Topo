@@ -113,7 +113,7 @@ elif polarization == 'zeven':
 elif polarization == 'zodd':
     ms.run_zodd()
 else:
-    print('ERROR! The mode does not belong to the allowed list')
+    print('ERROR! The polarization does not belong to the allowed list')
     exit()
 
 ### Extract the frequencies of the modes from the ModeSolver
