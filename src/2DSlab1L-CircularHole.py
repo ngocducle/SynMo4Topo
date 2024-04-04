@@ -88,26 +88,6 @@ ms = mpb.ModeSolver(
     num_bands = num_bands
 )
 
-if mode == 'all':
-    ms.run()
-elif mode == 'zeven':
-    ms.run_zeven()
-elif mode == 'zodd':
-    ms.run_zodd()
-else:
-    print('ERROR! The mode does not belong to the allowed list')
-    exit()
-
-# Extract the frequencies of the modes from the ModeSolver
-freqs = ms.all_freqs
-
-# The number of elements in k_points
-number = np.arange(len(k_points))
-
-# The title and the name of the files 
-namesave = '2DSlab1L-CircularHole-h_'+str(h)+'-r_'+str(radius)+'-'+mode 
-print(namesave)
-
 ### The function to plot the band structure:  
 def PlotBand_BrillouinZone(number,freqs,namesave):
     fig, ax = plt.subplots()
@@ -125,6 +105,26 @@ def PlotBand_BrillouinZone(number,freqs,namesave):
     plt.savefig(namesave+'.png')
     plt.show()
 
+##### The main program goes here
+if mode == 'all':
+    ms.run()
+elif mode == 'zeven':
+    ms.run_zeven()
+elif mode == 'zodd':
+    ms.run_zodd()
+else:
+    print('ERROR! The mode does not belong to the allowed list')
+    exit()
+
+### Extract the frequencies of the modes from the ModeSolver
+freqs = ms.all_freqs
+
+### The number of elements in k_points
+number = np.arange(len(k_points))
+
+### The title and the name of the files 
+namesave = '2DSlab1L-CircularHole-h_'+str(h)+'-r_'+str(radius)+'-'+mode 
+print(namesave)
 
 ### Plot the band structure
 PlotBand_BrillouinZone(number,freqs,namesave)
