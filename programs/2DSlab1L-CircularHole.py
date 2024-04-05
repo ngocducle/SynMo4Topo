@@ -136,6 +136,10 @@ def main():
     EField = EField_Profile(ms,k_field,Lz,zvalue,polarization,
                             resolution_eps,resolution_field,
                             num_periods,Bloch_Phase)
+    
+    # Plot the fields Ex,Ey,Ez in the plane z = zvalue
+    PlotField_Profile(EField,Lz,zvalue,
+                      resolution,resolution_eps,resolution_field,num_periods)
 
 ##### Run the MAIN program
 if __name__ == "__main__":
