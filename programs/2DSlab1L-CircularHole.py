@@ -9,6 +9,7 @@ from DielectricProfile import *
 from BandStructure import *
 from ExportData import *
 from EFieldProfile import *
+from HFieldProfile import *
 
 
 ##### The MAIN program goes here 
@@ -162,6 +163,22 @@ def main():
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
     
     Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
+    
+    # Calculate the magnetic field as a MPBArray
+    hfields,HField,X,Y,eps_Oxy = HField_Profile(ms,k_field,Lz,zvalue,polarization,
+                                    resolution_eps,resolution_field,
+                                    num_periods,Bloch_Phase)
+    
+    # Extract the fields Hx,Hy,Hz in the plane z = zvalue
+    Hfieldx,Hfieldy,Hfieldz,Xfield,Yfield = ExtractEField_Profile(hfields,HField,
+                      Lz,zvalue,resolution,resolution_eps,resolution_field,num_periods)
+
+    # Plot the H-field
+    Plot_ReHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
+    
+    Plot_ImHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
 
 ##### Run the MAIN program

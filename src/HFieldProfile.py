@@ -11,48 +11,48 @@ from DielectricProfile import DielectricProfileZvalue
 
 ### ============================================================================== ###
 ###                                                                                ###
-### This module contains all the functions to calculate the E-field profiles       ###
+### This module contains all the functions to calculate the H-field profiles       ###
 ###                                                                                ###
 ### ============================================================================== ###
 
-##### FUNCTION: Calculate the E-fields
-def EField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,
+##### FUNCTION: Calculate the H-fields
+def HField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,
                    resolution_eps,resolution_field,
                    num_periods,Bloch_Phase):
-    ### Initiate the array of E-fields
-    efields = []
+    ### Initiate the array of H-fields
+    hfields = []
 
-    ##### FUNCTION: Get the E-fields from a mode solver
+    ##### FUNCTION: Get the H-fields from a mode solver
     if Bloch_Phase == 'True':
-        def get_e_fields(ModeSolver,band):
-            efields.append(ModeSolver.get_efield(band,bloch_phase=True))
+        def get_h_fields(ModeSolver,band):
+            hfields.append(ModeSolver.get_hfield(band,bloch_phase=True))
     else:
-        def get_e_fields(ModeSolver,band):
-            efields.append(ModeSolver.get_efield(band,bloch_phase=False))
+        def get_h_fields(ModeSolver,band):
+            hfields.append(ModeSolver.get_hfield(band,bloch_phase=False))
 
     ### Rerun the simulation with respect to the polarization
     if polarization == 'all':
         ModeSolver.run(
             mpb.output_at_kpoint(
                          k_field,
-                         mpb.fix_efield_phase,
-                         get_e_fields
+                         mpb.fix_hfield_phase,
+                         get_h_fields
                         ) 
         )
     elif polarization == 'zeven':
         ModeSolver.run_zeven(
             mpb.output_at_kpoint(
                          k_field,
-                         mpb.fix_efield_phase,
-                         get_e_fields
+                         mpb.fix_hfield_phase,
+                         get_h_fields
                         ) 
         )
     elif polarization == 'zodd':
         ModeSolver.run_zodd(
             mpb.output_at_kpoint(
                          k_field,
-                         mpb.fix_efield_phase,
-                         get_e_fields
+                         mpb.fix_hfield_phase,
+                         get_h_fields
                         ) 
         )
     else:
@@ -71,14 +71,14 @@ def EField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,
                         np.linspace(-Ylim,Ylim,Ny) ) 
     
     ### Get the fields as a MPBArray
-    EField = mpb.MPBData(rectify = True, 
+    HField = mpb.MPBData(rectify = True, 
                                 resolution = resolution_field, 
                                 periods = num_periods) 
     
-    return efields,EField,X,Y,eps_Oxy 
+    return hfields,HField,X,Y,eps_Oxy 
 
 ##### FUNCTION: Extract the field profile
-def ExtractEField_Profile(efields,EField,Lz,zvalue,
+def ExtractHField_Profile(efields,HField,Lz,zvalue,
                       resolution,resolution_eps,resolution_field,num_periods):
     # Define the arrays for X and Y to plot the fields
     Xlim = 0.5*num_periods   
@@ -114,83 +114,81 @@ def ExtractEField_Profile(efields,EField,Lz,zvalue,
     # of the field to the two last positions, so that the other indices
     # are at the leftmost side to be able to be replaced by the ellipsis.
     # This is because we can put only 1 ellipsis into the formula. 
-    Efieldx = []
-    Efieldy = []
-    Efieldz = [] 
+    Hfieldx = []
+    Hfieldy = []
+    Hfieldz = [] 
 
-    for f in efields:
-        # Get the x component of the E-fields 
+    for f in hfields:
+        # Get the x component of the H-fields 
         print('The shape of f: '+str(np.shape(f))) 
 
-        # Take the slice (band,x,y) for Ex at z
-        Ex = f[:,:,zindex_field,0]  
+        # Take the slice (band,x,y) for Hx at z
+        Hx = f[:,:,zindex_field,0]  
 
-        # Save the data Ex to Efieldx
-        Efieldx.append(EField.convert(Ex))  
+        # Save the data Hx to Hfieldx
+        Hfieldx.append(HField.convert(Hx))  
 
-        # Get the y component of the E-fields 
+        # Get the y component of the H-fields 
         print('The shape of f: '+str(np.shape(f))) 
 
-        # Take the slice (band,x,y) for Ey at z
-        Ey = f[:,:,zindex_field,1]   
+        # Take the slice (band,x,y) for Hy at z
+        Hy = f[:,:,zindex_field,1]   
 
-        # Save the data Ey to converted
-        Efieldy.append(EField.convert(Ey))  
+        # Save the data Hy to converted
+        Hfieldy.append(HField.convert(Hy))  
 
-        # Get the z component of the E-fields 
+        # Get the z component of the H-fields 
         print('The shape of f: '+str(np.shape(f))) 
 
-        # Take the slice (band,x,y) for Ez at z
-        Ez = f[:,:,zindex_field,2] 
+        # Take the slice (band,x,y) for Hz at z
+        Hz = f[:,:,zindex_field,2] 
 
-        # Save the data Ez to converted
-        Efieldz.append(EField.convert(Ez))  
+        # Save the data Hz to converted
+        Hfieldz.append(HField.convert(Hz))  
 
-    return Efieldx,Efieldy,Efieldz,Xfield,Yfield
+    return Hfieldx,Hfieldy,Hfieldz,Xfield,Yfield
 
-##### Separate the plotting to plot the real and imaginary parts
-
-##### FUNCTION: Plot the real part of the E-fields at z = zvalue
-def Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
+##### FUNCTION: Plot the real part of the H-fields at z = zvalue
+def Plot_ReHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig):
     for i in range(8):
-        Ex = np.real(Efieldx[i])
-        Ey = np.real(Efieldy[i])
-        Ez = np.real(Efieldz[i]) 
+        Hx = np.real(Hfieldx[i])
+        Hy = np.real(Hfieldy[i])
+        Hz = np.real(Hfieldz[i]) 
 
         Xlim = int(num_periods/2)
         Ylim = int(num_periods/2) 
 
         fig, axs = plt.subplots(1,3)  
         axs[0].contour(X,Y,eps_Oxy.T,cmap='binary') 
-        axs[0].pcolormesh(Xfield,Yfield,Ex.T,shading='gouraud',cmap='RdBu')
+        axs[0].pcolormesh(Xfield,Yfield,Hx.T,shading='gouraud',cmap='RdBu')
         axs[0].set_xticks(np.linspace(-Xlim,Xlim,num_periods)) 
         axs[0].set_yticks(np.linspace(-Ylim,Ylim,num_periods)) 
         axs[0].set_xlabel('x/a',fontsize=14)
         axs[0].set_ylabel('y/a',fontsize=14) 
-        axs[0].set_title('Ex', fontsize=14) 
+        axs[0].set_title('Hx', fontsize=14) 
         axs[0].set_aspect('equal') 
 
         axs[1].contour(X,Y,eps_Oxy.T,cmap='binary') 
-        axs[1].pcolormesh(Xfield,Yfield,Ey.T,shading='gouraud',cmap='RdBu') 
+        axs[1].pcolormesh(Xfield,Yfield,Hy.T,shading='gouraud',cmap='RdBu') 
         axs[1].set_xticks(np.linspace(-Xlim,Xlim,num_periods)) 
         axs[1].set_yticks(np.linspace(-Ylim,Ylim,num_periods)) 
         axs[1].set_xlabel('x/a', fontsize=14)
         #axs[1].set_ylabel('y/a',fontsize=14) 
-        axs[1].set_title('Ey', fontsize=14) 
+        axs[1].set_title('Hy', fontsize=14) 
         axs[1].set_aspect('equal') 
 
         axs[2].contour(X,Y,eps_Oxy.T,cmap='binary') 
-        axs[2].pcolormesh(Xfield,Yfield,Ez.T,shading='gouraud',cmap='RdBu')
+        axs[2].pcolormesh(Xfield,Yfield,Hz.T,shading='gouraud',cmap='RdBu')
         axs[2].set_xticks(np.linspace(-Xlim,Xlim,num_periods)) 
         axs[2].set_yticks(np.linspace(-Ylim,Ylim,num_periods)) 
         axs[2].set_xlabel('x/a', fontsize=14)
         #axs[2].set_ylabel('y/a', fontsize=14) 
-        axs[2].set_title('Ez', fontsize=14) 
+        axs[2].set_title('Hz', fontsize=14) 
         axs[2].set_aspect('equal') 
 
-        vmin = min(Ex.min(),Ey.min(),Ez.min()) 
-        vmax = max(Ex.max(),Ey.max(),Ez.max())
+        vmin = min(Hx.min(),Hy.min(),Hz.min()) 
+        vmax = max(Hx.max(),Hy.max(),Hz.max())
         norm = colors.Normalize(vmin=vmin, vmax=vmax) 
         fig.colorbar(cm.ScalarMappable(norm=norm, cmap='RdBu'),
                      orientation='vertical',  
@@ -198,52 +196,52 @@ def Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
                      ax=axs)      
  
         fig.suptitle('z = '+str(zvalue)+': Band '+str(i+1), fontsize=14)  
-        plt.savefig('ReE_Oxy_Band'+str(i+1)+'.png')
+        plt.savefig('ReH_Oxy_Band'+str(i+1)+'.png')
 
         if show_fig == 'Yes':
             plt.show()   
 
-##### FUNCTION: Plot the imaginary part of the E-fields at z = zvalue
-def Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
+##### FUNCTION: Plot the imaginary part of the H-fields at z = zvalue
+def Plot_ImHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig):
     for i in range(8):
-        Ex = np.imag(Efieldx[i])
-        Ey = np.imag(Efieldy[i])
-        Ez = np.imag(Efieldz[i]) 
+        Hx = np.imag(Hfieldx[i])
+        Hy = np.imag(Hfieldy[i])
+        Hz = np.imag(Hfieldz[i]) 
 
         Xlim = int(num_periods/2)
         Ylim = int(num_periods/2) 
 
         fig, axs = plt.subplots(1,3)  
         axs[0].contour(X,Y,eps_Oxy.T,cmap='binary') 
-        axs[0].pcolormesh(Xfield,Yfield,Ex.T,shading='gouraud',cmap='RdBu')
+        axs[0].pcolormesh(Xfield,Yfield,Hx.T,shading='gouraud',cmap='RdBu')
         axs[0].set_xticks(np.linspace(-Xlim,Xlim,num_periods)) 
         axs[0].set_yticks(np.linspace(-Ylim,Ylim,num_periods)) 
         axs[0].set_xlabel('x/a',fontsize=14)
         axs[0].set_ylabel('y/a',fontsize=14) 
-        axs[0].set_title('Ex', fontsize=14) 
+        axs[0].set_title('Hx', fontsize=14) 
         axs[0].set_aspect('equal') 
 
         axs[1].contour(X,Y,eps_Oxy.T,cmap='binary') 
-        axs[1].pcolormesh(Xfield,Yfield,Ey.T,shading='gouraud',cmap='RdBu') 
+        axs[1].pcolormesh(Xfield,Yfield,Hy.T,shading='gouraud',cmap='RdBu') 
         axs[1].set_xticks(np.linspace(-Xlim,Xlim,num_periods)) 
         axs[1].set_yticks(np.linspace(-Ylim,Ylim,num_periods)) 
         axs[1].set_xlabel('x/a', fontsize=14)
         #axs[1].set_ylabel('y/a',fontsize=14) 
-        axs[1].set_title('Ey', fontsize=14) 
+        axs[1].set_title('Hy', fontsize=14) 
         axs[1].set_aspect('equal') 
 
         axs[2].contour(X,Y,eps_Oxy.T,cmap='binary') 
-        axs[2].pcolormesh(Xfield,Yfield,Ez.T,shading='gouraud',cmap='RdBu')
+        axs[2].pcolormesh(Xfield,Yfield,Hz.T,shading='gouraud',cmap='RdBu')
         axs[2].set_xticks(np.linspace(-Xlim,Xlim,num_periods)) 
         axs[2].set_yticks(np.linspace(-Ylim,Ylim,num_periods)) 
         axs[2].set_xlabel('x/a', fontsize=14)
         #axs[2].set_ylabel('y/a', fontsize=14) 
-        axs[2].set_title('Ez', fontsize=14) 
+        axs[2].set_title('Hz', fontsize=14) 
         axs[2].set_aspect('equal') 
 
-        vmin = min(Ex.min(),Ey.min(),Ez.min()) 
-        vmax = max(Ex.max(),Ey.max(),Ez.max())
+        vmin = min(Hx.min(),Hy.min(),Hz.min()) 
+        vmax = max(Hx.max(),Hy.max(),Hz.max())
         norm = colors.Normalize(vmin=vmin, vmax=vmax) 
         fig.colorbar(cm.ScalarMappable(norm=norm, cmap='RdBu'),
                      orientation='vertical',  
@@ -251,7 +249,7 @@ def Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
                      ax=axs)      
  
         fig.suptitle('z = '+str(zvalue)+': Band '+str(i+1), fontsize=14)  
-        plt.savefig('ImE_Oxy_Band'+str(i+1)+'.png')
+        plt.savefig('ImH_Oxy_Band'+str(i+1)+'.png')
 
         if show_fig == 'Yes':
             plt.show() 
