@@ -19,4 +19,15 @@ def DielectricProfileZ(ModeSolver,x,y,zmin,zmax,Nz):
 
     return epsilon_array
 
+def PlotDielectricProfileZ(x,y,zmin,zmax,Nz,epsilon_Z_array,namesave):
+    z_array = np.linspace(zmin,zmax,Nz)
+
+    fig,ax = plt.subplots()
+    plt.plot(z_array,epsilon_Z_array)
+    plt.xlabel('z',fontsize=14)
+    plt.ylabel(r'$\epsilon$', fontsize = 14)
+    plt.title('x = '+str(x)+', y = '+str(y), fontsize = 14) 
+    plt.savefig(namesave+'-epsilon-z.png')     
+    plt.show() 
+
 

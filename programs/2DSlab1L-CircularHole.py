@@ -5,7 +5,7 @@ from meep import mpb
 import sys
 sys.path.insert(0,'../src/')
 from ModeSolvers import _2DSlab1LCircularHole
-from PlotDielectricProfile import *
+from DielectricProfile import *
 from PlotBandStructure import *
 from ExportData import PrintBandStructure
 
