@@ -58,6 +58,8 @@ def main():
     namesave = '2DSlab1L-CircularHole-h_'+str(h)+'-r_'+str(radius) \
         +'-'+polarization+'-'+kSpace 
     
+
+
     ### Output the dielectric profile along the z-direction with projected (X,Y)
     x = 0.27 
     y = 0.36 
@@ -76,13 +78,21 @@ def main():
     #           namesave+'-epsilon-z.txt'
     PrintDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave)
 
+
+
     ### Output the dielectric profile with Ncellx x Ncelly unit cells 
     ### for zmin <= z <= zmax, with Nz values of z 
     Ncellx = 5
     Ncelly = 5
     zmin = -0.5*Lz
     zmax = 0.5*Lz 
+    Nx = 300
+    Ny = 300
     Nz = 9
+
+    DielectricProfileXY(ms,Ncellx,Ncelly,zmin,zmax,Nx,Ny,Nz)
+
+    # Calculate the dielectric profile in planes parallel to Oxy
     
     ### Print the band structure to file
     PrintBandStructure(freqs,number,namesave)

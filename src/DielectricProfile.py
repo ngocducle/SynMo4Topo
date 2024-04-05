@@ -35,4 +35,20 @@ def PlotDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave):
     plt.savefig(namesave+'-epsilon-z.png')     
     plt.show() 
 
+##### FUNCTION: Plot the dielectric profile on the planes parallel to the Oxy plane
+###   We extract the values of epsilon at the points (x,y,z) where:
+###             -0.5*Ncellx <= x <= 0.5*Ncellx
+###             -0.5*Ncelly <= y <= 0.5*Ncelly
+###             zmin <= z <= zmax
+###
+###   The plots are centered at the point (0,0,z)
+###   The size of the grids are (Nx,Ny,Nz)
+def DielectricProfileXY(ModeSolver,Ncellx,Ncelly,zmin,zmax,Nx,Ny,Nz):
+    x_array = np.linspace(-0.5*Ncellx,0.5*Ncelly,Nx)
+    y_array = np.linspace(-0.5*Ncelly,0.5*Ncelly,Ny)
+    z_array = np.linspace(zmin,zmax,Nz)
+
+    
+
+
 
