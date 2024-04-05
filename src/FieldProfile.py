@@ -51,6 +51,13 @@ def EField_Profile(ModeSolver,k_field,polarization,Bloch_Phase):
         print('ERROR! The polarization does not belong to the allowed list')
         exit()
 
-    
+    ### Get the epsilon profile
+    resolution_eps = 81 # Number of pixels per a 
+    num_periods = 3 # Number of periods along each direction 
+    md = mpb.MPBData(rectify = True, 
+                     periods = num_periods,  
+                     resolution = resolution_eps)
+    eps = ModeSolver.get_epsilon()
+    converted_eps = md.convert(eps)
 
-
+    print('The shape of converted_eps: '+str(np.shape(converted_eps)))
