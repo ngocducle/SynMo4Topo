@@ -95,11 +95,15 @@ def main():
         = DielectricProfileXY(ms,Ncellx,Ncelly,zmin,zmax,Nx,Ny,Nz)
     
     # Plot the dielectric profile, the name of the figure is:
-    #           namesave+'-epsilon-z.png'
+    #           namesave+'-z_'+str(k)+'.png'
+    # where k is the number of the value of z in the array z_array
     PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave)
     
-
+    # Print the dielectric profile to the file:
+    #           namesave+'-epsilon-xy.txt'
     PrintDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave)
+
+
 
     ### Print the band structure to file
     PrintBandStructure(freqs,number,namesave)
