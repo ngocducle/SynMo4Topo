@@ -90,9 +90,9 @@ def main():
     Ny = 300
     Nz = 9
 
-    DielectricProfileXY(ms,Ncellx,Ncelly,zmin,zmax,Nx,Ny,Nz)
-
     # Calculate the dielectric profile in planes parallel to Oxy
+    x_array,y_array,z_array,epsilon_xy_array \
+        = DielectricProfileXY(ms,Ncellx,Ncelly,zmin,zmax,Nx,Ny,Nz)
     
     ### Print the band structure to file
     PrintBandStructure(freqs,number,namesave)

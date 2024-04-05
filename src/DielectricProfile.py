@@ -48,7 +48,25 @@ def DielectricProfileXY(ModeSolver,Ncellx,Ncelly,zmin,zmax,Nx,Ny,Nz):
     y_array = np.linspace(-0.5*Ncelly,0.5*Ncelly,Ny)
     z_array = np.linspace(zmin,zmax,Nz)
 
-    
+    xplot = np.zeros((Nx, Ny))
+    for j in range(Ny):
+        xplot[:,j] = x_array  
+
+    yplot = np.zeros((Nx, Ny))
+    for i in range(Nx):
+        yplot[i,:] = y_array 
+
+    epsilon_xy_array = np.zeros((Nx,Ny,Nz))
+
+    for k in range(Nz):
+        for i in range(Nx):
+            for j in range(Ny):
+                epsilon_xy_array[i,j,k] = ModeSolver.get_epsilon_point \
+                    (mp.Vector3(x_array[i],y_array[j],z_array[k]))
+                     
+    return x_array,y_array,z_array,epsilon_xy_array
+
+
 
 
 
