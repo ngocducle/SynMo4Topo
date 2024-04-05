@@ -1,3 +1,4 @@
+import numpy as np
 import matplotlib.pyplot as plt
 
 ### ============================================================================== ###
@@ -6,3 +7,5 @@ import matplotlib.pyplot as plt
 ###                                                                                ###
 ### ============================================================================== ###
 
+def PlotDielectricProfileZ(x,y,zmin,zmax,Ncellx,Ncelly,Nz):
+    zarray = np.linspace(zmin,zmax,Nz)
