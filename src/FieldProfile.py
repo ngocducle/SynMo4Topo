@@ -14,7 +14,9 @@ from DielectricProfile import DielectricProfileZvalue
 ### ============================================================================== ###
 
 ##### FUNCTION: Calculate the E-fields
-def EField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,Bloch_Phase):
+def EField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,
+                   resolution_eps,resolution_field,
+                   num_periods,Bloch_Phase):
     ### Initiate the array of E-fields
     efields = []
 
@@ -56,9 +58,6 @@ def EField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,Bloch_Phase):
         exit()
 
     ### The dielectric profile in the plane z = zvalue
-    resolution_eps = 81 # Number of pixels per a 
-    num_periods = 3 # Number of periods along each direction 
-
     eps_Oxy = DielectricProfileZvalue(ModeSolver,zvalue,Lz,resolution_eps,num_periods)
 
     # The meshgrid of (x,y)
@@ -70,7 +69,6 @@ def EField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,Bloch_Phase):
                         np.linspace(-Ylim,Ylim,Ny) ) 
     
     ### Get the fields as a MPBArray
-    resolution_field = 81 
     ElectricField = mpb.MPBData(rectify = True, 
                                 resolution = resolution_field, 
                                 periods = num_periods) 

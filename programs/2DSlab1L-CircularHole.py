@@ -125,12 +125,17 @@ def main():
 
     ### Calculate the E-field profile in the planes parallel to Oxy
     Bloch_Phase = 'True' 
+    resolution_eps = 81 # Number of pixels per a 
+    resolution_field = 81 
+    num_periods = 3 # Number of periods along each direction 
 
     # The value of z where we take a slice to plot the field
     zvalue = -0.25*h 
 
     # Calculate the electric field as a MPBArray
-    EField = EField_Profile(ms,k_field,Lz,zvalue,polarization,Bloch_Phase)
+    EField = EField_Profile(ms,k_field,Lz,zvalue,polarization,
+                            resolution_eps,resolution_field,
+                            num_periods,Bloch_Phase)
 
 ##### Run the MAIN program
 if __name__ == "__main__":
