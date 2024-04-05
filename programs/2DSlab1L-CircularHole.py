@@ -98,6 +98,9 @@ def main():
     #           namesave+'-epsilon-z.png'
     PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave)
     
+
+    PrintDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave)
+
     ### Print the band structure to file
     PrintBandStructure(freqs,number,namesave)
 

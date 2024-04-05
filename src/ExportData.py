@@ -1,3 +1,5 @@
+import numpy as np
+
 ### ============================================================================== ###
 ###                                                                                ###
 ### This module contains all the functions to print the data to files              ###
@@ -12,7 +14,7 @@ def PrintBandStructure(freqs,number,namesave):
             file.writelines('%.8f   ' % w for w in freqs[n])
             file.write('\n')
 
-##### FUNCTION: Plot the dielectric profile along the line (x,y,z)
+##### FUNCTION: Print the dielectric profile along the line (x,y,z)
 ###   where zmin <= z <= zmax, with Nz values of z 
 ###   The name of the data file is: namesave+'-epsilon-z.txt'
 def PrintDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave):
@@ -25,3 +27,16 @@ def PrintDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave):
             file.writelines('%.8f      ' % z_array[i])
             file.writelines('%.8f      ' % epsilon_z_array[i])
             file.write('\n') 
+
+##### FUNCTION: Print the dielectric profile on the planes parallel to the Oxy plane
+###   We extract the values of epsilon at the points (x,y,z) where:
+###             -0.5*Ncellx <= x <= 0.5*Ncellx
+###             -0.5*Ncelly <= y <= 0.5*Ncelly
+###             zmin <= z <= zmax
+###
+###   The plots are centered at the point (0,0,z)
+###   The size of the grids are (Nx,Ny,Nz)
+def PrintDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave):
+    (Nx,Ny) = np.shape(x_plot)
+
+    
