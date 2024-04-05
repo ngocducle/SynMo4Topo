@@ -8,6 +8,7 @@ from ModeSolvers import _2DSlab1LCircularHole
 from DielectricProfile import *
 from BandStructure import *
 from ExportData import *
+from FieldProfile import *
 
 
 ##### The MAIN program goes here 
@@ -19,6 +20,9 @@ def main():
     ### The part of the momentum space to plot the band structure
     # Choose between: 'BZ', 'M' 
     kSpace = 'BZ'
+
+    ### The k-point at which we plot the field profile
+    k_field = mp.Vector3(0.5,0.5,0.0)   # M-point
 
     ### Resolution 
     resolution = mp.Vector3(8,8,8)   # pixels/a
@@ -116,6 +120,12 @@ def main():
     else:
         print('ERROR! The k-point has not been in the allowed list yet')
         exit()
+
+
+
+    ### Calculate the E-field profile in the planes parallel to Oxy
+    Bloch_Phase = True 
+    EField_Profile(ms,k_field,Bloch_Phase)
 
 ##### Run the MAIN program
 if __name__ == "__main__":

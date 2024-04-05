@@ -90,6 +90,3 @@ def PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave):
         ax.set_aspect('equal')
         plt.savefig(namesave+'-z_'+str(k)+'.png')
         plt.show()
-
-
-

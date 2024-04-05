@@ -50,4 +50,3 @@ def PrintDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave):
                     file.writelines('%.8f   ' % z_array[k])
                     file.writelines('%.8f   ' % epsilon_xy_array[i,j,k])
                     file.write('\n')
-
