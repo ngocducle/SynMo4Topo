@@ -67,10 +67,15 @@ def main():
     Ncelly = 5
     Nz = 500 
 
+    # Calculate the dielectric profile along the z-direction at fixed (x,y)
     z_array,epsilon_z_array = DielectricProfileZ(ms,x,y,zmin,zmax,Nz)
 
+    # Plot the dielectric profile, the name of the figure is:
+    #           namesave+'-epsilon-z.png'
     PlotDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave)
 
+    # Print the dielectric profile to the file:
+    #           namesave+'-epsilon-z.txt'
     PrintDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave)
     
     ### Print the band structure to file

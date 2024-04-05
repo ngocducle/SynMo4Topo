@@ -20,7 +20,6 @@ def DielectricProfileZ(ModeSolver,x,y,zmin,zmax,Nz):
     return z_array,epsilon_array
 
 def PlotDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave):
-
     fig,ax = plt.subplots()
     plt.plot(z_array,epsilon_z_array)
     plt.xlabel('z',fontsize=14)
