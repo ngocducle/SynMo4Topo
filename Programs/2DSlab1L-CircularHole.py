@@ -56,6 +56,12 @@ def main():
     ### The title and the name of the files 
     namesave = '2DSlab1L-CircularHole-h_'+str(h)+'-r_'+str(radius) \
         +'-'+polarization+'-'+kSpace 
+    
+    ### Output the dielectric profile along the z-direction with projected (X,Y)
+    DielectricX = 0.27 
+    DielectricY = 0.36 
+    Nz = 500 
+    
 
     ### Print the band structure to file
     PrintBandStructure(freqs,number,namesave)
