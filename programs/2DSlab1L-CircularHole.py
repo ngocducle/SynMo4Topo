@@ -82,17 +82,21 @@ def main():
 
     ### Output the dielectric profile with Ncellx x Ncelly unit cells 
     ### for zmin <= z <= zmax, with Nz values of z 
-    Ncellx = 5
-    Ncelly = 5
-    zmin = -0.5*Lz
-    zmax = 0.5*Lz 
+    Ncellx = 6
+    Ncelly = 6
+    zmin = -0.2*Lz
+    zmax = 0.2*Lz 
     Nx = 300
     Ny = 300
     Nz = 9
 
     # Calculate the dielectric profile in planes parallel to Oxy
-    x_array,y_array,z_array,epsilon_xy_array \
+    x_plot,y_plot,z_array,epsilon_xy_array \
         = DielectricProfileXY(ms,Ncellx,Ncelly,zmin,zmax,Nx,Ny,Nz)
+    
+    # Plot the dielectric profile, the name of the figure is:
+    #           namesave+'-epsilon-z.png'
+    PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave)
     
     ### Print the band structure to file
     PrintBandStructure(freqs,number,namesave)
