@@ -144,6 +144,9 @@ def main():
     # Plot the E-field
     Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods)
+    
+    Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods)
 
 ##### Run the MAIN program
 if __name__ == "__main__":
