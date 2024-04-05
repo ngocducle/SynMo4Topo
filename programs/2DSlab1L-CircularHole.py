@@ -67,7 +67,7 @@ def main():
     Ncelly = 5
     Nz = 500 
 
-    PlotDielectricProfileZ(x,y,zmin,zmax,Nz)
+    epsilon_Z_array = DielectricProfileZ(ms,x,y,zmin,zmax,Nz)
     
     ### Print the band structure to file
     PrintBandStructure(freqs,number,namesave)
