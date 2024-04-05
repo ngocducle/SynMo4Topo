@@ -73,10 +73,10 @@ def EField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,
                                 resolution = resolution_field, 
                                 periods = num_periods) 
     
-    return EField
+    return efields,EField
 
 ##### FUNCTION: Plot the field profile
-def PlotField_Profile(Field,Lz,zvalue,
+def ExtractEField_Profile(efields,EField,Lz,zvalue,
                       resolution,resolution_eps,resolution_field,num_periods):
     # Define the arrays for X and Y to plot the fields
     Xlim = 0.5*num_periods   
@@ -102,4 +102,46 @@ def PlotField_Profile(Field,Lz,zvalue,
         else:
             zindex_field = zarray_field_len - 1 
   
-    print('zindex_field = '+str(zindex_field))   
+    print('zindex_field = '+str(zindex_field))  
+
+    # efields and hfields contain num_bands array (datasheets?), 
+    # each corresponds to one band. 
+    # Each array has 4 indices (x,y,z,E-mp.Vector3)
+    # First, swap the axes y and z, i.e. swapping indices 1 and 2 
+    # We need to swap to move the indices of the y-coordinate and 
+    # of the field to the two last positions, so that the other indices
+    # are at the leftmost side to be able to be replaced by the ellipsis.
+    # This is because we can put only 1 ellipsis into the formula. 
+    Efieldx = []
+    Efieldy = []
+    Efieldz = [] 
+
+    for f in efields:
+        # Get the x component of the E-fields 
+        print('The shape of f: '+str(np.shape(f))) 
+
+        # Take the slice (band,x,y) for Ex at z
+        Ex = f[:,:,zindex_field,0]  
+
+        # Save the data Ex to Efieldx
+        Efieldx.append(EField.convert(Ex))  
+
+        # Get the y component of the E-fields 
+        print('The shape of f: '+str(np.shape(f))) 
+
+        # Take the slice (band,x,y) for Ey at z
+        Ey = f[:,:,zindex_field,1]   
+
+        # Save the data Ey to converted
+        Efieldy.append(EField.convert(Ey))  
+
+        # Get the z component of the E-fields 
+        print('The shape of f: '+str(np.shape(f))) 
+
+        # Take the slice (band,x,y) for Ez at z
+        Ez = f[:,:,zindex_field,2] 
+
+        # Save the data Ez to converted
+        Efieldz.append(EField.convert(Ez))  
+
+    return Efieldx,Efieldy,Efieldz

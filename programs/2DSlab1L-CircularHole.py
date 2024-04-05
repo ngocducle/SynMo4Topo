@@ -133,12 +133,12 @@ def main():
     zvalue = -0.25*h 
 
     # Calculate the electric field as a MPBArray
-    EField = EField_Profile(ms,k_field,Lz,zvalue,polarization,
-                            resolution_eps,resolution_field,
-                            num_periods,Bloch_Phase)
+    efields,EField = EField_Profile(ms,k_field,Lz,zvalue,polarization,
+                                    resolution_eps,resolution_field,
+                                    num_periods,Bloch_Phase)
     
-    # Plot the fields Ex,Ey,Ez in the plane z = zvalue
-    PlotField_Profile(EField,Lz,zvalue,
+    # Extract the fields Ex,Ey,Ez in the plane z = zvalue
+    Efieldx,Efieldy,Efieldz = ExtractEField_Profile(efields,EField,Lz,zvalue,
                       resolution,resolution_eps,resolution_field,num_periods)
 
 ##### Run the MAIN program
