@@ -9,16 +9,23 @@ import matplotlib.pyplot as plt
 ###                                                                                ###
 ### ============================================================================== ###
 
+##### FUNCTION: Calculate the dielectric profile along the line (x,y,z)
+###   where zmin <= z <= zmax, with Nz values of z
+###   Give the array of z: z_array
+###   and the corresponding array of dielectric constant: epsilon_z_array
 def DielectricProfileZ(ModeSolver,x,y,zmin,zmax,Nz):
     z_array = np.linspace(zmin,zmax,Nz)
 
-    epsilon_array = np.zeros(Nz)
+    epsilon_z_array = np.zeros(Nz)
 
     for i in range(Nz):
-        epsilon_array[i] = ModeSolver.get_epsilon_point(mp.Vector3(x,y,z_array[i]))
+        epsilon_z_array[i] = ModeSolver.get_epsilon_point(mp.Vector3(x,y,z_array[i]))
 
-    return z_array,epsilon_array
+    return z_array,epsilon_z_array
 
+##### FUNCTION: Plot the dielectric profile along the line (x,y,z)
+###   where zmin <= z <= zmax, with Nz values of z 
+###   The figure name is: namesave+'-epsilon-z.png'
 def PlotDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave):
     fig,ax = plt.subplots()
     plt.plot(z_array,epsilon_z_array)
