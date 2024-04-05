@@ -2,6 +2,8 @@ import numpy as np
 import scipy 
 import meep as mp
 from meep import mpb
+import matplotlib.pyplot as plt
+from matplotlib import cm, colors 
 
 import sys
 sys.path.insert(0,'.')
@@ -73,7 +75,7 @@ def EField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,
                                 resolution = resolution_field, 
                                 periods = num_periods) 
     
-    return efields,EField
+    return efields,EField,X,Y,eps_Oxy 
 
 ##### FUNCTION: Plot the field profile
 def ExtractEField_Profile(efields,EField,Lz,zvalue,
@@ -144,4 +146,58 @@ def ExtractEField_Profile(efields,EField,Lz,zvalue,
         # Save the data Ez to converted
         Efieldz.append(EField.convert(Ez))  
 
-    return Efieldx,Efieldy,Efieldz
+    return Efieldx,Efieldy,Efieldz,Xfield,Yfield
+
+##### Separate the plotting to plot the real and imaginary parts
+
+##### FUNCTION: Plot the E-fields at z = zvalue
+def Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods):
+    for i in range(8):
+        Ex = np.real(Efieldx[i])
+        Ey = np.real(Efieldy[i])
+        Ez = np.real(Efieldz[i]) 
+
+        Xlim = int(num_periods/2)
+        Ylim = int(num_periods/2) 
+
+        fig, axs = plt.subplots(1,3)  
+        axs[0].contour(X,Y,eps_Oxy.T,cmap='binary') 
+        axs[0].pcolormesh(Xfield,Yfield,Ex.T,shading='gouraud',cmap='RdBu')
+        axs[0].set_xticks(np.linspace(-Xlim,Xlim,num_periods)) 
+        axs[0].set_yticks(np.linspace(-Ylim,Ylim,num_periods)) 
+        axs[0].set_xlabel('x/a',fontsize=14)
+        axs[0].set_ylabel('y/a',fontsize=14) 
+        axs[0].set_title('Ex', fontsize=14) 
+        axs[0].set_aspect('equal') 
+
+        axs[1].contour(X,Y,eps_Oxy.T,cmap='binary') 
+        axs[1].pcolormesh(Xfield,Yfield,Ey.T,shading='gouraud',cmap='RdBu') 
+        axs[1].set_xticks(np.linspace(-Xlim,Xlim,num_periods)) 
+        axs[1].set_yticks(np.linspace(-Ylim,Ylim,num_periods)) 
+        axs[1].set_xlabel('x/a', fontsize=14)
+        #axs[1].set_ylabel('y/a',fontsize=14) 
+        axs[1].set_title('Ey', fontsize=14) 
+        axs[1].set_aspect('equal') 
+
+        axs[2].contour(X,Y,eps_Oxy.T,cmap='binary') 
+        axs[2].pcolormesh(Xfield,Yfield,Ez.T,shading='gouraud',cmap='RdBu')
+        axs[2].set_xticks(np.linspace(-Xlim,Xlim,num_periods)) 
+        axs[2].set_yticks(np.linspace(-Ylim,Ylim,num_periods)) 
+        axs[2].set_xlabel('x/a', fontsize=14)
+        #axs[2].set_ylabel('y/a', fontsize=14) 
+        axs[2].set_title('Ez', fontsize=14) 
+        axs[2].set_aspect('equal') 
+
+        vmin = min(Ex.min(),Ey.min(),Ez.min()) 
+        vmax = max(Ex.max(),Ey.max(),Ez.max())
+        norm = colors.Normalize(vmin=vmin, vmax=vmax) 
+        fig.colorbar(cm.ScalarMappable(norm=norm, cmap='RdBu'),
+                     orientation='vertical',  
+                     shrink=0.4, 
+                     ax=axs)      
+ 
+        fig.suptitle('z = '+str(zvalue)+': Band '+str(i+1), fontsize=14)  
+        plt.savefig('ReE_Oxy_Band'+str(i+1)+'.png')
+
+        plt.show()   
