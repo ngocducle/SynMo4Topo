@@ -28,7 +28,7 @@ def main():
     resolution = mp.Vector3(8,8,8)   # pixels/a
 
     ### Geometrical parameters
-    h = 0.40     # Thickness of the slab
+    h = 0.3      # Thickness of the slab
     radius = 0.4 # Radius of the hole
     Lz = 5.0     # The height of the unit cell along the z-direction
 
@@ -126,7 +126,10 @@ def main():
     ### Calculate the E-field profile in the planes parallel to Oxy
     Bloch_Phase = 'True' 
 
-    EField_Profile(ms,k_field,Lz,polarization,Bloch_Phase)
+    # The value of z where we take a slice to plot the field
+    zvalue = -0.25*h 
+
+    EField_Profile(ms,k_field,Lz,zvalue,polarization,Bloch_Phase)
 
 ##### Run the MAIN program
 if __name__ == "__main__":
