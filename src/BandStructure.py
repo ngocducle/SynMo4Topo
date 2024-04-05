@@ -24,7 +24,7 @@ def PlotBand_BrillouinZone(number,freqs,Nk,namesave):
     plt.savefig(namesave+'.png')
     plt.show()
 
-##### FUNCTION: plot the band structure in the vicinity of the M point
+##### FUNCTION: plot the band structure in the vicinity of the M-point
 def PlotBand_M(number,freqs,Nk,namesave):
     fig, ax = plt.subplots()
     ax.plot(number, freqs)
