@@ -13,9 +13,16 @@ from FieldProfile import *
 
 ##### The MAIN program goes here 
 def main():
+    ##########################################################################
+    #                                                                        #
+    #        Please define the parameters of the simulation here             #
+    #                                                                        #
+    ##########################################################################
+
+
     ### The light polarization
     # Choose between: 'all', 'zeven', 'zodd' 
-    polarization = 'all'
+    polarization = 'zeven'
 
     ### The part of the momentum space to plot the band structure
     # Choose between: 'BZ', 'M' 
@@ -25,7 +32,7 @@ def main():
     k_field = mp.Vector3(0.5,0.5,0.0)   # M-point
 
     ### Resolution 
-    resolution = mp.Vector3(8,8,8)   # pixels/a
+    resolution = mp.Vector3(16,16,16)   # pixels/a
 
     ### Geometrical parameters
     h = 0.3      # Thickness of the slab
@@ -33,10 +40,19 @@ def main():
     Lz = 5.0     # The height of the unit cell along the z-direction
 
     ### Number of bands
-    num_bands = 8 
+    num_bands = 16
 
     ### Number of k-points to interpolate between 2 high-symmetry points
-    Nk = 9 
+    Nk = 9  
+
+    ### Show figure (Yes/No)
+    show_fig = 'No'
+
+    ##########################################################################
+    #                                                                        #
+    #                   Here the simulation starts                           #
+    #                                                                        #
+    ##########################################################################
 
     ### Define the mode solver
     ms = _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace)
@@ -69,14 +85,14 @@ def main():
     y = 0.36 
     zmin = -0.5*Lz
     zmax = 0.5*Lz 
-    Nz = 500 
+    Nz = 50 
 
     # Calculate the dielectric profile along the z-direction at fixed (x,y)
     z_array,epsilon_z_array = DielectricProfileZ(ms,x,y,zmin,zmax,Nz)
 
     # Plot the dielectric profile, the name of the figure is:
     #           namesave+'-epsilon-z.png'
-    PlotDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave)
+    PlotDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave,show_fig)
 
     # Print the dielectric profile to the file:
     #           namesave+'-epsilon-z.txt'
@@ -90,9 +106,9 @@ def main():
     Ncelly = 5
     zmin = -0.2*Lz
     zmax = 0.2*Lz 
-    Nx = 30
-    Ny = 30
-    Nz = 5
+    Nx = 300
+    Ny = 300
+    Nz = 9
 
     # Calculate the dielectric profile in planes parallel to Oxy
     x_plot,y_plot,z_array,epsilon_xy_array \
@@ -101,7 +117,7 @@ def main():
     # Plot the dielectric profile, the name of the figure is:
     #           namesave+'-z_'+str(k)+'.png'
     # where k is the number of the value of z in the array z_array
-    PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave)
+    PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave,show_fig)
     
     # Print the dielectric profile to the file:
     #           namesave+'-epsilon-xy.txt'
@@ -114,9 +130,9 @@ def main():
 
     ### Plot the band structure
     if kSpace == 'BZ':
-        PlotBand_BrillouinZone(number,freqs,Nk,namesave)
+        PlotBand_BrillouinZone(number,freqs,Nk,namesave,show_fig)
     elif kSpace == 'M':
-        PlotBand_M(number,freqs,Nk,namesave)
+        PlotBand_M(number,freqs,Nk,namesave,show_fig)
     else:
         print('ERROR! The k-point has not been in the allowed list yet')
         exit()
@@ -130,7 +146,7 @@ def main():
     num_periods = 3 # Number of periods along each direction 
 
     # The value of z where we take a slice to plot the field
-    zvalue = -0.25*h 
+    zvalue = 0.0 
 
     # Calculate the electric field as a MPBArray
     efields,EField,X,Y,eps_Oxy = EField_Profile(ms,k_field,Lz,zvalue,polarization,
@@ -143,10 +159,10 @@ def main():
     
     # Plot the E-field
     Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
-                       X,Y,eps_Oxy,Xfield,Yfield,num_periods)
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
     
     Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
-                       X,Y,eps_Oxy,Xfield,Yfield,num_periods)
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
 
 ##### Run the MAIN program
 if __name__ == "__main__":

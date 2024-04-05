@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 ### ============================================================================== ###
 
 ##### FUNCTION: plot the band structure in the whole Brillouin zone
-def PlotBand_BrillouinZone(number,freqs,Nk,namesave):
+def PlotBand_BrillouinZone(number,freqs,Nk,namesave,show_fig):
     fig, ax = plt.subplots()
     ax.plot(number, freqs)
     plt.vlines(Nk+1,0.0,1.0,linestyle='dashed',color='black')
@@ -22,10 +22,11 @@ def PlotBand_BrillouinZone(number,freqs,Nk,namesave):
     ax.set_ylabel(r'$\omega a / (2 \pi c)$', fontsize = 14)
     plt.title(namesave,fontsize=14)
     plt.savefig(namesave+'.png')
-    plt.show()
+    if show_fig == 'Yes':
+            plt.show()
 
 ##### FUNCTION: plot the band structure in the vicinity of the M-point
-def PlotBand_M(number,freqs,Nk,namesave):
+def PlotBand_M(number,freqs,Nk,namesave,show_fig):
     fig, ax = plt.subplots()
     ax.plot(number, freqs)
     plt.vlines(Nk+1,0.0,1.0,linestyle='dashed',color='black')
@@ -39,4 +40,5 @@ def PlotBand_M(number,freqs,Nk,namesave):
     ax.set_ylabel(r'$\omega a / (2 \pi c)$', fontsize = 14)
     plt.title(namesave,fontsize=14)
     plt.savefig(namesave+'.png')
-    plt.show()
+    if show_fig == 'Yes':
+            plt.show()

@@ -152,7 +152,7 @@ def ExtractEField_Profile(efields,EField,Lz,zvalue,
 
 ##### FUNCTION: Plot the real part of the E-fields at z = zvalue
 def Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
-                       X,Y,eps_Oxy,Xfield,Yfield,num_periods):
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig):
     for i in range(8):
         Ex = np.real(Efieldx[i])
         Ey = np.real(Efieldy[i])
@@ -200,11 +200,12 @@ def Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
         fig.suptitle('z = '+str(zvalue)+': Band '+str(i+1), fontsize=14)  
         plt.savefig('ReE_Oxy_Band'+str(i+1)+'.png')
 
-        plt.show()   
+        if show_fig == 'Yes':
+            plt.show()   
 
 ##### FUNCTION: Plot the imaginary part of the E-fields at z = zvalue
 def Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
-                       X,Y,eps_Oxy,Xfield,Yfield,num_periods):
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig):
     for i in range(8):
         Ex = np.imag(Efieldx[i])
         Ey = np.imag(Efieldy[i])
@@ -252,4 +253,5 @@ def Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
         fig.suptitle('z = '+str(zvalue)+': Band '+str(i+1), fontsize=14)  
         plt.savefig('ImE_Oxy_Band'+str(i+1)+'.png')
 
-        plt.show()   
+        if show_fig == 'Yes':
+            plt.show() 
