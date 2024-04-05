@@ -8,7 +8,7 @@ from ModeSolvers import _2DSlab1LCircularHole
 from DielectricProfile import *
 from BandStructure import *
 from ExportData import *
-from FieldProfile import *
+from EFieldProfile import *
 
 
 ##### The MAIN program goes here 
@@ -37,13 +37,13 @@ def main():
     ### Geometrical parameters
     h = 0.3      # Thickness of the slab
     radius = 0.4 # Radius of the hole
-    Lz = 5.0     # The height of the unit cell along the z-direction
+    Lz = 3.0     # The height of the unit cell along the z-direction
 
     ### Number of bands
     num_bands = 16
 
     ### Number of k-points to interpolate between 2 high-symmetry points
-    Nk = 9  
+    Nk = 3  
 
     ### Show figure (Yes/No)
     show_fig = 'No'

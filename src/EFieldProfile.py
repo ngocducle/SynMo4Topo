@@ -11,7 +11,7 @@ from DielectricProfile import DielectricProfileZvalue
 
 ### ============================================================================== ###
 ###                                                                                ###
-### This module contains all the functions to calculate the field profiles         ###
+### This module contains all the functions to calculate the E-field profiles       ###
 ###                                                                                ###
 ### ============================================================================== ###
 
