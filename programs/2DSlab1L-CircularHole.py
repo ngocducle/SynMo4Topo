@@ -86,13 +86,13 @@ def main():
 
     ### Output the dielectric profile with Ncellx x Ncelly unit cells 
     ### for zmin <= z <= zmax, with Nz values of z 
-    Ncellx = 6
-    Ncelly = 6
+    Ncellx = 5
+    Ncelly = 5
     zmin = -0.2*Lz
     zmax = 0.2*Lz 
-    Nx = 300
-    Ny = 300
-    Nz = 9
+    Nx = 30
+    Ny = 30
+    Nz = 5
 
     # Calculate the dielectric profile in planes parallel to Oxy
     x_plot,y_plot,z_array,epsilon_xy_array \
@@ -126,7 +126,7 @@ def main():
     ### Calculate the E-field profile in the planes parallel to Oxy
     Bloch_Phase = 'True' 
 
-    EField_Profile(ms,k_field,polarization,Bloch_Phase)
+    EField_Profile(ms,k_field,Lz,polarization,Bloch_Phase)
 
 ##### Run the MAIN program
 if __name__ == "__main__":

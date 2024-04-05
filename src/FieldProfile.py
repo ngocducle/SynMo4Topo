@@ -10,7 +10,7 @@ from meep import mpb
 ### ============================================================================== ###
 
 ##### FUNCTION: Calculate the E-fields
-def EField_Profile(ModeSolver,k_field,polarization,Bloch_Phase):
+def EField_Profile(ModeSolver,k_field,Lz,polarization,Bloch_Phase):
     ### Initiate the array of E-fields
     efields = []
 
@@ -61,3 +61,20 @@ def EField_Profile(ModeSolver,k_field,polarization,Bloch_Phase):
     converted_eps = md.convert(eps)
 
     print('The shape of converted_eps: '+str(np.shape(converted_eps)))
+
+    ### ATTENTION! Be careful that the structure is also copied num_periods
+    # time along the z-axis 
+
+    ### The epsilon profile in the Oxy plane (parallel to the plane Oxy: z = 0)
+    # Array of zvalues to plot eps
+    # The shape of converted_eps is 
+    # (num_periods*resolution_eps*length_unit_cell_x,
+    # num_periods*resolution_eps*length_unit_cell_y,
+    # num_periods*resolution_eps*length_unit_cell_z)
+    # Here:
+    # length_unit_cell_x = length_unit_cell_y = 1
+    # length_unit_cell_z = Lz 
+    shape_eps = np.shape(converted_eps)
+    len_zarray_eps = int(shape_eps[2] / num_periods)
+    print('len_zarray_eps = '+str(len_zarray_eps)) 
+    zarray_eps = np.linspace(-0.5*Lz,0.5*Lz,len_zarray_eps) 
