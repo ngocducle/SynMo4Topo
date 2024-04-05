@@ -5,6 +5,7 @@ from meep import mpb
 import sys
 sys.path.insert(0,'../src/')
 from ModeSolvers import _2DSlab1LCircularHole
+from PlotDielectricProfile import *
 from PlotBandStructure import *
 from ExportData import PrintBandStructure
 
@@ -58,11 +59,16 @@ def main():
         +'-'+polarization+'-'+kSpace 
     
     ### Output the dielectric profile along the z-direction with projected (X,Y)
-    DielectricX = 0.27 
-    DielectricY = 0.36 
+    x = 0.27 
+    y = 0.36 
+    zmin = -0.5*Lz
+    zmax = 0.5*Lz 
+    Ncellx = 5
+    Ncelly = 5
     Nz = 500 
-    
 
+    PlotDielectricProfileZ(x,y,zmin,zmax,Ncellx,Ncelly,Nz)
+    
     ### Print the band structure to file
     PrintBandStructure(freqs,number,namesave)
 
