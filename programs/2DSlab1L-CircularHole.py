@@ -6,7 +6,7 @@ import sys
 sys.path.insert(0,'../src/')
 from ModeSolvers import _2DSlab1LCircularHole
 from DielectricProfile import *
-from PlotBandStructure import *
+from BandStructure import *
 from ExportData import PrintBandStructure
 
 
