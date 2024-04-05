@@ -69,3 +69,10 @@ def EField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,Bloch_Phase):
     X, Y = np.meshgrid( np.linspace(-Xlim,Xlim,Nx), 
                         np.linspace(-Ylim,Ylim,Ny) ) 
     
+    ### Get the fields as a MPBArray
+    resolution_field = 81 
+    ElectricField = mpb.MPBData(rectify = True, 
+                                resolution = resolution_field, 
+                                periods = num_periods) 
+    
+    return ElectricField

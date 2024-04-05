@@ -129,7 +129,8 @@ def main():
     # The value of z where we take a slice to plot the field
     zvalue = -0.25*h 
 
-    EField_Profile(ms,k_field,Lz,zvalue,polarization,Bloch_Phase)
+    # Calculate the electric field as a MPBArray
+    EField = EField_Profile(ms,k_field,Lz,zvalue,polarization,Bloch_Phase)
 
 ##### Run the MAIN program
 if __name__ == "__main__":
