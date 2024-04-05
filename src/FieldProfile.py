@@ -90,3 +90,14 @@ def EField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,Bloch_Phase):
 
     # The index of the slice in the z-axis
     print('zindex_eps = '+str(zindex_eps))
+
+    # The slice Oxy at z = zvalue
+    # The array eps_Oxy has shape
+    # (num_periods*resolution_eps*length_unit_cell_x,
+    # num_periods*resolution_eps*length_unit_cell_y) 
+    eps_Oxy = converted_eps[:,:,zindex_eps] 
+    print('The shape of eps_Oxy: '+str(np.shape(eps_Oxy)))
+
+    # The numerical errors produce noise, the contours of the noise hide
+    # the field pattern, so we round eps_Oxy to 4 decimals 
+    eps_Oxy = np.round(eps_Oxy,4) 
