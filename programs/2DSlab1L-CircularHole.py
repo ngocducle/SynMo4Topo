@@ -124,8 +124,9 @@ def main():
 
 
     ### Calculate the E-field profile in the planes parallel to Oxy
-    Bloch_Phase = True 
-    EField_Profile(ms,k_field,Bloch_Phase)
+    Bloch_Phase = 'True' 
+
+    EField_Profile(ms,k_field,polarization,Bloch_Phase)
 
 ##### Run the MAIN program
 if __name__ == "__main__":
