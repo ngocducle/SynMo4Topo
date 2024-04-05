@@ -17,13 +17,12 @@ def DielectricProfileZ(ModeSolver,x,y,zmin,zmax,Nz):
     for i in range(Nz):
         epsilon_array[i] = ModeSolver.get_epsilon_point(mp.Vector3(x,y,z_array[i]))
 
-    return epsilon_array
+    return z_array,epsilon_array
 
-def PlotDielectricProfileZ(x,y,zmin,zmax,Nz,epsilon_Z_array,namesave):
-    z_array = np.linspace(zmin,zmax,Nz)
+def PlotDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave):
 
     fig,ax = plt.subplots()
-    plt.plot(z_array,epsilon_Z_array)
+    plt.plot(z_array,epsilon_z_array)
     plt.xlabel('z',fontsize=14)
     plt.ylabel(r'$\epsilon$', fontsize = 14)
     plt.title('x = '+str(x)+', y = '+str(y), fontsize = 14) 

@@ -7,7 +7,7 @@ sys.path.insert(0,'../src/')
 from ModeSolvers import _2DSlab1LCircularHole
 from DielectricProfile import *
 from BandStructure import *
-from ExportData import PrintBandStructure
+from ExportData import *
 
 
 ##### The MAIN program goes here 
@@ -67,9 +67,11 @@ def main():
     Ncelly = 5
     Nz = 500 
 
-    epsilon_Z_array = DielectricProfileZ(ms,x,y,zmin,zmax,Nz)
+    z_array,epsilon_z_array = DielectricProfileZ(ms,x,y,zmin,zmax,Nz)
 
-    PlotDielectricProfileZ(x,y,zmin,zmax,Nz,epsilon_Z_array,namesave)
+    PlotDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave)
+
+    PrintDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave)
     
     ### Print the band structure to file
     PrintBandStructure(freqs,number,namesave)
