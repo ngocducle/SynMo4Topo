@@ -93,10 +93,8 @@ def PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave):
 
 ##### FUNCTION: Get the dielectric profile of the plane z = zvalue
 ###   Return the results as a MPBArray 
-def DielectricProfileZvalue(ModeSolver,zvalue,Lz):
-        ### Get the epsilon profile
-    resolution_eps = 81 # Number of pixels per a 
-    num_periods = 3 # Number of periods along each direction 
+def DielectricProfileZvalue(ModeSolver,zvalue,Lz,resolution_eps,num_periods):
+    ### Get the epsilon profile
     md = mpb.MPBData(rectify = True, 
                      periods = num_periods,  
                      resolution = resolution_eps)

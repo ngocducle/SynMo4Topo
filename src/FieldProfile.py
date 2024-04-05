@@ -56,4 +56,16 @@ def EField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,Bloch_Phase):
         exit()
 
     ### The dielectric profile in the plane z = zvalue
-    eps_zvalue = DielectricProfileZvalue(ModeSolver,zvalue,Lz)
+    resolution_eps = 81 # Number of pixels per a 
+    num_periods = 3 # Number of periods along each direction 
+
+    eps_Oxy = DielectricProfileZvalue(ModeSolver,zvalue,Lz,resolution_eps,num_periods)
+
+    # The meshgrid of (x,y)
+    Nx = resolution_eps*num_periods 
+    Ny = resolution_eps*num_periods 
+    Xlim = 0.5*num_periods   
+    Ylim = 0.5*num_periods  
+    X, Y = np.meshgrid( np.linspace(-Xlim,Xlim,Nx), 
+                        np.linspace(-Ylim,Ylim,Ny) ) 
+    
