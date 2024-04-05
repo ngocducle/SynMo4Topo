@@ -148,8 +148,6 @@ def ExtractEField_Profile(efields,EField,Lz,zvalue,
 
     return Efieldx,Efieldy,Efieldz,Xfield,Yfield
 
-##### Separate the plotting to plot the real and imaginary parts
-
 ##### FUNCTION: Plot the real part of the E-fields at z = zvalue
 def Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig):
