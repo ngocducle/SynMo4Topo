@@ -3,6 +3,10 @@ import scipy
 import meep as mp
 from meep import mpb
 
+import sys
+sys.path.insert(0,'.')
+from DielectricProfile import DielectricProfileZvalue
+
 ### ============================================================================== ###
 ###                                                                                ###
 ### This module contains all the functions to calculate the field profiles         ###
@@ -51,53 +55,5 @@ def EField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,Bloch_Phase):
         print('ERROR! The polarization does not belong to the allowed list')
         exit()
 
-    ### Get the epsilon profile
-    resolution_eps = 81 # Number of pixels per a 
-    num_periods = 3 # Number of periods along each direction 
-    md = mpb.MPBData(rectify = True, 
-                     periods = num_periods,  
-                     resolution = resolution_eps)
-    eps = ModeSolver.get_epsilon()
-    converted_eps = md.convert(eps)
-
-    print('The shape of converted_eps: '+str(np.shape(converted_eps)))
-
-    ### ATTENTION! Be careful that the structure is also copied num_periods
-    # time along the z-axis 
-
-    ### The epsilon profile in the Oxy plane (parallel to the plane Oxy: z = 0)
-    # Array of zvalues to plot eps
-    # The shape of converted_eps is 
-    # (num_periods*resolution_eps*length_unit_cell_x,
-    # num_periods*resolution_eps*length_unit_cell_y,
-    # num_periods*resolution_eps*length_unit_cell_z)
-    # Here:
-    # length_unit_cell_x = length_unit_cell_y = 1
-    # length_unit_cell_z = Lz 
-    shape_eps = np.shape(converted_eps)
-    len_zarray_eps = int(shape_eps[2] / num_periods)
-    print('len_zarray_eps = '+str(len_zarray_eps)) 
-    zarray_eps = np.linspace(-0.5*Lz,0.5*Lz,len_zarray_eps) 
-
-    # We look for the index of the element of zarray_eps which is closest
-    # to zvalue 
-    for i in range(len_zarray_eps-1): 
-        if ((zarray_eps[i] <= zvalue) and (zvalue < zarray_eps[i+1])):
-            zindex_eps = i 
-            break 
-        else:
-            zindex_eps = len_zarray_eps - 1
-
-    # The index of the slice in the z-axis
-    print('zindex_eps = '+str(zindex_eps))
-
-    # The slice Oxy at z = zvalue
-    # The array eps_Oxy has shape
-    # (num_periods*resolution_eps*length_unit_cell_x,
-    # num_periods*resolution_eps*length_unit_cell_y) 
-    eps_Oxy = converted_eps[:,:,zindex_eps] 
-    print('The shape of eps_Oxy: '+str(np.shape(eps_Oxy)))
-
-    # The numerical errors produce noise, the contours of the noise hide
-    # the field pattern, so we round eps_Oxy to 4 decimals 
-    eps_Oxy = np.round(eps_Oxy,4) 
+    ### The dielectric profile in the plane z = zvalue
+    eps_zvalue = DielectricProfileZvalue(ModeSolver,zvalue,Lz)
