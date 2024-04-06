@@ -33,12 +33,12 @@ def main():
     k_field = mp.Vector3(0.5,0.5,0.0)   # M-point
 
     ### Resolution 
-    resolution = mp.Vector3(8,8,8)   # pixels/a
+    resolution = mp.Vector3(16,16,32)   # pixels/a
 
     ### Geometrical parameters
     h = 0.3      # Thickness of the slab
     radius = 0.4 # Radius of the hole
-    dist = 0.1   # Distance between the two layers 
+    dist = 2.0   # Distance between the two layers 
     delta1 = 0.0 # Relative displacement along the x-direction
     delta2 = 0.0 # Relative displacement along the y-direction
     Lz = 10.0    # The height of the unit cell along the z-direction
@@ -47,7 +47,7 @@ def main():
     num_bands = 16
 
     ### Number of k-points to interpolate between 2 high-symmetry points
-    Nk = 3  
+    Nk = 19  
 
     ### Show figure (Yes/No)
     show_fig = 'No'
@@ -109,8 +109,8 @@ def main():
     ### for zmin <= z <= zmax, with Nz values of z 
     Ncellx = 5
     Ncelly = 5
-    zmin = -0.2*Lz
-    zmax = 0.2*Lz 
+    zmin = -0.5*Lz
+    zmax = 0.5*Lz 
     Nx = 300
     Ny = 300
     Nz = 9
@@ -151,7 +151,7 @@ def main():
     num_periods = 3 # Number of periods along each direction 
 
     # The value of z where we take a slice to plot the field
-    zvalue = 0.0 
+    zvalue = 0.5*(h+dist) 
 
     # Calculate the electric field as a MPBArray
     efields,EField,X,Y,eps_Oxy = EField_Profile(ms,k_field,Lz,zvalue,polarization,
