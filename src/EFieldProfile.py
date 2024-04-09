@@ -263,15 +263,6 @@ def EFields_2DSlab1LCircularHole(h,Lz,radius,num_bands,resolution,Mater,Envir,
     ### Define the k-points
     k_points = [k_field]
 
-    ### Define the materials
-    #Si = mp.Medium(index = 3.54)
-    #SiO2 = mp.Medium(index = 1.46)
-    #PMMA = mp.Medium(index = 1.46)
-    #Dielectric = mp.Medium(epsilon = 12.0)
-    #Air = mp.Medium(epsilon = 1.0)
-
-    #Environment = PMMA 
-
     ### Define the lattice
     geometry_lattice = mp.Lattice(
         size = mp.Vector3(1.0,1.0,Lz),
@@ -325,21 +316,13 @@ def EFields_2DSlab1LCircularHole(h,Lz,radius,num_bands,resolution,Mater,Envir,
 
 ##### FUNCTION: Mode solver to calculate the E-fields for 2DSlab2L_CircularHole
 def EFields_2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,num_bands,resolution,
-                                  k_field,zvalue,
-                                  polarization,resolution_eps,resolution_field,
-                                  num_periods,Bloch_Phase):
+                                 Mater,Envir,
+                                 k_field,zvalue,
+                                 polarization,resolution_eps,resolution_field,
+                                 num_periods,Bloch_Phase):
     
     ### Define the k-points
     k_points = [k_field]
-
-    ### Define the materials
-    Si = mp.Medium(index = 3.54)
-    SiO2 = mp.Medium(index = 1.46)
-    PMMA = mp.Medium(index = 1.46)
-    Dielectric = mp.Medium(epsilon = 12.0)
-    Air = mp.Medium(epsilon = 1.0)
-
-    Environment = PMMA 
 
     ### Define the lattice
     geometry_lattice = mp.Lattice(
@@ -353,19 +336,19 @@ def EFields_2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,num_bands,resolu
         mp.Block(
             center = mp.Vector3(0,0,0),  
             size = mp.Vector3(mp.inf, mp.inf, mp.inf), 
-            material = Environment
+            material = Envir
             ),
 
         mp.Block(
             center = mp.Vector3(0,0,0.5*(h+dist)), 
             size = mp.Vector3(1,1,h), 
-            material = Si
+            material = Mater 
             ), 
 
         mp.Block(
             center = mp.Vector3(0,0,-0.5*(h+dist)),
             size = mp.Vector3(1,1,h),
-            material = Si
+            material = Mater 
             ), 
 
         mp.Cylinder(
@@ -373,7 +356,7 @@ def EFields_2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,num_bands,resolu
             radius = radius,  
             height = h, 
             axis = mp.Vector3(0,0,1), 
-            material = Environment
+            material = Envir
             ),
 
         mp.Cylinder(
@@ -381,7 +364,7 @@ def EFields_2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,num_bands,resolu
             radius = radius,  
             height = h, 
             axis = mp.Vector3(0,0,1), 
-            material = Environment
+            material = Envir
             )    
     ] 
 
@@ -405,6 +388,3 @@ def EFields_2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,num_bands,resolu
     
     ### Return the results
     return Efieldx,Efieldy,Efieldz,X,Y,Xfield,Yfield,eps_Oxy
-    
-
-
