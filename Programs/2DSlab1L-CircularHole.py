@@ -54,7 +54,7 @@ def main():
 
     ### Number of k-points to interpolate between 2 high-symmetry points
     Nk = 19 
-    print('# The number of points to interprete the high-symmetry line Nk = '+str(Nk))
+    print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     ### Show figure (Yes/No)
     show_fig = 'No'
