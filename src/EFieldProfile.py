@@ -254,6 +254,15 @@ def Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
         if show_fig == 'Yes':
             plt.show() 
 
+##### FUNCTION: Plot both the real and the imaginary parts of the E-fields
+def Plot_Efield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig):
+    Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
+    
+    Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
+
 ##### FUNCTION: Mode solver to calculate the E-fields for 2DSlab1L_CircularHole
 def EFields_2DSlab1LCircularHole(h,Lz,radius,num_bands,resolution,Mater,Envir,
                                   k_field,zvalue,

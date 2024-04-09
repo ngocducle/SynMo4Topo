@@ -254,6 +254,15 @@ def Plot_ImHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
         if show_fig == 'Yes':
             plt.show() 
 
+##### FUNCTION: Plot both the real and the imaginary parts of the H-fields
+def Plot_Hfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig):
+    Plot_ReHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
+    
+    Plot_ImHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
+
 ##### FUNCTION: Mode solver to calculate the H-fields for 2DSlab1L_CircularHole
 def HFields_2DSlab1LCircularHole(h,Lz,radius,num_bands,resolution,Mater,Envir,
                                   k_field,zvalue,
