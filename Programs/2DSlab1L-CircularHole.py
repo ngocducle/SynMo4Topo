@@ -160,14 +160,12 @@ def main():
     # The value of z where we take a slice to plot the field
     zvalue = 0.0 
 
-    # Calculate the electric field as a MPBArray
-    efields,EField,X,Y,eps_Oxy = EField_Profile(ms,k_field,Lz,zvalue,polarization,
-                                    resolution_eps,resolution_field,
-                                    num_periods,Bloch_Phase)
-    
-    # Extract the fields Ex,Ey,Ez in the plane z = zvalue
-    Efieldx,Efieldy,Efieldz,Xfield,Yfield = ExtractEField_Profile(efields,EField,
-                      Lz,zvalue,resolution,resolution_eps,resolution_field,num_periods)
+    # Define the mode solver to calculate the field
+    Efieldx,Efieldy,Efieldz,X,Y,Xfield,Yfield,eps_Oxy = EFields_2DSlab1LCircularHole(h,Lz,
+                                radius,num_bands,resolution,
+                                k_field,zvalue,
+                                polarization,resolution_eps,resolution_field,
+                                num_periods,Bloch_Phase)
     
     # Plot the E-field
     Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
@@ -177,20 +175,20 @@ def main():
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
     
     # Calculate the magnetic field as a MPBArray
-    hfields,HField,X,Y,eps_Oxy = HField_Profile(ms,k_field,Lz,zvalue,polarization,
-                                    resolution_eps,resolution_field,
-                                    num_periods,Bloch_Phase)
+    #hfields,HField,X,Y,eps_Oxy = HField_Profile(ms,k_field,Lz,zvalue,polarization,
+    #                                resolution_eps,resolution_field,
+    #                                num_periods,Bloch_Phase)
     
     # Extract the fields Hx,Hy,Hz in the plane z = zvalue
-    Hfieldx,Hfieldy,Hfieldz,Xfield,Yfield = ExtractEField_Profile(hfields,HField,
-                      Lz,zvalue,resolution,resolution_eps,resolution_field,num_periods)
+    #Hfieldx,Hfieldy,Hfieldz,Xfield,Yfield = ExtractEField_Profile(hfields,HField,
+    #                  Lz,zvalue,resolution,resolution_eps,resolution_field,num_periods)
 
     # Plot the H-field
-    Plot_ReHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
-                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
+    #Plot_ReHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
+    #                   X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
     
-    Plot_ImHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
-                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
+    #Plot_ImHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
+    #                   X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
 
 ##### Run the MAIN program
 if __name__ == "__main__":
