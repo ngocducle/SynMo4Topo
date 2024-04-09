@@ -9,7 +9,7 @@ from meep import mpb
 ### ================================================================================ ###
 
 ##### FUNCTION: ModeSolver 2D photonic crystal slab monolayer with circular holes
-def _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace):
+def _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace,Mater,Envir):
     ### Define the k-points
     if kSpace == 'BZ':  # The whole Brillouin zone
         k_points = [
@@ -33,13 +33,13 @@ def _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace):
     k_points = mp.interpolate(Nk,k_points)
 
     ### Define the materials
-    Si = mp.Medium(index = 3.54)
-    SiO2 = mp.Medium(index = 1.46)
-    PMMA = mp.Medium(index = 1.46)
-    Dielectric = mp.Medium(epsilon = 12.0)
-    Air = mp.Medium(epsilon = 1.0)
+    #Si = mp.Medium(index = 3.54)
+    #SiO2 = mp.Medium(index = 1.46)
+    #PMMA = mp.Medium(index = 1.46)
+    #Dielectric = mp.Medium(epsilon = 12.0)
+    #Air = mp.Medium(epsilon = 1.0)
 
-    Environment = PMMA 
+    #Environment = PMMA 
 
     ### Define the lattice
     geometry_lattice = mp.Lattice(
@@ -53,13 +53,13 @@ def _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace):
         mp.Block(
             center = mp.Vector3(0.0,0.0,0.0),
             size = mp.Vector3(mp.inf,mp.inf,mp.inf),
-            material = Environment
+            material = Envir 
         ),
 
         mp.Block(
             center = mp.Vector3(0.0,0.0,0.0),
             size = mp.Vector3(1.0,1.0,h),
-            material = Si
+            material = Mater 
         ),
 
         mp.Cylinder(
@@ -67,7 +67,7 @@ def _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace):
             radius = radius,
             height = h,
             axis = mp.Vector3(0,0,1),
-            material = Environment
+            material = Envir 
         )
     ]
 

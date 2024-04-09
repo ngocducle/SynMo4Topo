@@ -36,7 +36,7 @@ def main():
     print('# The k-point at which we plot the field profile:'+str(k_field))
 
     ### Resolution 
-    resolution = mp.Vector3(32,32,32)   # pixels/a
+    resolution = mp.Vector3(8,8,8)   # pixels/a
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters
@@ -60,6 +60,19 @@ def main():
     show_fig = 'No'
     print('# Show the figure: '+str(show_fig))
 
+    ### Define the materials
+    Si = mp.Medium(index = 3.54)
+    SiO2 = mp.Medium(index = 1.46)
+    PMMA = mp.Medium(index = 1.46)
+    Dielectric = mp.Medium(epsilon = 12.0)
+    Air = mp.Medium(epsilon = 1.0)
+
+    # The material forming the structure 
+    Mater = Si 
+
+    # The environment 
+    Envir = PMMA 
+
     ### The parameters to calculate the E- and H-field profiles
     ### in the planes parallel to Oxy
     Bloch_Phase = 'True'   # Enable the Bloch phase: True/False
@@ -77,7 +90,7 @@ def main():
     ##########################################################################
 
     ### Define the mode solver
-    ms = _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace)
+    ms = _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace,Mater,Envir)
 
     ### Run the simulation
     if polarization == 'all':
