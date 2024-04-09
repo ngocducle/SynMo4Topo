@@ -24,30 +24,41 @@ def main():
     ### The light polarization
     # Choose between: 'all', 'zeven', 'zodd' 
     polarization = 'zeven'
+    print('# Polarization = '+polarization)
 
     ### The part of the momentum space to plot the band structure
     # Choose between: 'BZ', 'M' 
     kSpace = 'BZ'
+    print('# The part of the momentum space to simulate:'+kSpace)
 
     ### The k-point at which we plot the field profile
     k_field = mp.Vector3(0.5,0.5,0.0)   # M-point
+    print('# The k-point at which we plot the field profile:'+str(k_field))
 
     ### Resolution 
     resolution = mp.Vector3(16,16,16)   # pixels/a
+    print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters
     h = 0.3      # Thickness of the slab
     radius = 0.4 # Radius of the hole
-    Lz = 3.0     # The height of the unit cell along the z-direction
+    Lz = 5.0     # The height of the unit cell along the z-direction
+
+    print('# Thickness of the slab h = '+str(h))
+    print('# Radius of the circular hole r = '+str(radius))
+    print('# The height of the simulation cell Lz = '+str(Lz))
 
     ### Number of bands
-    num_bands = 16
+    num_bands = 20
+    print('# The number of bands to simulate: '+str(num_bands))
 
     ### Number of k-points to interpolate between 2 high-symmetry points
-    Nk = 3  
+    Nk = 19 
+    print('# The number of points to interprete the high-symmetry line Nk = '+str(Nk))
 
     ### Show figure (Yes/No)
     show_fig = 'No'
+    print('# Show the figure: '+str(show_fig))
 
     ##########################################################################
     #                                                                        #

@@ -33,7 +33,7 @@ def main():
     k_field = mp.Vector3(0.5,0.5,0.0)   # M-point
 
     ### Resolution 
-    resolution = mp.Vector3(16,16,32)   # pixels/a
+    resolution = mp.Vector3(16,16,16)   # pixels/a
 
     ### Geometrical parameters
     h = 0.3      # Thickness of the slab
@@ -44,7 +44,7 @@ def main():
     Lz = 10.0    # The height of the unit cell along the z-direction
 
     ### Number of bands
-    num_bands = 16
+    num_bands = 20
 
     ### Number of k-points to interpolate between 2 high-symmetry points
     Nk = 19  
@@ -148,10 +148,26 @@ def main():
     Bloch_Phase = 'True' 
     resolution_eps = 81 # Number of pixels per a 
     resolution_field = 81 
-    num_periods = 3 # Number of periods along each direction 
+    num_periods = 3 # Number of periods along each direction  
+
+    k_point = [k_field]
+
+    #ms = _2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,
+    #                      num_bands,Nk,resolution,kSpace)
+
+    ### Run the simulation
+    #if polarization == 'all':
+    #    ms.run()
+    #elif polarization == 'zeven':
+    #    ms.run_zeven()
+    #elif polarization == 'zodd':
+    #    ms.run_zodd()
+    #else:
+    #    print('ERROR! The polarization does not belong to the allowed list')
+    #    exit()
 
     # The value of z where we take a slice to plot the field
-    zvalue = 0.5*(h+dist) 
+    zvalue = 1.225
 
     # Calculate the electric field as a MPBArray
     efields,EField,X,Y,eps_Oxy = EField_Profile(ms,k_field,Lz,zvalue,polarization,
