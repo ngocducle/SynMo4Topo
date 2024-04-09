@@ -78,7 +78,7 @@ def HField_Profile(ModeSolver,k_field,Lz,zvalue,polarization,
     return hfields,HField,X,Y,eps_Oxy 
 
 ##### FUNCTION: Extract the field profile
-def ExtractHField_Profile(efields,HField,Lz,zvalue,
+def ExtractHField_Profile(hfields,HField,Lz,zvalue,
                       resolution,resolution_eps,resolution_field,num_periods):
     # Define the arrays for X and Y to plot the fields
     Xlim = 0.5*num_periods   
@@ -253,3 +253,72 @@ def Plot_ImHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
 
         if show_fig == 'Yes':
             plt.show() 
+
+##### FUNCTION: Mode solver to calculate the H-fields for 2DSlab1L_CircularHole
+def HFields_2DSlab1LCircularHole(h,Lz,radius,num_bands,resolution,
+                                  k_field,zvalue,
+                                  polarization,resolution_eps,resolution_field,
+                                  num_periods,Bloch_Phase):
+    
+    ### Define the k-points
+    k_points = [k_field]
+
+    ### Define the materials
+    Si = mp.Medium(index = 3.54)
+    SiO2 = mp.Medium(index = 1.46)
+    PMMA = mp.Medium(index = 1.46)
+    Dielectric = mp.Medium(epsilon = 12.0)
+    Air = mp.Medium(epsilon = 1.0)
+
+    Environment = PMMA 
+
+    ### Define the lattice
+    geometry_lattice = mp.Lattice(
+        size = mp.Vector3(1.0,1.0,Lz),
+        basis1 = mp.Vector3(1.0,0.0),
+        basis2 = mp.Vector3(0.0,1.0)
+    )
+
+    ### Define the geometry
+    geometry = [
+        mp.Block(
+            center = mp.Vector3(0.0,0.0,0.0),
+            size = mp.Vector3(mp.inf,mp.inf,mp.inf),
+            material = Environment
+        ),
+
+        mp.Block(
+            center = mp.Vector3(0.0,0.0,0.0),
+            size = mp.Vector3(1.0,1.0,h),
+            material = Si
+        ),
+
+        mp.Cylinder(
+            center = mp.Vector3(0.0,0.0,0.0),
+            radius = radius,
+            height = h,
+            axis = mp.Vector3(0,0,1),
+            material = Environment
+        )
+    ]
+
+    ### The ModeSolver
+    ms = mpb.ModeSolver(
+        geometry = geometry,
+        geometry_lattice = geometry_lattice,
+        k_points = k_points,
+        resolution = resolution,
+        num_bands = num_bands
+    )
+
+    ### Calculate the electric field as a MPBArray
+    hfields,HField,X,Y,eps_Oxy = HField_Profile(ms,k_field,Lz,zvalue,polarization,
+                                    resolution_eps,resolution_field,
+                                    num_periods,Bloch_Phase)
+    
+    ### Extract the fields Hx,Hy,Hz in the plane z = zvalue
+    Hfieldx,Hfieldy,Hfieldz,Xfield,Yfield = ExtractHField_Profile(hfields,HField,
+                      Lz,zvalue,resolution,resolution_eps,resolution_field,num_periods)
+    
+    ### Return the results
+    return Hfieldx,Hfieldy,Hfieldz,X,Y,Xfield,Yfield,eps_Oxy

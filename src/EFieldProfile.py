@@ -322,6 +322,8 @@ def EFields_2DSlab1LCircularHole(h,Lz,radius,num_bands,resolution,
     
     ### Return the results
     return Efieldx,Efieldy,Efieldz,X,Y,Xfield,Yfield,eps_Oxy
+
+
     
 
 
