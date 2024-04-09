@@ -36,7 +36,7 @@ def main():
     print('# The k-point at which we plot the field profile:'+str(k_field))
 
     ### Resolution 
-    resolution = mp.Vector3(16,16,16)   # pixels/a
+    resolution = mp.Vector3(32,32,32)   # pixels/a
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters
@@ -59,6 +59,16 @@ def main():
     ### Show figure (Yes/No)
     show_fig = 'No'
     print('# Show the figure: '+str(show_fig))
+
+    ### The parameters to calculate the E- and H-field profiles
+    ### in the planes parallel to Oxy
+    Bloch_Phase = 'True'   # Enable the Bloch phase: True/False
+    resolution_eps = 81    # Number of pixels per a 
+    resolution_field = 81  # Number of pixels per a 
+    num_periods = 3        # Number of periods along each direction  
+
+    # The value of z where we take a slice to plot the field
+    zvalue = 0.075 
 
     ##########################################################################
     #                                                                        #
@@ -148,18 +158,7 @@ def main():
     else:
         print('ERROR! The k-point has not been in the allowed list yet')
         exit()
-
-
-
-    ### Calculate the E-field profile in the planes parallel to Oxy
-    Bloch_Phase = 'True' 
-    resolution_eps = 81 # Number of pixels per a 
-    resolution_field = 81 
-    num_periods = 3 # Number of periods along each direction 
-
-    # The value of z where we take a slice to plot the field
-    zvalue = 0.0 
-
+    
     # Define the mode solver to calculate the E-field
     Efieldx,Efieldy,Efieldz,X,Y,Xfield,Yfield,eps_Oxy = EFields_2DSlab1LCircularHole(h,Lz,
                                 radius,num_bands,resolution,

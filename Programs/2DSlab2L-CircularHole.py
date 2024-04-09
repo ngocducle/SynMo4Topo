@@ -56,12 +56,25 @@ def main():
 
     ### Number of bands
     num_bands = 20
+    print('# The number of bands to simulate: '+str(num_bands))
 
     ### Number of k-points to interpolate between 2 high-symmetry points
     Nk = 19  
+    print('# The number of points to interprete the high-symmetry line Nk = '+str(Nk))
 
     ### Show figure (Yes/No)
     show_fig = 'No'
+    print('# Show the figure: '+str(show_fig))
+
+    ### The parameters to calculate the E- and H-field profiles
+    ### in the planes parallel to Oxy
+    Bloch_Phase = 'True'   # Enable the Bloch phase: True/False
+    resolution_eps = 81    # Number of pixels per a 
+    resolution_field = 81  # Number of pixels per a 
+    num_periods = 3        # Number of periods along each direction  
+
+    # The value of z where we take a slice to plot the fields 
+    zvalue = 1.225
 
     ##########################################################################
     #                                                                        #
@@ -153,26 +166,6 @@ def main():
         print('ERROR! The k-point has not been in the allowed list yet')
         exit()
 
-
-
-    ### Calculate the E-field profile in the planes parallel to Oxy
-    Bloch_Phase = 'True' 
-    resolution_eps = 81 # Number of pixels per a 
-    resolution_field = 81 
-    num_periods = 3 # Number of periods along each direction  
-
-    # The value of z where we take a slice to plot the field
-    zvalue = 1.225
-
-    # Calculate the electric field as a MPBArray
-    #efields,EField,X,Y,eps_Oxy = EField_Profile(ms,k_field,Lz,zvalue,polarization,
-    #                                resolution_eps,resolution_field,
-    #                                num_periods,Bloch_Phase)
-    
-    # Extract the fields Ex,Ey,Ez in the plane z = zvalue
-    #Efieldx,Efieldy,Efieldz,Xfield,Yfield = ExtractEField_Profile(efields,EField,
-    #                  Lz,zvalue,resolution,resolution_eps,resolution_field,num_periods)
-    
     # Define the mode solver to calculate the E-field
     Efieldx,Efieldy,Efieldz,X,Y,Xfield,Yfield,eps_Oxy = EFields_2DSlab2LCircularHole(h,Lz,
                                 radius,dist,delta1,delta2,num_bands,resolution,
@@ -186,15 +179,6 @@ def main():
     
     Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
-    
-    # Calculate the magnetic field as a MPBArray
-    #hfields,HField,X,Y,eps_Oxy = HField_Profile(ms,k_field,Lz,zvalue,polarization,
-    #                                resolution_eps,resolution_field,
-    #                                num_periods,Bloch_Phase)
-    
-    # Extract the fields Hx,Hy,Hz in the plane z = zvalue
-    #Hfieldx,Hfieldy,Hfieldz,Xfield,Yfield = ExtractEField_Profile(hfields,HField,
-    #                  Lz,zvalue,resolution,resolution_eps,resolution_field,num_periods)
     
     # Define the mode solver to calculate the H-field
     Hfieldx,Hfieldy,Hfieldz,X,Y,Xfield,Yfield,eps_Oxy = HFields_2DSlab2LCircularHole(h,Lz,
