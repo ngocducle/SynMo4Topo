@@ -255,7 +255,7 @@ def Plot_ImHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
             plt.show() 
 
 ##### FUNCTION: Mode solver to calculate the H-fields for 2DSlab1L_CircularHole
-def HFields_2DSlab1LCircularHole(h,Lz,radius,num_bands,resolution,
+def HFields_2DSlab1LCircularHole(h,Lz,radius,num_bands,resolution,Mater,Envir,
                                   k_field,zvalue,
                                   polarization,resolution_eps,resolution_field,
                                   num_periods,Bloch_Phase):
@@ -264,13 +264,13 @@ def HFields_2DSlab1LCircularHole(h,Lz,radius,num_bands,resolution,
     k_points = [k_field]
 
     ### Define the materials
-    Si = mp.Medium(index = 3.54)
-    SiO2 = mp.Medium(index = 1.46)
-    PMMA = mp.Medium(index = 1.46)
-    Dielectric = mp.Medium(epsilon = 12.0)
-    Air = mp.Medium(epsilon = 1.0)
+    #Si = mp.Medium(index = 3.54)
+    #SiO2 = mp.Medium(index = 1.46)
+    #PMMA = mp.Medium(index = 1.46)
+    #Dielectric = mp.Medium(epsilon = 12.0)
+    #Air = mp.Medium(epsilon = 1.0)
 
-    Environment = PMMA 
+    #Environment = PMMA 
 
     ### Define the lattice
     geometry_lattice = mp.Lattice(
@@ -284,13 +284,13 @@ def HFields_2DSlab1LCircularHole(h,Lz,radius,num_bands,resolution,
         mp.Block(
             center = mp.Vector3(0.0,0.0,0.0),
             size = mp.Vector3(mp.inf,mp.inf,mp.inf),
-            material = Environment
+            material = Envir
         ),
 
         mp.Block(
             center = mp.Vector3(0.0,0.0,0.0),
             size = mp.Vector3(1.0,1.0,h),
-            material = Si
+            material = Mater
         ),
 
         mp.Cylinder(
@@ -298,7 +298,7 @@ def HFields_2DSlab1LCircularHole(h,Lz,radius,num_bands,resolution,
             radius = radius,
             height = h,
             axis = mp.Vector3(0,0,1),
-            material = Environment
+            material = Envir
         )
     ]
 

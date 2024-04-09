@@ -32,15 +32,6 @@ def _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace,Mater,Envir
     # Interpolate to get the points on the lines
     k_points = mp.interpolate(Nk,k_points)
 
-    ### Define the materials
-    #Si = mp.Medium(index = 3.54)
-    #SiO2 = mp.Medium(index = 1.46)
-    #PMMA = mp.Medium(index = 1.46)
-    #Dielectric = mp.Medium(epsilon = 12.0)
-    #Air = mp.Medium(epsilon = 1.0)
-
-    #Environment = PMMA 
-
     ### Define the lattice
     geometry_lattice = mp.Lattice(
         size = mp.Vector3(1.0,1.0,Lz),
@@ -85,7 +76,7 @@ def _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace,Mater,Envir
 
 ##### FUNCTION: ModeSolver 2D photonic crystal slab bilayer with circular holes
 def _2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,
-                          num_bands,Nk,resolution,kSpace):
+                          num_bands,Nk,resolution,kSpace,Mater,Envir):
     ### Define the k-points
     if kSpace == 'BZ':  # The whole Brillouin zone
         k_points = [
@@ -108,15 +99,6 @@ def _2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,
     # Interpolate to get the points on the lines
     k_points = mp.interpolate(Nk,k_points)
 
-    ### Define the materials
-    Si = mp.Medium(index = 3.54)
-    SiO2 = mp.Medium(index = 1.46)
-    PMMA = mp.Medium(index = 1.46)
-    Dielectric = mp.Medium(epsilon = 12.0)
-    Air = mp.Medium(epsilon = 1.0)
-
-    Environment = PMMA 
-
     ### Define the lattice
     geometry_lattice = mp.Lattice(
         size = mp.Vector3(1.0,1.0,Lz),
@@ -129,19 +111,19 @@ def _2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,
         mp.Block(
             center = mp.Vector3(0,0,0),  
             size = mp.Vector3(mp.inf, mp.inf, mp.inf), 
-            material = Environment
+            material = Envir
             ),
 
         mp.Block(
             center = mp.Vector3(0,0,0.5*(h+dist)), 
             size = mp.Vector3(1,1,h), 
-            material = Si
+            material = Mater 
             ), 
 
         mp.Block(
             center = mp.Vector3(0,0,-0.5*(h+dist)),
             size = mp.Vector3(1,1,h),
-            material = Si
+            material = Mater 
             ), 
 
         mp.Cylinder(
@@ -149,7 +131,7 @@ def _2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,
             radius = radius,  
             height = h, 
             axis = mp.Vector3(0,0,1), 
-            material = Environment
+            material = Envir
             ),
 
         mp.Cylinder(
@@ -157,7 +139,7 @@ def _2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,
             radius = radius,  
             height = h, 
             axis = mp.Vector3(0,0,1), 
-            material = Environment
+            material = Envir
             )    
     ] 
 

@@ -174,7 +174,7 @@ def main():
     
     # Define the mode solver to calculate the E-field
     Efieldx,Efieldy,Efieldz,X,Y,Xfield,Yfield,eps_Oxy = EFields_2DSlab1LCircularHole(h,Lz,
-                                radius,num_bands,resolution,
+                                radius,num_bands,resolution,Mater,Envir,
                                 k_field,zvalue,
                                 polarization,resolution_eps,resolution_field,
                                 num_periods,Bloch_Phase)
@@ -188,7 +188,7 @@ def main():
     
     # Define the mode solver to calculate the H-field
     Hfieldx,Hfieldy,Hfieldz,X,Y,Xfield,Yfield,eps_Oxy = HFields_2DSlab1LCircularHole(h,Lz,
-                                radius,num_bands,resolution,
+                                radius,num_bands,resolution,Mater,Envir,
                                 k_field,zvalue,
                                 polarization,resolution_eps,resolution_field,
                                 num_periods,Bloch_Phase)
