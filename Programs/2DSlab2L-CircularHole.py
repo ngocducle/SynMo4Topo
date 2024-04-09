@@ -182,10 +182,7 @@ def main():
                                 num_periods,Bloch_Phase)
     
     # Plot the E-field
-    Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
-                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
-    
-    Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
+    Plot_Efield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
     
     # Define the mode solver to calculate the H-field
@@ -197,10 +194,7 @@ def main():
                                 num_periods,Bloch_Phase)
 
     # Plot the H-field
-    Plot_ReHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
-                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
-    
-    Plot_ImHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
+    Plot_Hfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
 
 ##### Run the MAIN program

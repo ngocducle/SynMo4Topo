@@ -174,12 +174,6 @@ def main():
                                 num_periods,Bloch_Phase)
     
     # Plot the E-field
-    #Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
-    #                   X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
-    
-    #Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
-    #                   X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
-
     Plot_Efield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
     
@@ -191,12 +185,6 @@ def main():
                                 num_periods,Bloch_Phase)
 
     # Plot the H-field
-    #Plot_ReHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
-    #                   X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
-    
-    #Plot_ImHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
-    #                   X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
-
     Plot_Hfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
 
