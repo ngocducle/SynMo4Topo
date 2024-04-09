@@ -111,10 +111,11 @@ def _2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,
     ### Define the materials
     Si = mp.Medium(index = 3.54)
     SiO2 = mp.Medium(index = 1.46)
+    PMMA = mp.Medium(index = 1.46)
     Dielectric = mp.Medium(epsilon = 12.0)
     Air = mp.Medium(epsilon = 1.0)
 
-    Environment = Air 
+    Environment = PMMA 
 
     ### Define the lattice
     geometry_lattice = mp.Lattice(

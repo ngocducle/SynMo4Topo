@@ -160,7 +160,7 @@ def main():
     # The value of z where we take a slice to plot the field
     zvalue = 0.0 
 
-    # Define the mode solver to calculate the field
+    # Define the mode solver to calculate the E-field
     Efieldx,Efieldy,Efieldz,X,Y,Xfield,Yfield,eps_Oxy = EFields_2DSlab1LCircularHole(h,Lz,
                                 radius,num_bands,resolution,
                                 k_field,zvalue,
@@ -174,7 +174,7 @@ def main():
     Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
     
-    # Define the mode solver to calculate the field
+    # Define the mode solver to calculate the H-field
     Hfieldx,Hfieldy,Hfieldz,X,Y,Xfield,Yfield,eps_Oxy = HFields_2DSlab1LCircularHole(h,Lz,
                                 radius,num_bands,resolution,
                                 k_field,zvalue,

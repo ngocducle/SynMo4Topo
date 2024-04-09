@@ -161,33 +161,24 @@ def main():
     resolution_field = 81 
     num_periods = 3 # Number of periods along each direction  
 
-    k_point = [k_field]
-
-    #ms = _2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,
-    #                      num_bands,Nk,resolution,kSpace)
-
-    ### Run the simulation
-    #if polarization == 'all':
-    #    ms.run()
-    #elif polarization == 'zeven':
-    #    ms.run_zeven()
-    #elif polarization == 'zodd':
-    #    ms.run_zodd()
-    #else:
-    #    print('ERROR! The polarization does not belong to the allowed list')
-    #    exit()
-
     # The value of z where we take a slice to plot the field
     zvalue = 1.225
 
     # Calculate the electric field as a MPBArray
-    efields,EField,X,Y,eps_Oxy = EField_Profile(ms,k_field,Lz,zvalue,polarization,
-                                    resolution_eps,resolution_field,
-                                    num_periods,Bloch_Phase)
+    #efields,EField,X,Y,eps_Oxy = EField_Profile(ms,k_field,Lz,zvalue,polarization,
+    #                                resolution_eps,resolution_field,
+    #                                num_periods,Bloch_Phase)
     
     # Extract the fields Ex,Ey,Ez in the plane z = zvalue
-    Efieldx,Efieldy,Efieldz,Xfield,Yfield = ExtractEField_Profile(efields,EField,
-                      Lz,zvalue,resolution,resolution_eps,resolution_field,num_periods)
+    #Efieldx,Efieldy,Efieldz,Xfield,Yfield = ExtractEField_Profile(efields,EField,
+    #                  Lz,zvalue,resolution,resolution_eps,resolution_field,num_periods)
+    
+    # Define the mode solver to calculate the E-field
+    Efieldx,Efieldy,Efieldz,X,Y,Xfield,Yfield,eps_Oxy = EFields_2DSlab2LCircularHole(h,Lz,
+                                radius,dist,delta1,delta2,num_bands,resolution,
+                                k_field,zvalue,
+                                polarization,resolution_eps,resolution_field,
+                                num_periods,Bloch_Phase)
     
     # Plot the E-field
     Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
@@ -197,13 +188,20 @@ def main():
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
     
     # Calculate the magnetic field as a MPBArray
-    hfields,HField,X,Y,eps_Oxy = HField_Profile(ms,k_field,Lz,zvalue,polarization,
-                                    resolution_eps,resolution_field,
-                                    num_periods,Bloch_Phase)
+    #hfields,HField,X,Y,eps_Oxy = HField_Profile(ms,k_field,Lz,zvalue,polarization,
+    #                                resolution_eps,resolution_field,
+    #                                num_periods,Bloch_Phase)
     
     # Extract the fields Hx,Hy,Hz in the plane z = zvalue
-    Hfieldx,Hfieldy,Hfieldz,Xfield,Yfield = ExtractEField_Profile(hfields,HField,
-                      Lz,zvalue,resolution,resolution_eps,resolution_field,num_periods)
+    #Hfieldx,Hfieldy,Hfieldz,Xfield,Yfield = ExtractEField_Profile(hfields,HField,
+    #                  Lz,zvalue,resolution,resolution_eps,resolution_field,num_periods)
+    
+    # Define the mode solver to calculate the H-field
+    Hfieldx,Hfieldy,Hfieldz,X,Y,Xfield,Yfield,eps_Oxy = HFields_2DSlab2LCircularHole(h,Lz,
+                                radius,dist,delta1,delta2,num_bands,resolution,
+                                k_field,zvalue,
+                                polarization,resolution_eps,resolution_field,
+                                num_periods,Bloch_Phase)
 
     # Plot the H-field
     Plot_ReHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
