@@ -10,6 +10,7 @@ from BandStructure import *
 from ExportData import *
 from EFieldProfile import *
 from HFieldProfile import *
+from Materials import *
 
 
 ##### The MAIN program goes here 
@@ -67,11 +68,11 @@ def main():
     print('# Show the figure: '+str(show_fig))
 
     ### Define the materials
-    Si = mp.Medium(index = 3.54)
-    SiO2 = mp.Medium(index = 1.46)
-    PMMA = mp.Medium(index = 1.46)
-    Dielectric = mp.Medium(epsilon = 12.0)
-    Air = mp.Medium(epsilon = 1.0)
+    #Si = mp.Medium(index = 3.54)
+    #SiO2 = mp.Medium(index = 1.46)
+    #PMMA = mp.Medium(index = 1.46)
+    #Dielectric = mp.Medium(epsilon = 12.0)
+    #Air = mp.Medium(epsilon = 1.0)
 
     # The material forming the structure 
     Mater = Si 
