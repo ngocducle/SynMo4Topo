@@ -20,10 +20,10 @@ def _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace,Mater,Envir
         ]
     elif kSpace == 'M': # In the vicinity of the M-point
         k_points = [
-            mp.Vector3(0.3,0.3,0.0),    # Gamma'
-            mp.Vector3(0.5,0.3,0.0),    # X
-            mp.Vector3(0.5,0.5,0.0),    # M 
-            mp.Vector3(0.3,0.3,0.0)     # Gamma 
+            mp.Vector3(0.45,0.45,0.0),    # Gamma'
+            mp.Vector3(0.5,0.45,0.0),     # X'
+            mp.Vector3(0.5,0.5,0.0),      # M 
+            mp.Vector3(0.45,0.45,0.0)     # Gamma 
         ]
     else:
         print('ERROR! The k-point has not been in the allowed list yet')

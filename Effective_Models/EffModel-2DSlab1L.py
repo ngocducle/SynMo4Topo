@@ -13,21 +13,6 @@ from EffectiveModels import EffModel_2DSlab1L_M
 #                                                                                      #
 ### ================================================================================ ###
 
-### FUNCTION: Hamiltonian of 2D photonic crystal slab monolayer at M-point
-#def EffModel_2DSlab1L_M(qx,qy,omegaM,v,U,W):
-#    Hamiltonian = np.array(
-#        [
-#            [omegaM+v*(qx+qy)/np.sqrt(2),W,W,U],
-#            [W,omegaM+v*(qx-qy)/np.sqrt(2),U,W],
-#            [W,U,omegaM+v*(-qx+qy)/np.sqrt(2),W],
-#            [U,W,W,omegaM+v*(-qx-qy)/np.sqrt(2)]
-#        ]
-#    )
-#
-#    evalues, evectors = sla.eigh(Hamiltonian)
-#
-#    return evalues, evectors
-
 ### ====================================================================================
 ### EVEN MODES: 
 # Values of the bands 
@@ -95,6 +80,18 @@ for i in range(3*Nk+4):
     E3_e[i] = evalues[2]
     E4_e[i] = evalues[3] 
 
+# Load the band structure calculated from MPB
+PhotonicBands_e = np.loadtxt('2DSlab1L-CircularHole-h_0.3-r_0.4-zeven-M-Band.txt') 
+
+# Number of k-points 
+number_e = PhotonicBands_e[:,0]
+
+# Load the Energy of the photonic bands 
+Band1_e = PhotonicBands_e[:,1]
+Band2_e = PhotonicBands_e[:,2]
+Band3_e = PhotonicBands_e[:,3]
+Band4_e = PhotonicBands_e[:,4] 
+
 ### ==========================================================================
 ### ODD MODES
 # Values of the bands 
@@ -125,7 +122,7 @@ print('Wo = '+str(Wo))
 # M  = (0, 0) 
 
 Nk = 19 # number of momenta 
-Kmax = 0.05 # maximum value of q from M-point 
+Kmax = -0.05 # maximum value of q from M-point 
 
 qxarray1 = np.linspace(-Kmax,0,Nk+2)  # Gamma' -> X' 
 qxarray2 = np.linspace(0,0,Nk+2)      # X' -> M 
@@ -162,6 +159,25 @@ for i in range(3*Nk+4):
     E3_o[i] = evalues[2]
     E4_o[i] = evalues[3] 
 
+# Load the band structure calculated from MPB
+PhotonicBands_o = np.loadtxt('2DSlab1L-CircularHole-h_0.3-r_0.4-zodd-M-Band.txt') 
+
+# Number of k-points 
+number_o = PhotonicBands_o[:,0]
+
+# Load the Energy of the photonic bands 
+Band1_o = PhotonicBands_o[:,1]
+Band2_o = PhotonicBands_o[:,2]
+Band3_o = PhotonicBands_o[:,3]
+Band4_o = PhotonicBands_o[:,4] 
+
+### ===========================================================================
+### Load the light-cone
+# Load the light cone 
+LightCone = np.loadtxt('PMMA-zeven-M-Kmax005.txt')
+LightConeMomenta = LightCone[:,0]
+LightConeEnergy = LightCone[:,1]
+
 ### ===========================================================================
 # Plot the band structure 
 fig, ax = plt.subplots() 
@@ -169,12 +185,28 @@ plt.plot(index, E1_e, color = 'blue')
 plt.plot(index, E2_e, color = 'blue') 
 plt.plot(index, E3_e, color = 'blue')
 plt.plot(index, E4_e, color = 'blue') 
-
+plt.plot(number_e, Band1_e, 'o', markersize = 2, 
+    markerfacecolor = 'blue', markeredgecolor = 'blue')
+plt.plot(number_e, Band2_e, 'o', markersize = 2, 
+    markerfacecolor = 'blue', markeredgecolor = 'blue')
+plt.plot(number_e, Band3_e, 'o', markersize = 2, 
+    markerfacecolor = 'blue', markeredgecolor = 'blue')
+plt.plot(number_e, Band4_e, 'o', markersize = 2, 
+    markerfacecolor = 'blue', markeredgecolor = 'blue') 
 plt.plot(index, E1_o, color = 'red')  
 plt.plot(index, E2_o, color = 'red') 
 plt.plot(index, E3_o, color = 'red')
 plt.plot(index[34:44], E4_o[34:44], color = 'red')
-
+plt.plot(number_o, Band1_o, 'o', markersize = 2, 
+    markerfacecolor = 'red', markeredgecolor = 'red')
+plt.plot(number_o, Band2_o, 'o', markersize = 2, 
+    markerfacecolor = 'red', markeredgecolor = 'red')
+plt.plot(number_o, Band3_o, 'o', markersize = 2, 
+    markerfacecolor = 'red', markeredgecolor = 'red')
+plt.plot(number_o[34:44], Band4_o[34:44], 'o', markersize = 2, 
+    markerfacecolor = 'red', markeredgecolor = 'red') 
+plt.plot(LightConeMomenta, LightConeEnergy, linewidth = 3, color = 'black')
+ax.fill_between(LightConeMomenta, LightConeEnergy, 0.5, facecolor = 'green') 
 plt.vlines(Nk+1, 0, 1, linestyle = 'dashed', color = 'black') 
 plt.vlines(2*(Nk+1),0,1, linestyle = 'dashed', color = 'black') 
 plt.xlim(0,3*(Nk+1))

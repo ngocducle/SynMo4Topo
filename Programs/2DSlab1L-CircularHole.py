@@ -24,12 +24,12 @@ def main():
 
     ### The light polarization
     # Choose between: 'all', 'zeven', 'zodd' 
-    polarization = 'zeven'
+    polarization = 'zodd'
     print('# Polarization = '+polarization)
 
     ### The part of the momentum space to plot the band structure
     # Choose between: 'BZ', 'M' 
-    kSpace = 'BZ'
+    kSpace = 'M'
     print('# The part of the momentum space to simulate:'+kSpace)
 
     ### The k-point at which we plot the field profile
@@ -75,7 +75,7 @@ def main():
     num_periods = 3        # Number of periods along each direction  
 
     # The value of z where we take a slice to plot the field
-    zvalue = 0.075 
+    zvalue = -0.075 
 
     ##########################################################################
     #                                                                        #
