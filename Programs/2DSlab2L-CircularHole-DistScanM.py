@@ -34,7 +34,7 @@ def main():
     print('# We focus on the M-point')
 
     ### Resolution 
-    resolution = mp.Vector3(32,32,32)   # pixels/a 
+    resolution = mp.Vector3(16,16,16)   # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters 
@@ -47,7 +47,7 @@ def main():
     print('# the height of the simulation cell Lz = '+str(Lz))
 
     ### Number of bands 
-    num_bands = 30 
+    num_bands = 10 
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Show figure (Yes/No)
@@ -68,8 +68,52 @@ def main():
     ##########################################################################
 
     ### Define the array for the interlayer distance
-    Ndist = 31 
+    Ndist = 5
     DistArray = np.linspace(0.0,3.0,Ndist)
+
+    ### Initialize the arrays of bands
+    Bands = np.zeros((Ndist,num_bands))
+
+    for i in range(Ndist):
+
+        ### Extract the interlayer distance 
+        dist = DistArray[i]
+
+        ### Define the mode solver 
+        ms = _2DSlab2LCircularHole(h,Lz,radius,dist,0.0,0.0,
+                                   num_bands,0,resolution,kSpace,Mater,Envir)
+        
+        ### Run the simulation 
+        if polarization == 'all':
+            ms.run()
+        elif polarization == 'zeven':
+            ms.run_zeven()
+        elif polarization == 'zodd':
+            ms.run_zodd()
+        else:
+            print('ERROR! The polarization does not belong to the allowed list')
+            exit()
+
+        ### Extract the frequencies of the modes from the ModeSolver
+        freqs = ms.all_freqs 
+
+        Bands[i,:] = freqs 
+
+    ##### Print the photonic bands into a file
+    ### Column 0: DistArray 
+    ### Column j (1 <= j <= num_bands): Band j
+
+    with open('2DSlab2L-CHole-DistScanM'+polarization+'.txt','w') as file:
+        file.write('# Interlayer distance / a  Band1    Band2   ...')
+        file.write('\n')
+
+        for i in range(Ndist):
+            file.write('%.8f        ' % DistArray[i])
+
+            for j in range(num_bands):
+                file.writelines('%.8f       ' % Bands[i,j])
+
+            file.write('\n')
 
 ##### Run the MAIN program 
 if __name__ == "__main__":
