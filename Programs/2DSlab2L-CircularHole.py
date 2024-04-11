@@ -28,7 +28,7 @@ def main():
     print('# Polarization = '+polarization)
 
     ### The part of the momentum space to plot the band structure
-    # Choose between: 'BZ', 'M' 
+    # Choose between: 'BZ', 'M', 'M-vicinity' 
     kSpace = 'BZ'
     print('# The part of the momentum space to simulate:'+kSpace)
 

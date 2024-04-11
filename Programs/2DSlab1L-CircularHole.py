@@ -28,8 +28,8 @@ def main():
     print('# Polarization = '+polarization)
 
     ### The part of the momentum space to plot the band structure
-    # Choose between: 'BZ', 'M' 
-    kSpace = 'M'
+    # Choose between: 'BZ', 'M-vicinity' 
+    kSpace = 'M-vicinity'
     print('# The part of the momentum space to simulate:'+kSpace)
 
     ### The k-point at which we plot the field profile
