@@ -18,6 +18,9 @@ def _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace,Mater,Envir
             mp.Vector3(0.5,0.5,0.0),    # M 
             mp.Vector3(0.0,0.0,0.0)     # Gamma 
         ]
+
+        ToInterpolate = 'Yes'
+
     elif kSpace == 'M-vicinity': # In the vicinity of the M-point
         k_points = [
             mp.Vector3(0.45,0.45,0.0),  # Gamma'
@@ -25,16 +28,23 @@ def _2DSlab1LCircularHole(h,Lz,radius,num_bands,Nk,resolution,kSpace,Mater,Envir
             mp.Vector3(0.5,0.5,0.0),    # M 
             mp.Vector3(0.45,0.45,0.0)   # Gamma 
         ]
+
+        ToInterpolate = 'Yes'
+
     elif kSpace == 'M': # Consider the M-point only 
         k_points = [
             mp.Vector3(0.5,0.5,0.0)     # M
         ]
+
+        ToInterpolate = 'No'
+
     else:
         print('ERROR! The k-point has not been in the allowed list yet')
         exit()
 
     # Interpolate to get the points on the lines
-    k_points = mp.interpolate(Nk,k_points)
+    if ToInterpolate == 'Yes':
+        k_points = mp.interpolate(Nk,k_points)
 
     ### Define the lattice
     geometry_lattice = mp.Lattice(
@@ -89,6 +99,9 @@ def _2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,
             mp.Vector3(0.5,0.5,0.0),    # M 
             mp.Vector3(0.0,0.0,0.0)     # Gamma 
         ]
+
+        ToInterpolate = 'Yes'
+
     elif kSpace == 'M-vicinity': # In the vicinity of the M-point
         k_points = [
             mp.Vector3(0.3,0.3,0.0),    # Gamma'
@@ -96,16 +109,23 @@ def _2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,
             mp.Vector3(0.5,0.5,0.0),    # M 
             mp.Vector3(0.3,0.3,0.0)     # Gamma 
         ]
+
+        ToInterpolate = 'Yes'
+
     elif kSpace == 'M': # Consider the M-point only 
         k_points = [
             mp.Vector3(0.5,0.5,0.0)     # M
         ]
+
+        ToInterpolate = 'No'
+
     else:
         print('ERROR! The k-point has not been in the allowed list yet')
         exit()
 
     # Interpolate to get the points on the lines
-    k_points = mp.interpolate(Nk,k_points)
+    if ToInterpolate == 'Yes':
+        k_points = mp.interpolate(Nk,k_points)
 
     ### Define the lattice
     geometry_lattice = mp.Lattice(
