@@ -67,6 +67,7 @@ def main():
     show_fig = 'No'
     print('# Show the figure: '+str(show_fig))
 
+    ### Materials
     # The material forming the structure 
     Mater = Si 
 

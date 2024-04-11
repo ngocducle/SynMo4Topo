@@ -52,6 +52,16 @@ def main():
 
     ### Show figure (Yes/No)
     show_fig = 'No'
+    print('# Show the figures: '+str(show_fig))
+
+    ### Materials
+    # The material forming the structure 
+    Mater = Si 
+
+    # The environment
+    Envir = PMMA 
+
+    
 
 ##### Run the MAIN program 
 if __name__ == "__main__":
