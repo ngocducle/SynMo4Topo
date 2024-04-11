@@ -39,7 +39,7 @@ def main():
     
     ### The light polarization 
     # Choose between: 'all', 'zeven', 'zodd'
-    polarization = 'zeven'
+    polarization = 'zodd'
     print('# Polarization = '+polarization)
 
     ### We focus on the M-point 
@@ -116,7 +116,7 @@ def main():
     ### Column 0: DistArray 
     ### Column j (1 <= j <= num_bands): Band j
 
-    namesave = '2DSlab2L-CHole-DistScanM'+polarization  
+    namesave = '2DSlab2L-CHole-DistScanM-'+polarization  
 
     with open(namesave+'.txt','w') as file:
         file.write('# Interlayer distance / a  Band1    Band2   ...')
