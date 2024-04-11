@@ -1,6 +1,7 @@
 import numpy as np
 import scipy
 import scipy.linalg as sla
+import cmath 
 
 ########################################################################################
 #                                                                                      # 
@@ -40,7 +41,7 @@ def EffModel_2DSlab2L_M(qx,qy,deltax,deltay,omegaM,v,U,W,V):
 
     Hamiltonian = np.array(
         [
-            [omegapp, W, W, U, Vpp, 0, 0, 0],
+        [omegapp, W, W, U, Vpp, 0, 0, 0],
         [W, omegapm, U, W, 0, Vpm, 0, 0],
         [W, U, omegamp, W, 0, 0, Vmp, 0],
         [U, W, W, omegamm, 0, 0, 0, Vmm],
