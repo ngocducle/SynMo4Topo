@@ -1,6 +1,7 @@
 import numpy as np 
 import meep as mp 
 from meep import mpb 
+import matplotlib.pyplot as plt 
 
 import sys 
 sys.path.insert(0,'../src/')
@@ -15,6 +16,18 @@ from Materials import *
 #                                                                            #
 ##############################################################################
 
+##### FUNCTION: Plot the figure
+def PlotFigureM(DistArray,Bands,num_bands,namesave,show_fig):
+    fig,ax = plt.subplots()
+
+    for j in range(num_bands):
+        plt.plot(DistArray,Bands[:,j],'o',markerfacecolor='black',markersize=1)
+
+    ax.set_xlabel('d/a',fontsize=14)
+    ax.set_ylabel(r'$\omega a / (2 \pi c)$',fontsize=14)
+    plt.savefig(namesave+'.png')
+    if show_fig == 'Yes':
+        plt.show()
 
 ##### The MAIN program goes here 
 def main():
@@ -34,7 +47,7 @@ def main():
     print('# We focus on the M-point')
 
     ### Resolution 
-    resolution = mp.Vector3(16,16,16)   # pixels/a 
+    resolution = mp.Vector3(32,32,32)   # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters 
@@ -47,11 +60,11 @@ def main():
     print('# the height of the simulation cell Lz = '+str(Lz))
 
     ### Number of bands 
-    num_bands = 10 
+    num_bands = 20 
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Show figure (Yes/No)
-    show_fig = 'No'
+    show_fig = 'Yes'
     print('# Show the figures: '+str(show_fig))
 
     ### Materials
@@ -68,8 +81,8 @@ def main():
     ##########################################################################
 
     ### Define the array for the interlayer distance
-    Ndist = 5
-    DistArray = np.linspace(0.0,3.0,Ndist)
+    Ndist = 101
+    DistArray = np.linspace(0.0,2.0,Ndist)
 
     ### Initialize the arrays of bands
     Bands = np.zeros((Ndist,num_bands))
@@ -103,7 +116,9 @@ def main():
     ### Column 0: DistArray 
     ### Column j (1 <= j <= num_bands): Band j
 
-    with open('2DSlab2L-CHole-DistScanM'+polarization+'.txt','w') as file:
+    namesave = '2DSlab2L-CHole-DistScanM'+polarization  
+
+    with open(namesave+'.txt','w') as file:
         file.write('# Interlayer distance / a  Band1    Band2   ...')
         file.write('\n')
 
@@ -114,6 +129,9 @@ def main():
                 file.writelines('%.8f       ' % Bands[i,j])
 
             file.write('\n')
+
+    ##### Plot the figure
+    PlotFigureM(DistArray,Bands,num_bands,namesave,show_fig)
 
 ##### Run the MAIN program 
 if __name__ == "__main__":
