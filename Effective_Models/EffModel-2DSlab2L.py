@@ -14,4 +14,200 @@ from EffectiveModels import EffModel_2DSlab2L_M
 ### ================================================================================ ###
 
 ### ====================================================================================
-### 
+### Fit the modes arising from monolayer EVEN bands
+
+# The shift along the x-direction 
+deltax = 0.0
+
+# The shift along the y-direction
+deltay = 0.0
+
+# Frequency at the M point 
+omegaMe = 0.37773038
+print('omegaMe = '+str(omegaMe))
+
+# Group velocity  
+ve = 0.35
+print('Group velocity = '+str(ve))
+
+# Counter-propagating coupling strength 
+Ue = -0.02365418
+print('Ue = '+str(Ue))
+
+# Orthogonally-propagating coupling stength 
+We = 0.00721296 
+print('We = '+str(We))
+
+# Interlayer coupling strength at zero interlayer distance 
+V0e = 0.075 
+print('V0e = '+str(V0e))
+
+# Characteristic length for interlayer coupling 
+d0e = 0.25 
+print('d0e = '+str(d0e))
+
+# Diagonalize the effective Hamiltonian 
+Ndist = 121
+DistArray = np.linspace(0.0,3.0,Ndist)
+
+Eeven1 = np.empty(Ndist, dtype = complex) 
+Eeven2 = np.empty(Ndist, dtype = complex)
+Eeven3 = np.empty(Ndist, dtype = complex)
+Eeven4 = np.empty(Ndist, dtype = complex)  
+Eeven5 = np.empty(Ndist, dtype = complex)
+Eeven6 = np.empty(Ndist, dtype = complex)
+Eeven7 = np.empty(Ndist, dtype = complex)
+Eeven8 = np.empty(Ndist, dtype = complex) 
+
+# Calculate the energy bands arising from monolayer EVEN modes as function of the 
+# distance 
+for i in range(Ndist):
+    qx = 0.0 
+    qy = 0.0 
+
+    d = DistArray[i]
+
+    Ve = V0e*np.exp(-d/d0e)
+
+    evalues, evectors = EffModel_2DSlab2L_M(qx,qy,deltax,deltay,omegaMe,ve,Ue,We,Ve)
+
+    Eeven1[i] = evalues[0]
+    Eeven2[i] = evalues[1]
+    Eeven3[i] = evalues[2]
+    Eeven4[i] = evalues[3] 
+    Eeven5[i] = evalues[4]
+    Eeven6[i] = evalues[5]
+    Eeven7[i] = evalues[6]
+    Eeven8[i] = evalues[7] 
+
+### ==================================================================================
+### Plot the figure for EVEN bands 
+fig, ax = plt.subplots()
+'''plt.plot(DistArrayMPB, DataEven[:,1],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=3)
+plt.plot(DistArrayMPB, DataEven[:,2],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=3) 
+plt.plot(DistArrayMPB, DataEven[:,3],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=5)  
+plt.plot(DistArrayMPB, DataEven[:,4],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=3)  
+plt.plot(DistArrayMPB, DataOdd[:,1],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=3)
+plt.plot(DistArrayMPB, DataOdd[:,2],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=3) 
+plt.plot(DistArrayMPB, DataOdd[:,3],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=5)  
+plt.plot(DistArrayMPB, DataOdd[:,4],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=3) 
+'''
+
+plt.plot(DistArray,Eeven1,linewidth=2,color='blue')
+plt.plot(DistArray,Eeven2,linewidth=2,color='blue')
+plt.plot(DistArray,Eeven3,linewidth=2,color='blue')
+plt.plot(DistArray,Eeven4,linewidth=2,color='blue')
+plt.plot(DistArray,Eeven5,linewidth=2,color='blue')
+plt.plot(DistArray,Eeven6,linewidth=2,color='blue')
+plt.plot(DistArray,Eeven7,linewidth=2,color='blue')
+plt.plot(DistArray,Eeven8,linewidth=2,color='blue')
+
+plt.xlim(0.0,2.0)
+ax.set_xlabel(r'$d / a$', fontsize = 14)
+ax.set_ylabel(r'$\omega a / (2 \pi c)$', fontsize = 14) 
+plt.savefig('Even-bands.png')
+plt.show() 
+
+### ==================================================================================
+### Fit the ODD bands
+    
+# Frequency at the M point
+omegaMo = 0.435940955
+print('omegaMo = '+str(omegaMo)) 
+
+# Group velocity
+vo = 0.41
+print('Group velocity = '+str(vo))
+
+# Counter-propagating coupling strength 
+Uo =  0.008515315
+print('Ue = '+str(Uo))
+
+# Orthogonally-propagating coupling strength
+Wo = 0.0154966775
+print('We = '+str(Wo)) 
+
+# Interlayer coupling strength amplitude
+V0o = 0.075
+print('V0e = '+str(V0o))
+
+# Characteristic length for interlayer coupling
+d0o = 0.25
+print('d0e = '+str(d0o)) 
+
+# Diagonalize the effective Hamiltonian
+Ndist = 121 
+DistArray = np.linspace(0.0,3.0,Ndist) 
+
+Eodd1 = np.empty(Ndist, dtype = complex) 
+Eodd2 = np.empty(Ndist, dtype = complex)
+Eodd3 = np.empty(Ndist, dtype = complex)
+Eodd4 = np.empty(Ndist, dtype = complex)  
+Eodd5 = np.empty(Ndist, dtype = complex)
+Eodd6 = np.empty(Ndist, dtype = complex)
+Eodd7 = np.empty(Ndist, dtype = complex)
+Eodd8 = np.empty(Ndist, dtype = complex) 
+
+# Calculate the energy bands of odd modes as function of the distance 
+for i in range(Ndist):
+    qx = 0.0
+    qy = 0.0 
+
+    d = DistArray[i]
+
+    Vo = V0o * np.exp(-d/d0o)
+
+    evalues, evectors = EffModel_2DSlab2L_M(qx,qy,0.0,0.0,omegaMo,vo,Uo,Wo,Vo) 
+    
+    Eodd1[i] = evalues[0] 
+    Eodd2[i] = evalues[1]
+    Eodd3[i] = evalues[2]
+    Eodd4[i] = evalues[3] 
+    Eodd5[i] = evalues[4]
+    Eodd6[i] = evalues[5]
+    Eodd7[i] = evalues[6]
+    Eodd8[i] = evalues[7] 
+
+### ==================================================================================
+### Plot the figure for ODD bands 
+fig, ax = plt.subplots()
+'''plt.plot(DistArrayMPB, DataEven[:,5],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=3)
+plt.plot(DistArrayMPB, DataEven[:,6],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=3) 
+plt.plot(DistArrayMPB, DataEven[:,7],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=5)  
+plt.plot(DistArrayMPB, DataEven[:,8],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=3)  
+plt.plot(DistArrayMPB, DataOdd[:,5],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=3)
+plt.plot(DistArrayMPB, DataOdd[:,6],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=3) 
+plt.plot(DistArrayMPB, DataOdd[:,7],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=5)  
+plt.plot(DistArrayMPB, DataOdd[:,8],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=3) 
+'''
+
+plt.plot(DistArray,Eodd1,linewidth=2,color='red')
+plt.plot(DistArray,Eodd2,linewidth=2,color='red')
+plt.plot(DistArray,Eodd3,linewidth=2,color='red')
+plt.plot(DistArray,Eodd4,linewidth=2,color='red')
+plt.plot(DistArray,Eodd5,linewidth=2,color='red')
+plt.plot(DistArray,Eodd6,linewidth=2,color='red')
+plt.plot(DistArray,Eodd7,linewidth=2,color='red')
+plt.plot(DistArray,Eodd8,linewidth=2,color='red')
+
+plt.xlim(0.0,2.0)
+ax.set_xlabel(r'$d / a$', fontsize = 14)
+ax.set_ylabel(r'$\omega a / (2 \pi c)$', fontsize = 14) 
+plt.savefig('Odd-bands.png')
+plt.show() 
