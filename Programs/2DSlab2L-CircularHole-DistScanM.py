@@ -61,7 +61,15 @@ def main():
     # The environment
     Envir = PMMA 
 
-    
+    ##########################################################################
+    #                                                                        #
+    #                   Here the simulation starts                           #
+    #                                                                        #
+    ##########################################################################
+
+    ### Define the array for the interlayer distance
+    Ndist = 31 
+    DistArray = np.linspace(0.0,3.0,Ndist)
 
 ##### Run the MAIN program 
 if __name__ == "__main__":
