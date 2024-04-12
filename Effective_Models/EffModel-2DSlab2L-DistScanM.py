@@ -39,11 +39,11 @@ We = 0.00721296
 print('We = '+str(We))
 
 # Interlayer coupling strength at zero interlayer distance 
-V0e = 0.075 
+V0e = 0.044 
 print('V0e = '+str(V0e))
 
 # Characteristic length for interlayer coupling 
-d0e = 0.25 
+d0e = 0.35 
 print('d0e = '+str(d0e))
 
 # Diagonalize the effective Hamiltonian 
@@ -80,39 +80,47 @@ for i in range(Ndist):
     Eeven7[i] = evalues[6]
     Eeven8[i] = evalues[7] 
 
+### ============================================================================
+### Load the data 
+DataEven = np.loadtxt('2DSlab2L-CHole-DistScanMzeven.txt')
+DataOdd = np.loadtxt('2DSlab2L-CHole-DistScanM-zodd.txt') 
+
+DistArrayMPB = DataEven[:,0]
+
 ### ==================================================================================
 ### Plot the figure for EVEN bands 
 fig, ax = plt.subplots()
-'''plt.plot(DistArrayMPB, DataEven[:,1],'o',markerfacecolor='blue',\
-    markeredgecolor='blue',markersize=3)
+plt.plot(DistArrayMPB, DataEven[:,1],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=1)
 plt.plot(DistArrayMPB, DataEven[:,2],'o',markerfacecolor='blue',\
-    markeredgecolor='blue',markersize=3) 
+    markeredgecolor='blue',markersize=1) 
 plt.plot(DistArrayMPB, DataEven[:,3],'o',markerfacecolor='blue',\
-    markeredgecolor='blue',markersize=5)  
+    markeredgecolor='blue',markersize=1)  
 plt.plot(DistArrayMPB, DataEven[:,4],'o',markerfacecolor='blue',\
-    markeredgecolor='blue',markersize=3)  
-plt.plot(DistArrayMPB, DataOdd[:,1],'o',markerfacecolor='blue',\
-    markeredgecolor='blue',markersize=3)
-plt.plot(DistArrayMPB, DataOdd[:,2],'o',markerfacecolor='blue',\
-    markeredgecolor='blue',markersize=3) 
-plt.plot(DistArrayMPB, DataOdd[:,3],'o',markerfacecolor='blue',\
-    markeredgecolor='blue',markersize=5)  
-plt.plot(DistArrayMPB, DataOdd[:,4],'o',markerfacecolor='blue',\
-    markeredgecolor='blue',markersize=3) 
-'''
+    markeredgecolor='blue',markersize=1)  
+plt.plot(DistArrayMPB, DataOdd[:,1],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=1)
+plt.plot(DistArrayMPB, DataOdd[:,2],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=1) 
+plt.plot(DistArrayMPB, DataOdd[:,3],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=1)  
+plt.plot(DistArrayMPB, DataOdd[:,4],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=1) 
 
-plt.plot(DistArray,Eeven1,linewidth=2,color='blue')
-plt.plot(DistArray,Eeven2,linewidth=2,color='blue')
-plt.plot(DistArray,Eeven3,linewidth=2,color='blue')
-plt.plot(DistArray,Eeven4,linewidth=2,color='blue')
-plt.plot(DistArray,Eeven5,linewidth=2,color='blue')
-plt.plot(DistArray,Eeven6,linewidth=2,color='blue')
-plt.plot(DistArray,Eeven7,linewidth=2,color='blue')
-plt.plot(DistArray,Eeven8,linewidth=2,color='blue')
+
+plt.plot(DistArray,Eeven1,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven2,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven3,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven4,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven5,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven6,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven7,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven8,linewidth=1,color='blue')
 
 plt.xlim(0.0,2.0)
 ax.set_xlabel(r'$d / a$', fontsize = 14)
 ax.set_ylabel(r'$\omega a / (2 \pi c)$', fontsize = 14) 
+plt.title('z-even bands')
 plt.savefig('Even-bands.png')
 plt.show() 
 
@@ -136,11 +144,11 @@ Wo = 0.0154966775
 print('We = '+str(Wo)) 
 
 # Interlayer coupling strength amplitude
-V0o = 0.075
+V0o = 0.049
 print('V0e = '+str(V0o))
 
 # Characteristic length for interlayer coupling
-d0o = 0.25
+d0o = 0.42
 print('d0e = '+str(d0o)) 
 
 # Diagonalize the effective Hamiltonian
@@ -179,35 +187,98 @@ for i in range(Ndist):
 ### ==================================================================================
 ### Plot the figure for ODD bands 
 fig, ax = plt.subplots()
-'''plt.plot(DistArrayMPB, DataEven[:,5],'o',markerfacecolor='red',\
-    markeredgecolor='red',markersize=3)
-plt.plot(DistArrayMPB, DataEven[:,6],'o',markerfacecolor='red',\
-    markeredgecolor='red',markersize=3) 
-plt.plot(DistArrayMPB, DataEven[:,7],'o',markerfacecolor='red',\
-    markeredgecolor='red',markersize=5)  
-plt.plot(DistArrayMPB, DataEven[:,8],'o',markerfacecolor='red',\
-    markeredgecolor='red',markersize=3)  
+plt.plot(DistArrayMPB, DataEven[:,5],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=1)
+plt.plot(DistArrayMPB, DataEven[:,6],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=1) 
+plt.plot(DistArrayMPB, DataEven[:,7],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=1)  
+plt.plot(DistArrayMPB, DataEven[:,8],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=1)  
 plt.plot(DistArrayMPB, DataOdd[:,5],'o',markerfacecolor='red',\
-    markeredgecolor='red',markersize=3)
+    markeredgecolor='red',markersize=1)
 plt.plot(DistArrayMPB, DataOdd[:,6],'o',markerfacecolor='red',\
-    markeredgecolor='red',markersize=3) 
+    markeredgecolor='red',markersize=1) 
 plt.plot(DistArrayMPB, DataOdd[:,7],'o',markerfacecolor='red',\
-    markeredgecolor='red',markersize=5)  
+    markeredgecolor='red',markersize=1)  
 plt.plot(DistArrayMPB, DataOdd[:,8],'o',markerfacecolor='red',\
-    markeredgecolor='red',markersize=3) 
-'''
+    markeredgecolor='red',markersize=1) 
 
-plt.plot(DistArray,Eodd1,linewidth=2,color='red')
-plt.plot(DistArray,Eodd2,linewidth=2,color='red')
-plt.plot(DistArray,Eodd3,linewidth=2,color='red')
-plt.plot(DistArray,Eodd4,linewidth=2,color='red')
-plt.plot(DistArray,Eodd5,linewidth=2,color='red')
-plt.plot(DistArray,Eodd6,linewidth=2,color='red')
-plt.plot(DistArray,Eodd7,linewidth=2,color='red')
-plt.plot(DistArray,Eodd8,linewidth=2,color='red')
+plt.plot(DistArray,Eodd1,linewidth=1,color='red')
+plt.plot(DistArray,Eodd2,linewidth=1,color='red')
+plt.plot(DistArray,Eodd3,linewidth=1,color='red')
+plt.plot(DistArray,Eodd4,linewidth=1,color='red')
+plt.plot(DistArray,Eodd5,linewidth=1,color='red')
+plt.plot(DistArray,Eodd6,linewidth=1,color='red')
+plt.plot(DistArray,Eodd7,linewidth=1,color='red')
+plt.plot(DistArray,Eodd8,linewidth=1,color='red')
 
 plt.xlim(0.0,2.0)
 ax.set_xlabel(r'$d / a$', fontsize = 14)
 ax.set_ylabel(r'$\omega a / (2 \pi c)$', fontsize = 14) 
+plt.title('z-odd bands')
 plt.savefig('Odd-bands.png')
+plt.show() 
+
+### ==================================================================
+### Plot all the bands together
+fig, ax = plt.subplots()
+plt.plot(DistArrayMPB, DataEven[:,1],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=1)
+plt.plot(DistArrayMPB, DataEven[:,2],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=1) 
+plt.plot(DistArrayMPB, DataEven[:,3],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=1)  
+plt.plot(DistArrayMPB, DataEven[:,4],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=1)  
+plt.plot(DistArrayMPB, DataOdd[:,1],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=1)
+plt.plot(DistArrayMPB, DataOdd[:,2],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=1) 
+plt.plot(DistArrayMPB, DataOdd[:,3],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=1)  
+plt.plot(DistArrayMPB, DataOdd[:,4],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=1) 
+
+
+plt.plot(DistArray,Eeven1,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven2,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven3,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven4,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven5,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven6,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven7,linewidth=1,color='blue')
+plt.plot(DistArray,Eeven8,linewidth=1,color='blue')
+
+plt.plot(DistArrayMPB, DataEven[:,5],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=1)
+plt.plot(DistArrayMPB, DataEven[:,6],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=1) 
+plt.plot(DistArrayMPB, DataEven[:,7],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=1)  
+plt.plot(DistArrayMPB, DataEven[:,8],'o',markerfacecolor='blue',\
+    markeredgecolor='blue',markersize=1)  
+plt.plot(DistArrayMPB, DataOdd[:,5],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=1)
+plt.plot(DistArrayMPB, DataOdd[:,6],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=1) 
+plt.plot(DistArrayMPB, DataOdd[:,7],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=1)  
+plt.plot(DistArrayMPB, DataOdd[:,8],'o',markerfacecolor='red',\
+    markeredgecolor='red',markersize=1) 
+
+plt.plot(DistArray,Eodd1,linewidth=1,color='red')
+plt.plot(DistArray,Eodd2,linewidth=1,color='red')
+plt.plot(DistArray,Eodd3,linewidth=1,color='red')
+plt.plot(DistArray,Eodd4,linewidth=1,color='red')
+plt.plot(DistArray,Eodd5,linewidth=1,color='red')
+plt.plot(DistArray,Eodd6,linewidth=1,color='red')
+plt.plot(DistArray,Eodd7,linewidth=1,color='red')
+plt.plot(DistArray,Eodd8,linewidth=1,color='red')
+
+plt.xlim(0.0,2.0)
+ax.set_xlabel(r'$d / a$', fontsize = 14)
+ax.set_ylabel(r'$\omega a / (2 \pi c)$', fontsize = 14) 
+plt.title('All bands')
+plt.savefig('All-bands.png')
 plt.show() 
