@@ -47,7 +47,7 @@ def main():
     print('# We focus on the M-point')
 
     ### Resolution 
-    resolution = mp.Vector3(32,32,32)   # pixels/a 
+    resolution = mp.Vector3(16,16,16)   # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters 
@@ -60,7 +60,7 @@ def main():
     print('# the height of the simulation cell Lz = '+str(Lz))
 
     ### Number of bands 
-    num_bands = 20 
+    num_bands = 30 
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Show figure (Yes/No)
@@ -82,12 +82,13 @@ def main():
 
     ### Define the array for the interlayer distance
     Ndist = 101
-    DistArray = np.linspace(0.0,2.0,Ndist)
+    DistArray = np.concatenate((np.linspace(0.0,0.5,150),
+                                np.linspace(0.5,2.0,50)))
 
     ### Initialize the arrays of bands
-    Bands = np.zeros((Ndist,num_bands))
+    Bands = np.zeros((len(DistArray),num_bands))
 
-    for i in range(Ndist):
+    for i in range(len(DistArray)):
 
         ### Extract the interlayer distance 
         dist = DistArray[i]
@@ -122,7 +123,7 @@ def main():
         file.write('# Interlayer distance / a  Band1    Band2   ...')
         file.write('\n')
 
-        for i in range(Ndist):
+        for i in range(len(DistArray)):
             file.write('%.8f        ' % DistArray[i])
 
             for j in range(num_bands):

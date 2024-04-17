@@ -24,12 +24,12 @@ def main():
 
     ### The light polarization
     # Choose between: 'all', 'zeven', 'zodd' 
-    polarization = 'zeven'
+    polarization = 'all'
     print('# Polarization = '+polarization)
 
     ### The part of the momentum space to plot the band structure
     # Choose between: 'BZ', 'M', 'M-vicinity' 
-    kSpace = 'BZ'
+    kSpace = 'M-vicinity'
     print('# The part of the momentum space to simulate:'+kSpace)
 
     ### The k-point at which we plot the field profile
@@ -43,7 +43,7 @@ def main():
     ### Geometrical parameters
     h = 0.3      # Thickness of the slab
     radius = 0.4 # Radius of the hole
-    dist = 2.0   # Distance between the two layers 
+    dist = 0.05  # Distance between the two layers 
     delta1 = 0.0 # Relative displacement along the x-direction
     delta2 = 0.0 # Relative displacement along the y-direction
     Lz = 10.0    # The height of the unit cell along the z-direction
@@ -56,11 +56,11 @@ def main():
     print('# Interlayer distance dist = '+str(dist))
 
     ### Number of bands
-    num_bands = 20
+    num_bands = 25
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Number of k-points to interpolate between 2 high-symmetry points
-    Nk = 19  
+    Nk = 29  
     print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     ### Show figure (Yes/No)
@@ -174,6 +174,7 @@ def main():
         print('ERROR! The k-point has not been in the allowed list yet')
         exit()
 
+    '''
     # Define the mode solver to calculate the E-field
     Efieldx,Efieldy,Efieldz,X,Y,Xfield,Yfield,eps_Oxy = EFields_2DSlab2LCircularHole(h,Lz,
                                 radius,dist,delta1,delta2,num_bands,resolution,
@@ -197,6 +198,7 @@ def main():
     # Plot the H-field
     Plot_Hfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
+    '''
 
 ##### Run the MAIN program
 if __name__ == "__main__":

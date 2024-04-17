@@ -241,14 +241,14 @@ plt.plot(DistArrayMPB, DataOdd[:,4],'o',markerfacecolor='red',\
     markeredgecolor='red',markersize=1) 
 
 
-plt.plot(DistArray,Eeven1,linewidth=1,color='blue')
-plt.plot(DistArray,Eeven2,linewidth=1,color='blue')
-plt.plot(DistArray,Eeven3,linewidth=1,color='blue')
-plt.plot(DistArray,Eeven4,linewidth=1,color='blue')
-plt.plot(DistArray,Eeven5,linewidth=1,color='blue')
-plt.plot(DistArray,Eeven6,linewidth=1,color='blue')
-plt.plot(DistArray,Eeven7,linewidth=1,color='blue')
-plt.plot(DistArray,Eeven8,linewidth=1,color='blue')
+#plt.plot(DistArray,Eeven1,linewidth=1,color='blue')
+#plt.plot(DistArray,Eeven2,linewidth=1,color='blue')
+#plt.plot(DistArray,Eeven3,linewidth=1,color='blue')
+#plt.plot(DistArray,Eeven4,linewidth=1,color='blue')
+#plt.plot(DistArray,Eeven5,linewidth=1,color='blue')
+#plt.plot(DistArray,Eeven6,linewidth=1,color='blue')
+#plt.plot(DistArray,Eeven7,linewidth=1,color='blue')
+#plt.plot(DistArray,Eeven8,linewidth=1,color='blue')
 
 plt.plot(DistArrayMPB, DataEven[:,5],'o',markerfacecolor='blue',\
     markeredgecolor='blue',markersize=1)
@@ -267,14 +267,14 @@ plt.plot(DistArrayMPB, DataOdd[:,7],'o',markerfacecolor='red',\
 plt.plot(DistArrayMPB, DataOdd[:,8],'o',markerfacecolor='red',\
     markeredgecolor='red',markersize=1) 
 
-plt.plot(DistArray,Eodd1,linewidth=1,color='red')
-plt.plot(DistArray,Eodd2,linewidth=1,color='red')
-plt.plot(DistArray,Eodd3,linewidth=1,color='red')
-plt.plot(DistArray,Eodd4,linewidth=1,color='red')
-plt.plot(DistArray,Eodd5,linewidth=1,color='red')
-plt.plot(DistArray,Eodd6,linewidth=1,color='red')
-plt.plot(DistArray,Eodd7,linewidth=1,color='red')
-plt.plot(DistArray,Eodd8,linewidth=1,color='red')
+#plt.plot(DistArray,Eodd1,linewidth=1,color='red')
+#plt.plot(DistArray,Eodd2,linewidth=1,color='red')
+#plt.plot(DistArray,Eodd3,linewidth=1,color='red')
+#plt.plot(DistArray,Eodd4,linewidth=1,color='red')
+#plt.plot(DistArray,Eodd5,linewidth=1,color='red')
+#plt.plot(DistArray,Eodd6,linewidth=1,color='red')
+#plt.plot(DistArray,Eodd7,linewidth=1,color='red')
+#plt.plot(DistArray,Eodd8,linewidth=1,color='red')
 
 plt.xlim(0.0,2.0)
 ax.set_xlabel(r'$d / a$', fontsize = 14)
