@@ -39,7 +39,7 @@ def main():
     
     ### The light polarization 
     # Choose between: 'all', 'zeven', 'zodd'
-    polarization = 'zodd'
+    polarization = 'all'
     print('# Polarization = '+polarization)
 
     ### We focus on the M-point 
@@ -47,12 +47,14 @@ def main():
     print('# We focus on the M-point')
 
     ### Resolution 
-    resolution = mp.Vector3(16,16,16)   # pixels/a 
+    resolution = mp.Vector3(32,32,32)   # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters 
     h = 0.3         # Thickness of the slab 
     radius = 0.4    # Radius of the hole 
+    delta1 = 0.1    # Shift along the x-direction
+    delta2 = 0.1    # Shift along the y-direction
     Lz = 10.0       # The height of the unit cell along the z-direction 
 
     print('# Thickness of the slab h = '+str(h))
@@ -64,7 +66,7 @@ def main():
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Show figure (Yes/No)
-    show_fig = 'Yes'
+    show_fig = 'No'
     print('# Show the figures: '+str(show_fig))
 
     ### Materials
@@ -81,9 +83,9 @@ def main():
     ##########################################################################
 
     ### Define the array for the interlayer distance
-    Ndist = 101
-    DistArray = np.concatenate((np.linspace(0.0,0.5,150),
-                                np.linspace(0.5,2.0,50)))
+    Ndist = 352
+    DistArray = np.concatenate((np.arange(0.0,0.505,0.0025),
+                                np.arange(0.51,2.01,0.01)))
 
     ### Initialize the arrays of bands
     Bands = np.zeros((len(DistArray),num_bands))
@@ -94,7 +96,7 @@ def main():
         dist = DistArray[i]
 
         ### Define the mode solver 
-        ms = _2DSlab2LCircularHole(h,Lz,radius,dist,0.0,0.0,
+        ms = _2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,
                                    num_bands,0,resolution,kSpace,Mater,Envir)
         
         ### Run the simulation 
