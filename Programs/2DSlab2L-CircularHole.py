@@ -37,7 +37,7 @@ def main():
     print('# The k-point at which we plot the field profile:'+str(k_field))
 
     ### Resolution 
-    resolution = mp.Vector3(32,32,32)   # pixels/a
+    resolution = mp.Vector3(16,16,16)   # pixels/a
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters

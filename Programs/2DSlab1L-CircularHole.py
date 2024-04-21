@@ -29,7 +29,7 @@ def main():
 
     ### The part of the momentum space to plot the band structure
     # Choose between: 'BZ', 'M-vicinity' 
-    kSpace = 'M-vicinity'
+    kSpace = 'BZ'
     print('# The part of the momentum space to simulate:'+kSpace)
 
     ### The k-point at which we plot the field profile
@@ -76,7 +76,7 @@ def main():
     num_periods = 3        # Number of periods along each direction  
 
     # The value of z where we take a slice to plot the field
-    zvalue = -0.075 
+    zvalue = 0.075 
 
     ##########################################################################
     #                                                                        #
