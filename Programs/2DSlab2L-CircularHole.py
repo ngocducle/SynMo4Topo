@@ -29,7 +29,7 @@ def main():
 
     ### The part of the momentum space to plot the band structure
     # Choose between: 'BZ', 'M', 'M-vicinity' 
-    kSpace = 'M-vicinity'
+    kSpace = 'BZ'
     print('# The part of the momentum space to simulate:'+kSpace)
 
     ### The k-point at which we plot the field profile
@@ -37,15 +37,15 @@ def main():
     print('# The k-point at which we plot the field profile:'+str(k_field))
 
     ### Resolution 
-    resolution = mp.Vector3(16,16,16)   # pixels/a
+    resolution = mp.Vector3(32,32,32)   # pixels/a
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters
     h = 0.3      # Thickness of the slab
     radius = 0.4 # Radius of the hole
     dist = 0.05  # Distance between the two layers 
-    delta1 = 0.0 # Relative displacement along the x-direction
-    delta2 = 0.0 # Relative displacement along the y-direction
+    delta1 = 0.3 # Relative displacement along the x-direction
+    delta2 = 0.3 # Relative displacement along the y-direction
     Lz = 10.0    # The height of the unit cell along the z-direction
 
     print('# Thickness of the slab h = '+str(h))
@@ -82,7 +82,7 @@ def main():
     num_periods = 3        # Number of periods along each direction  
 
     # The value of z where we take a slice to plot the fields 
-    zvalue = 1.225
+    zvalue = 0.5*(dist+h)
 
     ##########################################################################
     #                                                                        #
@@ -118,8 +118,8 @@ def main():
 
 
     ### Output the dielectric profile along the z-direction with projected (X,Y)
-    x = 0.27 
-    y = 0.36 
+    x = 0.50 
+    y = 0.50 
     zmin = -0.5*Lz
     zmax = 0.5*Lz 
     Nz = 50 
@@ -141,11 +141,11 @@ def main():
     ### for zmin <= z <= zmax, with Nz values of z 
     Ncellx = 5
     Ncelly = 5
-    zmin = -0.5*Lz
-    zmax = 0.5*Lz 
+    zmin = -0.5*dist-h 
+    zmax = 0.5*dist+h  
     Nx = 300
     Ny = 300
-    Nz = 9
+    Nz = 13
 
     # Calculate the dielectric profile in planes parallel to Oxy
     x_plot,y_plot,z_array,epsilon_xy_array \
@@ -174,7 +174,6 @@ def main():
         print('ERROR! The k-point has not been in the allowed list yet')
         exit()
 
-    '''
     # Define the mode solver to calculate the E-field
     Efieldx,Efieldy,Efieldz,X,Y,Xfield,Yfield,eps_Oxy = EFields_2DSlab2LCircularHole(h,Lz,
                                 radius,dist,delta1,delta2,num_bands,resolution,
@@ -198,7 +197,6 @@ def main():
     # Plot the H-field
     Plot_Hfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
                        X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
-    '''
 
 ##### Run the MAIN program
 if __name__ == "__main__":

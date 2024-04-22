@@ -38,8 +38,8 @@ We = (E4calc_e - E3calc_e) / 4
 print('We = '+str(We))
 
 # The array of momenta 
-# Gamma' = (-0.2, -0.2)
-# X' = (-0.2, 0)
+# Gamma' = (-Kmax, -Kmax)
+# X' = (-Kmax, 0)
 # M  = (0, 0) 
 
 Nk = 19 # number of momenta 
@@ -217,5 +217,5 @@ ax.set_xticks(tick_locs)
 ax.set_xticklabels(tick_labs, size = 16) 
 #ax.set_xlabel(r'$k a / (2 \pi)$', fontsize = 14) 
 ax.set_ylabel(r'$\omega a / (2 \pi c)$', fontsize = 14) 
-plt.savefig('FitResults-2DPhCSlabMonolayer.png')  
+plt.savefig('FitResults-2DSlab1L.png')  
 plt.show() 
