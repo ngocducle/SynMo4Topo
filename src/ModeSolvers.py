@@ -256,6 +256,8 @@ def _2DSlab1LSquareHole(h,Lz,edge,num_bands,Nk,resolution,kSpace,Mater,Envir):
         k_points = k_points,
         resolution = resolution,
         num_bands = num_bands
+        #tolerance = 1.e-7,
+        #mesh_size = 10
     )
 
     ### Return the mode solver
@@ -281,6 +283,14 @@ def _2DSlab2LSquareHole(h,Lz,edge,dist,delta1,delta2,
             mp.Vector3(0.5,0.45,0.0),     # X
             mp.Vector3(0.5,0.5,0.0),      # M 
             mp.Vector3(0.45,0.45,0.0)     # Gamma 
+        ]
+
+        ToInterpolate = 'Yes'
+
+    elif kSpace == 'Gamma-M':   # Run along the line Gamma-M: kx = ky 
+        k_points = [
+            mp.Vector3(0.0,0.0,0.0),      # Gamma 
+            mp.Vector3(0.5,0.5,0.0)       # M 
         ]
 
         ToInterpolate = 'Yes'

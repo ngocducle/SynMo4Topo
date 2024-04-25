@@ -24,7 +24,7 @@ def main():
 
     ### The light polarization
     # Choose between: 'all', 'zeven', 'zodd' 
-    polarization = 'zodd'
+    polarization = 'zeven'
     print('# Polarization = '+polarization)
 
     ### The part of the momentum space to plot the band structure
@@ -37,12 +37,12 @@ def main():
     print('# The k-point at which we plot the field profile:'+str(k_field))
 
     ### Resolution 
-    resolution = mp.Vector3(16,16,16)   # pixels/a
+    resolution = mp.Vector3(50,50,50)   # pixels/a
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters
-    h = 0.4      # Thickness of the slab
-    edge = 0.45  # Edge of the square hole
+    h = 0.35     # Thickness of the slab
+    edge = 0.4   # Edge of the square hole
     Lz = 5.0     # The height of the unit cell along the z-direction
 
     print('# Thickness of the slab h = '+str(h))

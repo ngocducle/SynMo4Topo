@@ -23,7 +23,7 @@ def PlotBand_BrillouinZone(number,freqs,Nk,namesave,show_fig):
     plt.title(namesave,fontsize=14)
     plt.savefig(namesave+'.png')
     if show_fig == 'Yes':
-            plt.show()
+        plt.show()
 
 ##### FUNCTION: plot the band structure in the vicinity of the M-point
 def PlotBand_M(number,freqs,Nk,namesave,show_fig):
@@ -41,4 +41,19 @@ def PlotBand_M(number,freqs,Nk,namesave,show_fig):
     plt.title(namesave,fontsize=14)
     plt.savefig(namesave+'.png')
     if show_fig == 'Yes':
-            plt.show()
+        plt.show()
+
+
+##### FUNCTION: plot the band structure along the Gamma-M point
+def PlotBand_GammaM(number,freqs,Nk,namesave,show_fig):
+    fig, ax = plt.subplots()
+    ax.plot(number, freqs)
+    tick_locs = [0,Nk+1]
+    tick_labs = [r'$\omega a / (2 \pi c)$']
+    ax.set_xticks(tick_locs)
+    ax.set_xticklabels(tick_labs,size=16)
+    ax.set_ylabel(r'$\omega a / (2 \pi c)$', fontsize = 14)
+    plt.title(namesave,fontsize=14)
+    plt.savefig(namesave+'.png')
+    if show_fig == 'Yes':
+      plt.show()

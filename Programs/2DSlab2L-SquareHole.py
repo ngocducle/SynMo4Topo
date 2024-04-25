@@ -28,8 +28,8 @@ def main():
     print('# Polarization = '+polarization)
 
     ### The part of the momentum space to plot the band structure
-    # Choose between: 'BZ', 'M', 'M-vicinity' 
-    kSpace = 'BZ'
+    # Choose between: 'BZ', 'Gamma-M','M', 'M-vicinity' 
+    kSpace = 'Gamma-M'
     print('# The part of the momentum space to simulate:'+kSpace)
 
     ### The k-point at which we plot the field profile
@@ -41,12 +41,12 @@ def main():
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters
-    h = 0.3      # Thickness of the slab
-    edge = 0.6   # Edge of the square hole
-    dist = 0.05  # Distance between the two layers 
-    delta1 = 0.0 # Relative displacement along the x-direction
-    delta2 = 0.0 # Relative displacement along the y-direction
-    Lz = 10.0    # The height of the unit cell along the z-direction
+    h = 0.35      # Thickness of the slab
+    edge = 0.4    # Edge of the square hole
+    dist = 0.05   # Distance between the two layers 
+    delta1 = 0.20 # Relative displacement along the x-direction
+    delta2 = 0.20 # Relative displacement along the y-direction
+    Lz = 10.0     # The height of the unit cell along the z-direction
 
     print('# Thickness of the slab h = '+str(h))
     print('# Edge of the square hole b = '+str(edge))
@@ -60,11 +60,11 @@ def main():
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Number of k-points to interpolate between 2 high-symmetry points
-    Nk = 29  
+    Nk = 49  
     print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     ### Show figure (Yes/No)
-    show_fig = 'Yes'
+    show_fig = 'No'
     print('# Show the figure: '+str(show_fig))
 
     ### Materials
@@ -170,6 +170,8 @@ def main():
         PlotBand_BrillouinZone(number,freqs,Nk,namesave,show_fig)
     elif kSpace == 'M':
         PlotBand_M(number,freqs,Nk,namesave,show_fig)
+    elif kSpace == 'Gamma-M':
+        PlotBand_GammaM(number,freqs,Nk,namesave,show_fig)
     else:
         print('ERROR! The k-point has not been in the allowed list yet')
         exit()
