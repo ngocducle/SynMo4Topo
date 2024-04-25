@@ -44,8 +44,8 @@ def main():
     h = 0.35      # Thickness of the slab
     edge = 0.4    # Edge of the square hole
     dist = 0.05   # Distance between the two layers 
-    delta1 = 0.20 # Relative displacement along the x-direction
-    delta2 = 0.20 # Relative displacement along the y-direction
+    delta1 = 0.45 # Relative displacement along the x-direction
+    delta2 = 0.45 # Relative displacement along the y-direction
     Lz = 10.0     # The height of the unit cell along the z-direction
 
     print('# Thickness of the slab h = '+str(h))
