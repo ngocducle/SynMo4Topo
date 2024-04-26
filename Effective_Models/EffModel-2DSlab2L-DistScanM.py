@@ -9,7 +9,7 @@ from EffectiveModels import EffModel_2DSlab2L_M
 
 ### ================================================================================ ###
 #                                                                                      #
-#           Fit the effective model for 2D photonic crystal slab monolayer             #
+#           Fit the effective model for 2D photonic crystal slab bilayer               #
 #                                                                                      #
 ### ================================================================================ ###
 

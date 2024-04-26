@@ -34,10 +34,10 @@ def EffModel_2DSlab2L_M(qx,qy,deltax,deltay,omegaM,v,U,W,V):
 
     K = 2.0*np.pi
 
-    Vpp = V * cmath.exp(- 0.5 * 1j * (qx+qy) * K)
-    Vpm = V * cmath.exp(- 0.5 * 1j * (qx-qy) * K)
-    Vmp = V * cmath.exp(- 0.5 * 1j * (-qx+qy) * K)
-    Vmm = V * cmath.exp(- 0.5 * 1j * (-qx-qy) * K)
+    Vpp = V * cmath.exp(- 0.5 * 1j * (deltax+deltay) * K)
+    Vpm = V * cmath.exp(- 0.5 * 1j * (deltax-deltay) * K)
+    Vmp = V * cmath.exp(- 0.5 * 1j * (-deltax+deltay) * K)
+    Vmm = V * cmath.exp(- 0.5 * 1j * (-deltax-deltay) * K)
 
     Hamiltonian = np.array(
         [

@@ -16,10 +16,10 @@ from EffectiveModels import EffModel_2DSlab1L_M
 ### ====================================================================================
 ### EVEN MODES: 
 # Values of the bands 
-E1calc_e = 0.40138452
-E2calc_e = 0.40156082
-E3calc_e = 0.33956213
-E4calc_e = 0.36841401
+E1calc_e = 0.31708008 
+E2calc_e = 0.31715896 
+E3calc_e = 0.28031946
+E4calc_e = 0.28729913
 
 # Energy at point M 
 omegaM_e = (E1calc_e + E2calc_e + E3calc_e + E4calc_e) / 4    
@@ -42,7 +42,7 @@ print('We = '+str(We))
 # X' = (-Kmax, 0)
 # M  = (0, 0) 
 
-Nk = 19 # number of momenta 
+Nk = 29 # number of momenta 
 Kmax = 0.05 # maximum value of q from M-point 
 
 qxarray1 = np.linspace(-Kmax,0,Nk+2)  # Gamma' -> X' 
@@ -81,7 +81,7 @@ for i in range(3*Nk+4):
     E4_e[i] = evalues[3] 
 
 # Load the band structure calculated from MPB
-PhotonicBands_e = np.loadtxt('2DSlab1L-CircularHole-h_0.3-r_0.4-zeven-M-Band.txt') 
+PhotonicBands_e = np.loadtxt('2DSlab1L-SquareHole-h_0.35-b_0.4-zeven-M-vicinity-Band.txt') 
 
 # Number of k-points 
 number_e = PhotonicBands_e[:,0]
@@ -95,10 +95,10 @@ Band4_e = PhotonicBands_e[:,4]
 ### ==========================================================================
 ### ODD MODES
 # Values of the bands 
-E1calc_o = 0.42742564
-E2calc_o = 0.42744911
-E3calc_o = 0.41345118
-E4calc_o = 0.47543789
+E1calc_o = 0.37835712   
+E2calc_o = 0.37836366
+E3calc_o = 0.36932345
+E4calc_o = 0.39456160
 
 # Energy at point M 
 omegaM_o = (E1calc_o + E2calc_o + E3calc_o + E4calc_o) / 4    
@@ -121,7 +121,7 @@ print('Wo = '+str(Wo))
 # X' = (-0.2, 0)
 # M  = (0, 0) 
 
-Nk = 19 # number of momenta 
+Nk = 29 # number of momenta 
 Kmax = -0.05 # maximum value of q from M-point 
 
 qxarray1 = np.linspace(-Kmax,0,Nk+2)  # Gamma' -> X' 
@@ -160,7 +160,7 @@ for i in range(3*Nk+4):
     E4_o[i] = evalues[3] 
 
 # Load the band structure calculated from MPB
-PhotonicBands_o = np.loadtxt('2DSlab1L-CircularHole-h_0.3-r_0.4-zodd-M-Band.txt') 
+PhotonicBands_o = np.loadtxt('2DSlab1L-SquareHole-h_0.35-b_0.4-zodd-M-vicinity-Band.txt') 
 
 # Number of k-points 
 number_o = PhotonicBands_o[:,0]
@@ -174,7 +174,7 @@ Band4_o = PhotonicBands_o[:,4]
 ### ===========================================================================
 ### Load the light-cone
 # Load the light cone 
-LightCone = np.loadtxt('PMMA-zeven-M-Kmax005.txt')
+LightCone = np.loadtxt('PMMA-zeven-Mvicinity-Nk29.txt')
 LightConeMomenta = LightCone[:,0]
 LightConeEnergy = LightCone[:,1]
 
@@ -196,21 +196,21 @@ plt.plot(number_e, Band4_e, 'o', markersize = 2,
 plt.plot(index, E1_o, color = 'red')  
 plt.plot(index, E2_o, color = 'red') 
 plt.plot(index, E3_o, color = 'red')
-plt.plot(index[34:44], E4_o[34:44], color = 'red')
+plt.plot(index, E4_o, color = 'red')
 plt.plot(number_o, Band1_o, 'o', markersize = 2, 
     markerfacecolor = 'red', markeredgecolor = 'red')
 plt.plot(number_o, Band2_o, 'o', markersize = 2, 
     markerfacecolor = 'red', markeredgecolor = 'red')
 plt.plot(number_o, Band3_o, 'o', markersize = 2, 
     markerfacecolor = 'red', markeredgecolor = 'red')
-plt.plot(number_o[34:44], Band4_o[34:44], 'o', markersize = 2, 
+plt.plot(number_o, Band4_o, 'o', markersize = 2, 
     markerfacecolor = 'red', markeredgecolor = 'red') 
 plt.plot(LightConeMomenta, LightConeEnergy, linewidth = 3, color = 'black')
 ax.fill_between(LightConeMomenta, LightConeEnergy, 0.5, facecolor = 'green') 
 plt.vlines(Nk+1, 0, 1, linestyle = 'dashed', color = 'black') 
 plt.vlines(2*(Nk+1),0,1, linestyle = 'dashed', color = 'black') 
 plt.xlim(0,3*(Nk+1))
-plt.ylim(0.3,0.5)         
+plt.ylim(0.25,0.5)         
 tick_locs = [0, Nk+1, 2*(Nk+1), 3*(Nk+1)]  
 tick_labs = [ r'$\Gamma \prime$', r'$X\prime$', 'M', r'$\Gamma \prime$' ]
 ax.set_xticks(tick_locs) 

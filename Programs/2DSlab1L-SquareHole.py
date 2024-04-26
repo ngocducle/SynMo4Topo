@@ -24,12 +24,12 @@ def main():
 
     ### The light polarization
     # Choose between: 'all', 'zeven', 'zodd' 
-    polarization = 'zeven'
+    polarization = 'zodd'
     print('# Polarization = '+polarization)
 
     ### The part of the momentum space to plot the band structure
     # Choose between: 'BZ', 'M-vicinity' 
-    kSpace = 'BZ'
+    kSpace = 'M-vicinity'
     print('# The part of the momentum space to simulate:'+kSpace)
 
     ### The k-point at which we plot the field profile
@@ -161,7 +161,7 @@ def main():
     ### Plot the band structure
     if kSpace == 'BZ':
         PlotBand_BrillouinZone(number,freqs,Nk,namesave,show_fig)
-    elif kSpace == 'M':
+    elif kSpace == 'M-vicinity':
         PlotBand_M(number,freqs,Nk,namesave,show_fig)
     else:
         print('ERROR! The k-point has not been in the allowed list yet')
