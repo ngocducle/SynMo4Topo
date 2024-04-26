@@ -302,6 +302,14 @@ def _2DSlab2LSquareHole(h,Lz,edge,dist,delta1,delta2,
 
         ToInterpolate = 'No'
 
+    elif kSpace == 'Gamma-M-Mvicinity': # Run along the line Gamma-M: kx=ky, close to M
+        k_points = [
+            mp.Vector3(0.4,0.4,0.0),    # A point in the line Gamma-M
+            mp.Vector3(0.5,0.5,0.0)     # M
+        ]
+
+        ToInterpolate = 'Yes'
+
     else:
         print('ERROR! The k-point has not been in the allowed list yet')
         exit()

@@ -23,12 +23,12 @@ def main():
     print('# Polarization = '+polarization)
 
     ### The part of the momentum space to plot the band structure
-    # Choose between: 'BZ', 'Gamma-M', 'M', 'M-vicinity'
-    kSpace = 'Gamma-M' 
+    # Choose between: 'BZ', 'Gamma-M', 'M', 'M-vicinity', 'Gamma-M-Mvicinity'
+    kSpace = 'Gamma-M-Mvicinity' 
     print('# The part of the momentum space to simulate:'+kSpace) 
 
     ### Resolution 
-    resolution = mp.Vector3(16,16,16)   # pixels/a 
+    resolution = mp.Vector3(8,8,8)   # pixels/a 
     print('# The resolution:'+str(resolution)) 
 
     ### Geometrical parameters 
@@ -43,7 +43,7 @@ def main():
     print('# Interlayer distance dist = '+str(dist))
 
     ### The array of shift delta 
-    Ndelta = 51 
+    Ndelta = 6 
     delta_array = np.linspace(0.0,0.5,Ndelta)
     print('# The array of delta is: ')
     print(delta_array)
