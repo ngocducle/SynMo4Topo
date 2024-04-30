@@ -17,7 +17,7 @@ from EffectiveModels import EffModel_2DSlab2L_M
 ### Calculate the modes arising from monolayer EVEN bands
 
 # Frequency at the M point
-omegaMe = 0.37773038
+omegaMe = 0.300464408
 print('omegaMe = '+str(omegaMe))
 
 # Group velocity 
@@ -25,11 +25,11 @@ ve = 0.35
 print('Group velocity = '+str(ve))
 
 # Counter-propagating coupling strength 
-Ue = -0.02365418
+Ue = -0.016615673
 print('Ue = '+str(Ue))
 
 # Orthogonally-propagating coupling strength
-We = 0.00721296
+We = 0.001744918
 print('We = '+str(We))
 
 # Interlayer coupling strength at zero interlayer distance
@@ -41,18 +41,18 @@ d0e = 0.35
 print('d0e = '+str(d0e))
 
 # The interlayer distance
-dist = 0.00
+dist = 2.0
 print('Interlayer distance dist = '+str(dist))
 
 Ve = V0e*np.exp(-dist/d0e) 
 
 # The array of intrinsic momenta
-Nk = 101 
+Nk = 201 
 k_array = np.linspace(-0.1,0.1,Nk)
 #k_array = [0.0,0.001]
 
 # The array of synthetic momenta 
-Ndelta = 101
+Ndelta = 201
 delta_array = np.linspace(-0.5,0.5,Ndelta)
 #delta_array = [0.0,0.01]
 
@@ -89,7 +89,7 @@ for i in range(Nk):
 ### Calculate the modes arising from monolayer ODD bands
 
 # Frequency at the M point
-omegaMo = 0.435940955
+omegaMo = 0.380151458
 print('omegaMo = '+str(omegaMo))
 
 # Group velocity 
@@ -97,11 +97,11 @@ vo = 0.41
 print('Group velocity = '+str(vo))
 
 # Counter-propagating coupling strength 
-Uo = 0.008515315
+Uo = 0.001794338
 print('Uo = '+str(Uo))
 
 # Orthogonally-propagating coupling strength
-Wo = 0.015496678
+Wo = 0.006309538
 print('Wo = '+str(Wo)) 
 
 # Interlayer coupling strength amplitude
@@ -123,6 +123,7 @@ Eodd6 = np.empty((Nk,Ndelta),dtype=complex)
 Eodd7 = np.empty((Nk,Ndelta),dtype=complex)
 Eodd8 = np.empty((Nk,Ndelta),dtype=complex)
 
+"""
 ### Calculate the energy bands of bands arsing from 1L even modes 
 for i in range(Nk):
     for j in range(Ndelta):
@@ -140,6 +141,7 @@ for i in range(Nk):
         Eodd6[i,j] = evalues[5]
         Eodd7[i,j] = evalues[6]
         Eodd8[i,j] = evalues[7]
+"""
 
 
 ### Plot the dispersion surface
@@ -155,13 +157,13 @@ print(np.shape(Y))
 print(Y)
 
 ax = plt.figure(figsize=(12,10)).add_subplot(projection='3d')
-surfe1 = ax.plot_surface(X,Y,Eeven1,cmap='winter')
-surfe2 = ax.plot_surface(X,Y,Eeven2,cmap='winter')
-surfe3 = ax.plot_surface(X,Y,Eeven3,cmap='winter')
-surfe4 = ax.plot_surface(X,Y,Eeven4,cmap='winter')
-surfe5 = ax.plot_surface(X,Y,Eeven5,cmap='winter')
-surfe6 = ax.plot_surface(X,Y,Eeven6,cmap='winter')
-surfe7 = ax.plot_surface(X,Y,Eeven7,cmap='winter')
+#surfe1 = ax.plot_surface(X,Y,Eeven1,cmap='winter')
+#surfe2 = ax.plot_surface(X,Y,Eeven2,cmap='spring')
+#surfe3 = ax.plot_surface(X,Y,Eeven3,cmap='autumn')
+#surfe4 = ax.plot_surface(X,Y,Eeven4,cmap='summer')
+#surfe5 = ax.plot_surface(X,Y,Eeven5,cmap='summer')
+#surfe6 = ax.plot_surface(X,Y,Eeven6,cmap='autumn')
+surfe7 = ax.plot_surface(X,Y,Eeven7,cmap='spring')
 surfe8 = ax.plot_surface(X,Y,Eeven8,cmap='winter')
 
 #surfo1 = ax.plot_surface(X,Y,Eodd1,cmap='Blues')
@@ -170,12 +172,12 @@ surfe8 = ax.plot_surface(X,Y,Eeven8,cmap='winter')
 #surfo4 = ax.plot_surface(X,Y,Eodd4,cmap='Blues')
 
 #ax.set_zlim(0.345,0.36)
-#ax.set_xticks([-0.01,0.0,0.01])
-#ax.set_yticks([-0.20,-0.10,0,0.10,0.20])
+ax.set_xticks([0.4,0.45,0.5,0.55,0.6])
+ax.set_yticks([-0.50,-0.25,0,0.25,0.50])
 ax.set_xlabel(r'$k a / (2 \pi)$',fontsize=14)
 ax.set_ylabel(r'$\delta$',fontsize=14)
 ax.set_title('dist = '+str(dist),fontsize=14)
-ax.view_init(elev=2.5,azim=-10,roll=0) # View from delta side
-#ax.view_init(elev=2.5,azim=45,roll=0) # View from q side 
+ax.view_init(elev=5,azim=75,roll=0) # View from delta side
+#ax.view_init(elev=5,azim=15,roll=0) # View from q side 
 plt.savefig('dist_'+str(dist)+'.png')
 plt.show()
