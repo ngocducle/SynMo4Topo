@@ -29,7 +29,7 @@ def main():
 
     ### The part of the momentum space to plot the band structure
     # Choose between: 'BZ', 'M-vicinity' 
-    kSpace = 'M-vicinity'
+    kSpace = 'BZ'
     print('# The part of the momentum space to simulate:'+kSpace)
 
     ### The k-point at which we plot the field profile
@@ -37,7 +37,7 @@ def main():
     print('# The k-point at which we plot the field profile:'+str(k_field))
 
     ### Resolution 
-    resolution = mp.Vector3(50,50,50)   # pixels/a
+    resolution = mp.Vector3(25,25,25)   # pixels/a
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters

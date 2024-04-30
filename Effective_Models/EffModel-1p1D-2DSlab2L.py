@@ -41,18 +41,20 @@ d0e = 0.35
 print('d0e = '+str(d0e))
 
 # The interlayer distance
-dist = 0.01
+dist = 0.00
 print('Interlayer distance dist = '+str(dist))
 
 Ve = V0e*np.exp(-dist/d0e) 
 
 # The array of intrinsic momenta
-Nk = 81 
-k_array = np.linspace(-0.01,0.01,Nk)
+Nk = 101 
+k_array = np.linspace(-0.1,0.1,Nk)
+#k_array = [0.0,0.001]
 
 # The array of synthetic momenta 
-Ndelta = 151
-delta_array = np.linspace(-0.25,0.25,Ndelta)
+Ndelta = 101
+delta_array = np.linspace(-0.5,0.5,Ndelta)
+#delta_array = [0.0,0.01]
 
 # Initiate the arrays for frequencies
 Eeven1 = np.empty((Nk,Ndelta),dtype=complex)
@@ -99,7 +101,7 @@ Uo = 0.008515315
 print('Uo = '+str(Uo))
 
 # Orthogonally-propagating coupling strength
-Wo = 0.0154966775
+Wo = 0.015496678
 print('Wo = '+str(Wo)) 
 
 # Interlayer coupling strength amplitude
@@ -143,7 +145,7 @@ for i in range(Nk):
 ### Plot the dispersion surface
 X, Y = np.meshgrid(k_array,delta_array)
 
-X = X.transpose()
+X = X.transpose()+0.5
 Y = Y.transpose()
 
 print(np.shape(X))
@@ -152,15 +154,15 @@ print(X)
 print(np.shape(Y))
 print(Y)
 
-ax = plt.figure().add_subplot(projection='3d')
-#surfe1 = ax.plot_surface(X,Y,Eeven1,cmap='winter')
+ax = plt.figure(figsize=(12,10)).add_subplot(projection='3d')
+surfe1 = ax.plot_surface(X,Y,Eeven1,cmap='winter')
 surfe2 = ax.plot_surface(X,Y,Eeven2,cmap='winter')
 surfe3 = ax.plot_surface(X,Y,Eeven3,cmap='winter')
-#surfe4 = ax.plot_surface(X,Y,Eeven4,cmap='winter')
-#surfe5 = ax.plot_surface(X,Y,Eeven5)
-#surfe6 = ax.plot_surface(X,Y,Eeven6)
-#surfe7 = ax.plot_surface(X,Y,Eeven7)
-#surfe8 = ax.plot_surface(X,Y,Eeven8)
+surfe4 = ax.plot_surface(X,Y,Eeven4,cmap='winter')
+surfe5 = ax.plot_surface(X,Y,Eeven5,cmap='winter')
+surfe6 = ax.plot_surface(X,Y,Eeven6,cmap='winter')
+surfe7 = ax.plot_surface(X,Y,Eeven7,cmap='winter')
+surfe8 = ax.plot_surface(X,Y,Eeven8,cmap='winter')
 
 #surfo1 = ax.plot_surface(X,Y,Eodd1,cmap='Blues')
 #surfo2 = ax.plot_surface(X,Y,Eodd2,cmap='Blues')
@@ -168,11 +170,12 @@ surfe3 = ax.plot_surface(X,Y,Eeven3,cmap='winter')
 #surfo4 = ax.plot_surface(X,Y,Eodd4,cmap='Blues')
 
 #ax.set_zlim(0.345,0.36)
-ax.set_xticks([-0.01,0.0,0.01])
-ax.set_yticks([-0.20,-0.10,0,0.10,0.20])
-ax.set_xlabel(r'$q a / (2 \pi)$',fontsize=14)
+#ax.set_xticks([-0.01,0.0,0.01])
+#ax.set_yticks([-0.20,-0.10,0,0.10,0.20])
+ax.set_xlabel(r'$k a / (2 \pi)$',fontsize=14)
 ax.set_ylabel(r'$\delta$',fontsize=14)
 ax.set_title('dist = '+str(dist),fontsize=14)
-ax.view_init(elev=2.5,azim=-10,roll=0)
+ax.view_init(elev=2.5,azim=-10,roll=0) # View from delta side
+#ax.view_init(elev=2.5,azim=45,roll=0) # View from q side 
 plt.savefig('dist_'+str(dist)+'.png')
 plt.show()
