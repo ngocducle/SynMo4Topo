@@ -14,6 +14,46 @@ from EffectiveModels import EffModel_2DSlab2L_M
 #                                                                                      #
 ### ================================================================================ ###
 
+### The interlayer distance
+dist = 0.0
+print('Interlayer distance dist = '+str(dist)) 
+
+# The array of intrinsic momenta
+Nk = 201 
+k_array = np.linspace(-0.1,0.1,Nk)
+#k_array = [0.0,0.001]
+
+# The array of synthetic momenta 
+Ndelta = 201
+delta_array = np.linspace(-0.5,0.5,Ndelta)
+#delta_array = [0.0,0.01]
+
+# The frequency of the light-cone at Gamma point
+kLightCone_Gamma = 0.0 
+LightCone_Gamma = 0.0 
+
+# The frequency of the light-cone at the X point
+kLightCone_X = 0.5
+LightCone_X = 0.34246575
+
+# Interpolate the array of light-cone
+kLightCone_array = k_array + 0.5 
+LightCone_array = np.zeros(Nk)
+
+for i in np.arange(Nk):
+    if kLightCone_array[i] <= 0.5:
+        LightCone_array[i] = LightCone_X*kLightCone_array[i] / kLightCone_X
+    elif kLightCone_array[i] <= 1.0:
+        LightCone_array[i] = LightCone_X*(kLightCone_array[i]-1.0) / (kLightCone_X-1.0)
+    else:
+        print('# Error in the calculation of the light cone dispersion')
+
+# Transfer to 2D
+LightCone = np.zeros((Nk,Ndelta))
+
+for j in np.arange(Ndelta):
+    LightCone[:,j] = LightCone_array
+
 ### Calculate the modes arising from monolayer EVEN bands
 
 # Frequency at the M point
@@ -39,22 +79,7 @@ print('V0e = '+str(V0e))
 # Characteristic length for interlayer coupling
 d0e = 0.35 
 print('d0e = '+str(d0e))
-
-# The interlayer distance
-dist = 1.3
-print('Interlayer distance dist = '+str(dist))
-
 Ve = V0e*np.exp(-dist/d0e) 
-
-# The array of intrinsic momenta
-Nk = 201 
-k_array = np.linspace(-0.1,0.1,Nk)
-#k_array = [0.0,0.001]
-
-# The array of synthetic momenta 
-Ndelta = 201
-delta_array = np.linspace(-0.5,0.5,Ndelta)
-#delta_array = [0.0,0.01]
 
 # Initiate the arrays for frequencies
 Eeven1 = np.empty((Nk,Ndelta),dtype=complex)
@@ -157,6 +182,7 @@ print(np.shape(Y))
 print(Y)
 
 ax = plt.figure(figsize=(12,10)).add_subplot(projection='3d')
+light_surface = ax.plot_surface(X,Y,LightCone)
 surfe1 = ax.plot_surface(X,Y,Eeven1,cmap='winter')
 surfe2 = ax.plot_surface(X,Y,Eeven2,cmap='spring')
 surfe3 = ax.plot_surface(X,Y,Eeven3,cmap='autumn')
@@ -171,7 +197,7 @@ surfe8 = ax.plot_surface(X,Y,Eeven8,cmap='winter')
 #surfo3 = ax.plot_surface(X,Y,Eodd3,cmap='Blues')
 #surfo4 = ax.plot_surface(X,Y,Eodd4,cmap='Blues')
 
-#ax.set_zlim(0.345,0.36)
+#ax.set_zlim(0.20,LightCone_X)
 ax.set_xticks([0.40,0.45,0.5,0.55,0.60])
 ax.set_yticks([-0.50,-0.25,0,0.25,0.50])
 ax.set_xlabel(r'$k_x a / (2 \pi)$',fontsize=14)
