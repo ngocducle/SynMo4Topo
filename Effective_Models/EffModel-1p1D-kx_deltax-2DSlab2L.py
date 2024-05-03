@@ -20,12 +20,12 @@ print('Interlayer distance dist = '+str(dist))
 
 # The array of intrinsic momenta
 Nk = 201 
-k_array = np.linspace(-0.1,0.1,Nk)
+k_array = np.linspace(-0.05,0.05,Nk)
 #k_array = [0.0,0.001]
 
 # The array of synthetic momenta 
 Ndelta = 201
-delta_array = np.linspace(-0.5,0.5,Ndelta)
+delta_array = np.linspace(0.0,1.0,Ndelta)
 #delta_array = [0.0,0.01]
 
 # The frequency of the light-cone at Gamma point
@@ -33,20 +33,26 @@ kLightCone_Gamma = 0.0
 LightCone_Gamma = 0.0 
 
 # The frequency of the light-cone at the X point
-kLightCone_X = 0.5
+kxLightCone_X = 0.5
+kyLightCone_X = 0.0 
 LightCone_X = 0.34246575
 
 # Interpolate the array of light-cone
-kLightCone_array = k_array + 0.5 
+kxLightCone_array = k_array + 0.5
+kyLightCone_array = np.zeros(Nk) 
 LightCone_array = np.zeros(Nk)
 
 for i in np.arange(Nk):
-    if kLightCone_array[i] <= 0.5:
-        LightCone_array[i] = LightCone_X*kLightCone_array[i] / kLightCone_X
-    elif kLightCone_array[i] <= 1.0:
-        LightCone_array[i] = LightCone_X*(kLightCone_array[i]-1.0) / (kLightCone_X-1.0)
-    else:
-        print('# Error in the calculation of the light cone dispersion')
+    kxval = kxLightCone_array[i]
+    kyval = 0.5
+
+    if (kxval > 0.5):
+        kxval = kxval - 1.0 
+
+    if (kyval > 0.5):
+        kyval = kyval - 1.0 
+
+    LightCone_array[i] = LightCone_X/kxLightCone_X * np.sqrt(kxval**2+kyval**2)
 
 # Transfer to 2D
 LightCone = np.zeros((Nk,Ndelta))
@@ -111,6 +117,18 @@ for i in range(Nk):
 
 #print(np.shape(Eeven1))
 
+for i in range(Nk):
+    for j in range(Ndelta):
+        Eeven1[i,j] = min(Eeven1[i,j],LightCone[i,j])
+        Eeven2[i,j] = min(Eeven2[i,j],LightCone[i,j])
+        Eeven3[i,j] = min(Eeven3[i,j],LightCone[i,j])
+        Eeven4[i,j] = min(Eeven4[i,j],LightCone[i,j])
+        Eeven5[i,j] = min(Eeven5[i,j],LightCone[i,j])
+        Eeven6[i,j] = min(Eeven6[i,j],LightCone[i,j])
+        Eeven7[i,j] = min(Eeven7[i,j],LightCone[i,j])
+        Eeven8[i,j] = min(Eeven8[i,j],LightCone[i,j])
+
+
 ### Calculate the modes arising from monolayer ODD bands
 
 # Frequency at the M point
@@ -166,6 +184,18 @@ for i in range(Nk):
         Eodd6[i,j] = evalues[5]
         Eodd7[i,j] = evalues[6]
         Eodd8[i,j] = evalues[7]
+
+for i in range(Nk):
+    for j in range(Ndelta):
+        Eodd1[i,j] = min(Eodd1[i,j],LightCone[i,j])
+        Eodd2[i,j] = min(Eodd2[i,j],LightCone[i,j])
+        Eodd3[i,j] = min(Eodd3[i,j],LightCone[i,j])
+        Eodd4[i,j] = min(Eodd4[i,j],LightCone[i,j])
+        Eodd5[i,j] = min(Eodd5[i,j],LightCone[i,j])
+        Eodd6[i,j] = min(Eodd6[i,j],LightCone[i,j])
+        Eodd7[i,j] = min(Eodd7[i,j],LightCone[i,j])
+        Eodd8[i,j] = min(Eodd8[i,j],LightCone[i,j])
+        
 """
 
 
@@ -182,15 +212,15 @@ print(np.shape(Y))
 print(Y)
 
 ax = plt.figure(figsize=(12,10)).add_subplot(projection='3d')
-light_surface = ax.plot_surface(X,Y,LightCone)
-surfe1 = ax.plot_surface(X,Y,Eeven1,cmap='winter')
-surfe2 = ax.plot_surface(X,Y,Eeven2,cmap='spring')
-surfe3 = ax.plot_surface(X,Y,Eeven3,cmap='autumn')
-surfe4 = ax.plot_surface(X,Y,Eeven4,cmap='summer')
+#light_surface = ax.plot_surface(X,Y,LightCone,cmap='gray')
+#surfe1 = ax.plot_surface(X,Y,Eeven1,cmap='winter')
+#surfe2 = ax.plot_surface(X,Y,Eeven2,cmap='spring')
+#surfe3 = ax.plot_surface(X,Y,Eeven3,cmap='autumn')
+#surfe4 = ax.plot_surface(X,Y,Eeven4,cmap='summer')
 surfe5 = ax.plot_surface(X,Y,Eeven5,cmap='summer')
 surfe6 = ax.plot_surface(X,Y,Eeven6,cmap='autumn')
-surfe7 = ax.plot_surface(X,Y,Eeven7,cmap='spring')
-surfe8 = ax.plot_surface(X,Y,Eeven8,cmap='winter')
+#surfe7 = ax.plot_surface(X,Y,Eeven7,cmap='spring')
+#surfe8 = ax.plot_surface(X,Y,Eeven8,cmap='winter')
 
 #surfo1 = ax.plot_surface(X,Y,Eodd1,cmap='Blues')
 #surfo2 = ax.plot_surface(X,Y,Eodd2,cmap='Blues')
@@ -198,12 +228,13 @@ surfe8 = ax.plot_surface(X,Y,Eeven8,cmap='winter')
 #surfo4 = ax.plot_surface(X,Y,Eodd4,cmap='Blues')
 
 #ax.set_zlim(0.20,LightCone_X)
-ax.set_xticks([0.40,0.45,0.5,0.55,0.60])
-ax.set_yticks([-0.50,-0.25,0,0.25,0.50])
+#ax.set_xticks([0.40,0.45,0.5,0.55,0.60])
+#ax.set_yticks([-0.50,-0.25,0,0.25,0.50])
 ax.set_xlabel(r'$k_x a / (2 \pi)$',fontsize=14)
 ax.set_ylabel(r'$\delta_x$',fontsize=14)
 ax.set_title('dist = '+str(dist),fontsize=14)
-ax.view_init(elev=10,azim=75,roll=0) # View from delta side
-#ax.view_init(elev=5,azim=15,roll=0) # View from q side 
+#ax.view_init(elev=5,azim=75,roll=0)  # View from delta side
+#ax.view_init(elev=5,azim=45,roll=0)  # View from the midpoint
+ax.view_init(elev=5,azim=15,roll=0) # View from q side 
 plt.savefig('dist_'+str(dist)+'.png')
 plt.show()

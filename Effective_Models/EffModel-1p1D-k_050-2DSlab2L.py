@@ -41,7 +41,7 @@ d0e = 0.35
 print('d0e = '+str(d0e))
 
 # The interlayer distance
-dist = 0.8881
+dist = 0.95
 print('Interlayer distance dist = '+str(dist))
 
 Ve = V0e*np.exp(-dist/d0e) 
@@ -153,7 +153,7 @@ plt.plot(delta_array,Eeven3,color='red')
 #plt.plot(delta_array,Eodd8,color='blue')
 
 ax.set_xticks([-0.50,-0.25,0,0.25,0.50])
-ax.set_xlabel(r'$\delta$',fontsize=14)
-ax.set_title('k = 0.5, dist = '+str(dist),fontsize=14)
+ax.set_xlabel(r'$\delta_x$',fontsize=14)
+ax.set_title('k_x = 0.5, k_y = 0.0, dist = '+str(dist),fontsize=14)
 plt.savefig('k_050-dist_'+str(dist)+'.png')
 plt.show()
