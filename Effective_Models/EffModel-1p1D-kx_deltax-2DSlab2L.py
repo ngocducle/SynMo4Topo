@@ -15,7 +15,7 @@ from EffectiveModels import EffModel_2DSlab2L_M
 ### ================================================================================ ###
 
 ### The interlayer distance
-dist = 0.0
+dist = 2.0
 print('Interlayer distance dist = '+str(dist)) 
 
 # The array of intrinsic momenta
@@ -213,14 +213,14 @@ print(Y)
 
 ax = plt.figure(figsize=(12,10)).add_subplot(projection='3d')
 #light_surface = ax.plot_surface(X,Y,LightCone,cmap='gray')
-#surfe1 = ax.plot_surface(X,Y,Eeven1,cmap='winter')
-#surfe2 = ax.plot_surface(X,Y,Eeven2,cmap='spring')
-#surfe3 = ax.plot_surface(X,Y,Eeven3,cmap='autumn')
-#surfe4 = ax.plot_surface(X,Y,Eeven4,cmap='summer')
+surfe1 = ax.plot_surface(X,Y,Eeven1,cmap='winter')
+surfe2 = ax.plot_surface(X,Y,Eeven2,cmap='spring')
+surfe3 = ax.plot_surface(X,Y,Eeven3,cmap='autumn')
+surfe4 = ax.plot_surface(X,Y,Eeven4,cmap='summer')
 surfe5 = ax.plot_surface(X,Y,Eeven5,cmap='summer')
 surfe6 = ax.plot_surface(X,Y,Eeven6,cmap='autumn')
-#surfe7 = ax.plot_surface(X,Y,Eeven7,cmap='spring')
-#surfe8 = ax.plot_surface(X,Y,Eeven8,cmap='winter')
+surfe7 = ax.plot_surface(X,Y,Eeven7,cmap='spring')
+surfe8 = ax.plot_surface(X,Y,Eeven8,cmap='winter')
 
 #surfo1 = ax.plot_surface(X,Y,Eodd1,cmap='Blues')
 #surfo2 = ax.plot_surface(X,Y,Eodd2,cmap='Blues')
@@ -228,13 +228,15 @@ surfe6 = ax.plot_surface(X,Y,Eeven6,cmap='autumn')
 #surfo4 = ax.plot_surface(X,Y,Eodd4,cmap='Blues')
 
 #ax.set_zlim(0.20,LightCone_X)
-#ax.set_xticks([0.40,0.45,0.5,0.55,0.60])
-#ax.set_yticks([-0.50,-0.25,0,0.25,0.50])
+ax.set_xticks([0.55,0.525,0.50,0.475,0.45])
+ax.set_yticks([0.0,0.25,0.5,0.75,1.0])
 ax.set_xlabel(r'$k_x a / (2 \pi)$',fontsize=14)
 ax.set_ylabel(r'$\delta_x$',fontsize=14)
 ax.set_title('dist = '+str(dist),fontsize=14)
 #ax.view_init(elev=5,azim=75,roll=0)  # View from delta side
 #ax.view_init(elev=5,azim=45,roll=0)  # View from the midpoint
 ax.view_init(elev=5,azim=15,roll=0) # View from q side 
+#ax.view_init(elev=-1,azim=90,roll=0) # Face view
+#ax.view_init(elev=-1,azim=0,roll=0)  # Side view
 plt.savefig('dist_'+str(dist)+'.png')
 plt.show()
