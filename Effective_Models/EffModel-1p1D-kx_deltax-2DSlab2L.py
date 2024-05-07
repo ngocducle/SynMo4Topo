@@ -15,7 +15,7 @@ from EffectiveModels import EffModel_2DSlab2L_M
 ### ================================================================================ ###
 
 ### The interlayer distance
-dist = 2.0
+dist = 0.3
 print('Interlayer distance dist = '+str(dist)) 
 
 # The array of intrinsic momenta
@@ -25,7 +25,7 @@ k_array = np.linspace(-0.05,0.05,Nk)
 
 # The array of synthetic momenta 
 Ndelta = 201
-delta_array = np.linspace(0.0,1.0,Ndelta)
+delta_array = np.linspace(-0.5,0.5,Ndelta)
 #delta_array = [0.0,0.01]
 
 # The frequency of the light-cone at Gamma point
@@ -229,7 +229,7 @@ surfe8 = ax.plot_surface(X,Y,Eeven8,cmap='winter')
 
 #ax.set_zlim(0.20,LightCone_X)
 ax.set_xticks([0.55,0.525,0.50,0.475,0.45])
-ax.set_yticks([0.0,0.25,0.5,0.75,1.0])
+#ax.set_yticks([0.0,0.25,0.5,0.75,1.0])
 ax.set_xlabel(r'$k_x a / (2 \pi)$',fontsize=14)
 ax.set_ylabel(r'$\delta_x$',fontsize=14)
 ax.set_title('dist = '+str(dist),fontsize=14)
