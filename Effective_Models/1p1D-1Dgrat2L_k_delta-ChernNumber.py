@@ -77,16 +77,19 @@ def Berry_curvature_q_delta(q,delta,v,U1,U2,V):
 
                 curvature[i] = curvature[i] + S 
 
-    return curvature 
+    return evalues,curvature 
 
 ##### The MAIN program goes here
 def main():
-    U = 1.0 
-    Delta = 0.05*U 
+    U = 0.0208
+    Delta = -0.05*U
+    Gamma = -0.05*U  
     U1 = U+Delta
     U2 = U-Delta  
-    v = 0.5 
-    V = 0.8 
+    V = np.sqrt(U**2-Delta**2)-Gamma 
+    ng = 3.1024 
+    v = 1.0/(2.0*np.pi*ng)
+    
 
     """
     q = 0.1 
@@ -104,6 +107,9 @@ def main():
     Ndelta = 201
     delta_array = np.linspace(-0.5,0.5,Ndelta) 
 
+    ### Arrays of energy 
+    Energy = np.zeros((Nk,Ndelta,4))
+
     ### Array of Berry curvature 
     Berry_curvature = np.zeros((Nk,Ndelta,4))
 
@@ -112,7 +118,8 @@ def main():
         for j in range(Ndelta):
             q = k_array[i]
             delta = delta_array[j] 
-            Berry_curvature[i,j,:] = Berry_curvature_q_delta(q,delta,v,U1,U2,V) 
+            evalues,Berry_curvature[i,j,:] = Berry_curvature_q_delta(q,delta,v,U1,U2,V) 
+            Energy[i,j,:] = evalues 
 
     print(Berry_curvature)
 
@@ -132,6 +139,12 @@ def main():
         norm = colors.Normalize(vmin=vmin,vmax=vmax)
         fig.colorbar(cm.ScalarMappable(norm=norm,cmap='RdBu'),
                     ax = ax)
+        
+        ax = plt.figure(figsize=(12,10)).add_subplot(projection='3d')
+        band1 = ax.plot_surface(X,Y,Energy[:,:,0].T)
+        band2 = ax.plot_surface(X,Y,Energy[:,:,1].T)
+        band3 = ax.plot_surface(X,Y,Energy[:,:,2].T)
+        band4 = ax.plot_surface(X,Y,Energy[:,:,3].T)
     
     plt.show()
 
