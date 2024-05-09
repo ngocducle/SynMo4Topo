@@ -43,7 +43,7 @@ def ddelta_1p1D_1Dgrat2L_X_k_delta(delta,V):
     dHddelta = np.array(
         [
             [0.0,0.0,-1j*np.pi*Vp,0.0],
-            [0.0,0.0,0.0,1j*np.pi*Vm],
+            [0.0,0.0,0.0,-1j*np.pi*Vm],
             [1j*np.pi*Vm,0.0,0.0,0.0],
             [0.0,-1j*np.pi*Vp,0.0,0.0] 
         ]
@@ -51,6 +51,7 @@ def ddelta_1p1D_1Dgrat2L_X_k_delta(delta,V):
 
     return dHddelta 
 
+"""
 ##### FUNCTION: function to calculate the Berry curvature 
 def Berry_curvature_q_delta(q,delta,v,U1,U2,V):
     H = _1p1D_1Dgrat2L_X_k_delta(q,delta,v,U1,U2,V) 
@@ -78,7 +79,8 @@ def Berry_curvature_q_delta(q,delta,v,U1,U2,V):
                 curvature[i] = curvature[i] + S 
 
     return evalues,curvature 
-
+"""
+    
 ##### The MAIN program goes here
 def main():
     U = 0.0208
@@ -89,16 +91,18 @@ def main():
     V = np.sqrt(U**2-Delta**2)-Gamma 
     ng = 3.1024 
     v = 1.0/(2.0*np.pi*ng)
+    
 
     ### Array of genuine momenta 
     Nk = 201
-    Kmax = 0.5
-    k_array = np.linspace(-Kmax,Kmax,Nk)
+    Kmax = 0.125
+    k_array = np.linspace(-Kmax,Kmax,Nk) 
 
     ### Array of intrinsic momenta
     Ndelta = 201
     delta_array = np.linspace(-0.5,0.5,Ndelta) 
 
+    """
     ### Arrays of energy 
     Energy = np.zeros((Nk,Ndelta,4))
 
@@ -117,15 +121,42 @@ def main():
             Energy[i,j,:] = evalues 
 
     #print(Berry_curvature)
+    """
+
+    ### Array of energy 
+    Energy = np.zeros((Nk,Ndelta,4)) 
+
+    ### Array of states 
+    States = np.zeros((Nk,Ndelta,4,4))
+
+    ### Calculate the energy eigenvalues and states
+    Energy, States = sla.eigh(np.array( \
+        [_1p1D_1Dgrat2L_X_k_delta(k,delta,v,U1,U2,V) \
+        for k in k_array for delta in delta_array]))  
+
+    ### Array of Berry curvature
+    Berry_curvature = np.zeros((Nk,Ndelta,4)) 
+
+    ### Array of Chern number
+    Chern_number = np.zeros(4)
+
+    ### Calculate the Berry curvature
 
     ### Calculate the Chern numbers 
     Chern_number = np.sum(Berry_curvature,axis = (0,1))*2.0*Kmax/(Nk*Ndelta*2.0*np.pi)
+    
+    #for n in range(4):
+    #    for i in range(Nk):
+    #        for j in range(Ndelta):
+    #            Chern_number[n] = Chern_number[n]+Berry_curvature[i,j,n]
 
-    print('# Chern numbers = ')    
+    #Chern_number = Chern_number / (Nk*Ndelta*2.0*np.pi)
+    
     print(Chern_number)
 
+"""
     ### Plot the figure 
-    X,Y = np.meshgrid(k_array+0.5,delta_array) 
+    X,Y = np.meshgrid(k_array,delta_array) 
 
     for i in range(4):
         fig,ax = plt.subplots()
@@ -141,24 +172,16 @@ def main():
         fig.colorbar(cm.ScalarMappable(norm=norm,cmap='RdBu'),
                     ax = ax)
         
-        
-    ax = plt.figure(figsize=(12,10)).add_subplot(projection='3d')
-    band1 = ax.plot_surface(X,Y,Energy[:,:,0].T,
-                            antialiased='True',
-                            linewidth=2)
-    band2 = ax.plot_surface(X,Y,Energy[:,:,1].T,
-                            antialiased='True',
-                            linewidth=2)
-    band3 = ax.plot_surface(X,Y,Energy[:,:,2].T,
-                            antialiased='True',
-                            linewidth=2)
-    band4 = ax.plot_surface(X,Y,Energy[:,:,3].T,
-                            antialiased='True',
-                            linewidth=2)
-    ax.set_xlabel(r'$ka/(2\pi)$',fontsize=14)
-    ax.set_ylabel(r'$\delta$',fontsize=14) 
-
+        ax = plt.figure(figsize=(12,10)).add_subplot(projection='3d')
+        band1 = ax.plot_surface(X,Y,Energy[:,:,0].T)
+        band2 = ax.plot_surface(X,Y,Energy[:,:,1].T)
+        band3 = ax.plot_surface(X,Y,Energy[:,:,2].T)
+        band4 = ax.plot_surface(X,Y,Energy[:,:,3].T)
+    
     plt.show()
+"""
+
+    
 
 if __name__ == '__main__':
     main()

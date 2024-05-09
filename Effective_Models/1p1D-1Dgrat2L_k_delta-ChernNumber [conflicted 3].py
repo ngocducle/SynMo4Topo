@@ -43,7 +43,7 @@ def ddelta_1p1D_1Dgrat2L_X_k_delta(delta,V):
     dHddelta = np.array(
         [
             [0.0,0.0,-1j*np.pi*Vp,0.0],
-            [0.0,0.0,0.0,1j*np.pi*Vm],
+            [0.0,0.0,0.0,-1j*np.pi*Vm],
             [1j*np.pi*Vm,0.0,0.0,0.0],
             [0.0,-1j*np.pi*Vp,0.0,0.0] 
         ]
@@ -89,11 +89,20 @@ def main():
     V = np.sqrt(U**2-Delta**2)-Gamma 
     ng = 3.1024 
     v = 1.0/(2.0*np.pi*ng)
+    
+
+    """
+    q = 0.1 
+    delta = 0.2 
+
+    F = Berry_curvature_q_delta(q,delta,v,U1,U2,V) 
+    print(F)
+    """ 
 
     ### Array of genuine momenta 
     Nk = 201
-    Kmax = 0.5
-    k_array = np.linspace(-Kmax,Kmax,Nk)
+    Kmax = 0.125
+    k_array = np.linspace(-Kmax,Kmax,Nk) 
 
     ### Array of intrinsic momenta
     Ndelta = 201
@@ -124,8 +133,9 @@ def main():
     print('# Chern numbers = ')    
     print(Chern_number)
 
+"""
     ### Plot the figure 
-    X,Y = np.meshgrid(k_array+0.5,delta_array) 
+    X,Y = np.meshgrid(k_array,delta_array) 
 
     for i in range(4):
         fig,ax = plt.subplots()
@@ -141,24 +151,16 @@ def main():
         fig.colorbar(cm.ScalarMappable(norm=norm,cmap='RdBu'),
                     ax = ax)
         
-        
-    ax = plt.figure(figsize=(12,10)).add_subplot(projection='3d')
-    band1 = ax.plot_surface(X,Y,Energy[:,:,0].T,
-                            antialiased='True',
-                            linewidth=2)
-    band2 = ax.plot_surface(X,Y,Energy[:,:,1].T,
-                            antialiased='True',
-                            linewidth=2)
-    band3 = ax.plot_surface(X,Y,Energy[:,:,2].T,
-                            antialiased='True',
-                            linewidth=2)
-    band4 = ax.plot_surface(X,Y,Energy[:,:,3].T,
-                            antialiased='True',
-                            linewidth=2)
-    ax.set_xlabel(r'$ka/(2\pi)$',fontsize=14)
-    ax.set_ylabel(r'$\delta$',fontsize=14) 
-
+        ax = plt.figure(figsize=(12,10)).add_subplot(projection='3d')
+        band1 = ax.plot_surface(X,Y,Energy[:,:,0].T)
+        band2 = ax.plot_surface(X,Y,Energy[:,:,1].T)
+        band3 = ax.plot_surface(X,Y,Energy[:,:,2].T)
+        band4 = ax.plot_surface(X,Y,Energy[:,:,3].T)
+    
     plt.show()
+"""
+
+    
 
 if __name__ == '__main__':
     main()
