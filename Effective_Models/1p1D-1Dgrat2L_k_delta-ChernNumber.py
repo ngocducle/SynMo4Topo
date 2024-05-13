@@ -83,7 +83,7 @@ def main():
     v = 1.0/(2.0*np.pi*ng)
 
     ### Array of genuine momenta 
-    Nk = 251
+    Nk = 201
     Kmax = 0.5
     k_array = np.linspace(-Kmax,Kmax,Nk)
 
@@ -125,100 +125,46 @@ def main():
 
     ### Plot the figure 
     X,Y = np.meshgrid(k_array+0.5,delta_array) 
+    cmap = 'coolwarm'
 
     maxabs = abs(F_array).max() 
     vmin, vmax = -maxabs, maxabs 
     norm = colors.Normalize(vmin=vmin,vmax=vmax)
 
-    cmap = 'rainbow'
-
-    """
     for i in range(4):
         fig,ax = plt.subplots()
-        ax.pcolormesh(X,Y,Berry_curvature[:,:,i].T,shading='gouraud',cmap=cmap)
+        ax.pcolormesh(X,Y,F_array[:,:,i].T,shading='gouraud',cmap=cmap)
         ax.set_xlabel('q',fontsize=14)
         ax.set_ylabel(r'$\delta$',fontsize=14)
         ax.set_title('Band '+str(i+1))
         fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),ax = ax)
         plt.savefig('Berry_curvature_Band_'+str(i+1)+'.png')
-    """
-    fig,ax = plt.subplots()
-    ax.pcolormesh(X,Y,F_array[:,:,0].T,shading='gouraud',cmap=cmap)
-    ax.set_xlabel('q',fontsize=14)
-    ax.set_ylabel(r'$\delta$',fontsize=14)
-    ax.set_title('Band 1')
-    fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),ax = ax)
-    plt.savefig('Berry_curvature_Band_1.png')
 
-    fig,ax = plt.subplots()
-    ax.pcolormesh(X,Y,F_array[:,:,1].T,shading='gouraud',cmap=cmap)
-    ax.set_xlabel('q',fontsize=14)
-    ax.set_ylabel(r'$\delta$',fontsize=14)
-    ax.set_title('Band 2')
-    fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),ax = ax)
-    plt.savefig('Berry_curvature_Band_2.png')
-
-    fig,ax = plt.subplots()
-    ax.pcolormesh(X,Y,F_array[:,:,2].T,shading='gouraud',cmap=cmap)
-    ax.set_xlabel('q',fontsize=14)
-    ax.set_ylabel(r'$\delta$',fontsize=14)
-    ax.set_title('Band 3')
-    fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),ax = ax)
-    plt.savefig('Berry_curvature_Band_3.png')
-
-    fig,ax = plt.subplots()
-    ax.pcolormesh(X,Y,F_array[:,:,3].T,shading='gouraud',cmap=cmap)
-    ax.set_xlabel('q',fontsize=14)
-    ax.set_ylabel(r'$\delta$',fontsize=14)
-    ax.set_title('Band 4')
-    fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),ax = ax)
-    plt.savefig('Berry_curvature_Band_4.png')
-
-    ### Plot the dispersion surface with Berry curvature 
-    rgb = np.tile([1.0,1.0,1.0],(Ndelta,Nk,1))
-
-    """
-    ls = LightSource(azdeg=225,altdeg=30)
-    illuminated_surface1 = ls.shade_rgb(rgb,Berry_curvature[:,:,0].T)
-    illuminated_surface2 = ls.shade_rgb(rgb,Berry_curvature[:,:,1].T)
-    illuminated_surface3 = ls.shade_rgb(rgb,Berry_curvature[:,:,2].T)
-    illuminated_surface4 = ls.shade_rgb(rgb,Berry_curvature[:,:,3].T)
-
-    fig,ax = plt.subplots(subplot_kw={'projection':'3d'})    
-    ax.plot_surface(X,Y,Energy[:,:,0].T,linewidth=0.01,
-                    facecolors=illuminated_surface1,cmap=cmap)
-    ax.plot_surface(X,Y,Energy[:,:,1].T,linewidth=0.01,
-                    facecolors=illuminated_surface2,cmap=cmap)
-    ax.plot_surface(X,Y,Energy[:,:,2].T,linewidth=0.01,
-                    facecolors=illuminated_surface3,cmap=cmap)
-    ax.plot_surface(X,Y,Energy[:,:,3].T,linewidth=0.01,
-                    facecolors=illuminated_surface4,cmap=cmap)
-    ax.set_xlabel(r'$k a / (2 \ pi)$',fontsize=14)
-    ax.set_ylabel(r'$\delta$',fontsize=14)
-    fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),
-                 orientation='vertical',
-                 shrink=0.4,
-                 ax = ax)
-    plt.savefig('Bands.png')    
-    plt.show()
-    """
-
-    fig,ax = plt.subplots(subplot_kw={'projection':'3d'}) 
+    ### Plot the dispersion surface with Berry curvature    
+    maxabs = abs(F_array).max() 
+    F_array_3D = np.sinh(20.0*F_array/maxabs)
+    vmin, vmax = -1, 1 
+    norm = colors.Normalize(vmin=vmin,vmax=vmax)
     scamap = plt.cm.ScalarMappable(norm=norm,cmap=cmap)
-    fcolors1 = scamap.to_rgba(F_array[:,:,0].T)   
-    ax.plot_surface(X,Y,Energy_array[:,:,0].T,linewidth=1e-7,
+
+    linewidth=0 
+
+    fig,ax = plt.subplots(subplot_kw={'projection':'3d'})
+    
+    fcolors1 = scamap.to_rgba(F_array_3D[:,:,0].T)   
+    ax.plot_surface(X,Y,Energy_array[:,:,0].T,linewidth=linewidth,
                     facecolors=fcolors1,cmap=cmap)
 
-    fcolors2 = scamap.to_rgba(F_array[:,:,1].T)  
-    ax.plot_surface(X,Y,Energy_array[:,:,1].T,linewidth=1e-7,
+    fcolors2 = scamap.to_rgba(F_array_3D[:,:,1].T)  
+    ax.plot_surface(X,Y,Energy_array[:,:,1].T,linewidth=linewidth,
                     facecolors=fcolors2,cmap=cmap)
     
-    fcolors3 = scamap.to_rgba(F_array[:,:,2].T)  
-    ax.plot_surface(X,Y,Energy_array[:,:,2].T,linewidth=1e-7,
+    fcolors3 = scamap.to_rgba(F_array_3D[:,:,2].T)  
+    ax.plot_surface(X,Y,Energy_array[:,:,2].T,linewidth=linewidth,
                     facecolors=fcolors3,cmap=cmap)
     
-    fcolors4 = scamap.to_rgba(F_array[:,:,3].T)  
-    ax.plot_surface(X,Y,Energy_array[:,:,3].T,linewidth=1e-7,
+    fcolors4 = scamap.to_rgba(F_array_3D[:,:,3].T)  
+    ax.plot_surface(X,Y,Energy_array[:,:,3].T,linewidth=linewidth,
                     facecolors=fcolors4,cmap=cmap)
     
     ax.set_xlabel(r'$k a / (2 \ pi)$',fontsize=14)
@@ -228,7 +174,8 @@ def main():
                  shrink=0.4,
                  ax = ax)
     plt.savefig('Bands.png')    
+    ax.view_init(elev=5,azim=45,roll=0)
     plt.show()
-
+    
 if __name__ == '__main__':
     main()
