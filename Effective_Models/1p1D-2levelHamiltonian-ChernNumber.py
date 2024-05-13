@@ -72,7 +72,7 @@ def main():
 
     F_array = np.zeros((Nx,Ny,2))
 
-    """
+    
     for i in range(Nx):
         for j in range(Ny):
             kx = Kx[i]
@@ -85,26 +85,6 @@ def main():
             energy,states = sla.eigh(H) 
 
             F_array[i,j,:] = Berry_curvature(dHx,dHy,energy,states)
-    """
-
-    #energy,states = sla.eigh(
-    #                    np.array(
-    #                        Hamiltonian(kx,ky,U,V,Delta,v) for kx in Kx for ky in Ky)
-    #)
-
-    H = np.array([Hamiltonian(kx,ky,U,V,Delta,v) for kx in Kx for ky in Ky])
-    print(np.shape(H))
-
-    energy, states = np.linalg.eigh(H)
-    print(np.shape(energy))
-    print(np.shape(states))
-
-    dHx = np.array([dH_x(kx,U,Delta,v) for kx in Kx for ky in Ky])
-    print(np.shape(dHx))
-
-    dHy = dH_y(V)
-
-    F_array = Berry_curvature(dHx,dHy,energy,states)
             
     C1 = np.sum(np.sum(F_array[:,:,0]))*dx*dy/(2.0*np.pi)
     print('Chern number C1 = '+str(C1)) 

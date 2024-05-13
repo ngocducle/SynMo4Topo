@@ -1,12 +1,16 @@
 program ChernNumber 
 implicit none 
 
-integer(8) :: Nx,Ny
-integer(8) :: i,j  
-real(8) :: velocity,U,V,Delta 
-real(8) :: x,y 
+real(8),parameter :: math_pi = 3.141592653589793d0
 
-real(8),dimension(:), allocatable :: Kx,Ky 
+integer(8) :: Nx,Ny
+integer(8) :: i,j,k,l 
+real(8) :: velocity,U,V,Delta 
+real(8) :: kx,ky,kx_min,kx_max,ky_min,ky_max,dkx,dky
+real(8) :: Chern1,Chern2 
+complex(8) :: F1,F2
+
+real(8),dimension(:), allocatable :: kx_scan,ky_scan 
 real(8),dimension(:,:), allocatable :: Energy1,Energy2
 
 complex(8),dimension(2) :: State1,State2 
@@ -21,6 +25,7 @@ double precision, dimension(:),allocatable :: rwork
 complex(8), dimension(:),allocatable :: work 
 real(8), dimension(:),allocatable :: eigenvalues
 
+!!!!! The parameters of the model 
 velocity = 0.5
 print*,'# velocity = ',velocity 
 
@@ -33,60 +38,75 @@ print*,'# V = ', V
 Delta = 0.1*U 
 print*,'# Delta = ', Delta 
 
+!!!!! The matrix dH/dy 
 dHy(1,1) = 0.0
 dHy(1,2) = cmplx(0.0,-V,8)
 dHy(2,1) = -dHy(1,2)
 dHy(2,2) = 0.0 
 
-Nx = 2001
-Ny = 2001  
-
-allocate(Kx(Nx))
-allocate(Ky(Ny))
+!!!!!  Allocate the arrays of momenta,energy and Berry curvature
+Nx = 201
+Ny = 201  
+allocate(kx_scan(Nx))
+allocate(ky_scan(Ny))
 allocate(Energy1(Nx,Ny))
 allocate(Energy2(Nx,Ny))
 allocate(Berry_curvature1(Nx,Ny))
 allocate(Berry_curvature2(Nx,Ny))
 
+!!!!! The array of kx 
+kx_min = -0.5d0 
+kx_max = 0.5d0 
+dkx = (kx_max-kx_min)/(Nx-1)
 do i = 1,Nx 
-    Kx(i) = -0.5+(i-1)*1.0/(Nx-1) 
-    !print*, Kx(i) 
+    kx_scan(i) = kx_min+(i-1)*dkx  
+    !print*, kx_scan(i) 
 end do ! i-loop 
 
+!!!!! The array of ky 
+ky_min = -0.5d0 
+ky_max = 0.5d0 
+dky = (ky_max-ky_min)/(Ny-1) 
 do j = 1,Ny 
-    Ky(j) = -0.5+(j-1)*1.0/(Ny-1) 
-    !print*, Ky(j)
+    ky_scan(j) = -0.5+(j-1)*dky  
+    !print*, ky_scan(j)
 end do ! j-loop 
 
+!!!!! Initiate the Chern numbers of  band 1 and band 2 
+Chern1 = 0.0d0 
+Chern2 = 0.0d0 
+
+!!!!! LAPACK allocations 
 lapackdim = 2 
 lwork = 128 
 allocate(work(lwork))
 allocate(rwork(6))
 allocate(eigenvalues(2))
 
+!!!!! We scan over the momenta kx and ky 
 do j = 1,Ny 
 do i = 1,Nx 
-    !x = Kx(i)
-    !print*, 'x = ', x 
+    !!! Take the values of kx and ky 
+    kx = kx_scan(i)
+    ky = ky_scan(j) 
 
-    !y = Ky(j) 
-
-    !print*,U - V + 0.5*velocity**2 * x**2/U
-
-    Hamiltonian(1,1) = cmplx(U - V + 0.5*velocity**2 * Kx(i)**2/U,0.0d0,8)  
-    Hamiltonian(1,2) = cmplx(-velocity*Delta/U * Kx(i), -V*Ky(j),8) 
-    Hamiltonian(2,1) = cmplx(-velocity*Delta/U * Kx(i),  V*Ky(j),8)
+    !!! The Hamiltonian H(kx,ky)
+    Hamiltonian(1,1) = cmplx(U - V + 0.5*velocity**2 * kx**2/U,0.0d0,8)  
+    Hamiltonian(1,2) = cmplx(-velocity*Delta/U * kx, -V*ky,8) 
+    Hamiltonian(2,1) = cmplx(-velocity*Delta/U * kx,  V*ky,8)
     Hamiltonian(2,2) = -Hamiltonian(1,1)
-
     !print*,Hamiltonian 
 
+    !!! Diagonalization 
     call zheev('V','U',lapackdim,Hamiltonian,2,eigenvalues,work,128,rwork,info)
     !print*,'# LAPACK info',info 
     !print*, eigenvalues(1),eigenvalues(2)
 
+    !!! The energies of the bands 
     Energy1(i,j) = eigenvalues(1)
     Energy2(i,j) = eigenvalues(2) 
 
+    !!! The eigenstates 
     State1(1) = Hamiltonian(1,1)
     State1(2) = Hamiltonian(2,1)
     State2(1) = Hamiltonian(1,2)
@@ -95,14 +115,54 @@ do i = 1,Nx
     !print*,State1(1),State1(2)
     !print*,State2(1),State2(2)
 
-    dHx(1,1) = velocity**2 * Kx(i)/U 
+    !!! The matrix dH/dx 
+    dHx(1,1) = velocity**2 * kx/U 
     dHx(1,2) = -velocity*Delta/U 
     dHx(2,1) = -velocity*Delta/U 
     dHx(2,2) = -dHx(1,1) 
 
-    Berry_curvature1(i,j) = -2.0*aimag(matmul(State1,matmul(dHx,State2)))
+    !!! Berry curvature and Chern number of band 1 
+    F1 = cmplx(0.0,0.0)
+    F2 = cmplx(0.0,0.0)
+
+    do l = 1,2 
+    do k = 1,2 
+        F1 = F1 + conjg(State1(k))*dHx(k,l)*State2(l)
+        F2 = F2 + conjg(State2(k))*dHy(k,l)*State1(l)
+    end do ! k-loop 
+    end do ! l-loop 
+
+    Berry_curvature1(i,j) = Berry_curvature1(i,j) &
+        & -2*aimag(F1*F2)/(eigenvalues(1)-eigenvalues(2))**2
+
+    Chern1 = Chern1 + Berry_curvature1(i,j)
+
+    !!! Berry curvature and Chern number of band 2 
+    F1 = cmplx(0.0,0.0)
+    F2 = cmplx(0.0,0.0)
+
+    do l = 1,2 
+    do k = 1,2 
+        F1 = F1 + conjg(State2(k))*dHx(k,l)*State1(l)
+        F2 = F2 + conjg(State1(k))*dHy(k,l)*State2(l) 
+    end do ! k-loop 
+    end do ! l-loop 
+
+    Berry_curvature2(i,j) = Berry_curvature2(i,j) &
+        & -2*aimag(F1*F2)/(eigenvalues(1)-eigenvalues(2))**2
+
+    Chern2 = Chern2 + Berry_curvature2(i,j)
+
 end do ! i-loop 
 end do ! j-loop 
+
+!!!!! Chern number of band 1 
+Chern1 = Chern1*dkx*dky/(2.0*math_pi)
+print*,'# Chern1 = ', Chern1 
+
+!!!!! Chern number of band 2 
+Chern2 = Chern2*dkx*dky/(2.0*math_pi)
+print*,'# Chern2 = ', Chern2 
 
 deallocate(work)
 deallocate(rwork)
