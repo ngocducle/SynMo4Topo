@@ -9,7 +9,7 @@ from matplotlib.colors import LightSource
 
 ##### FUNCTION: Hamiltonian of 1D grating bilayer at X-point
 ###   The slabs are different from each other
-def _1p1D_1Dgrat2L_X_k_delta(q,delta,v,U1,U2,V):
+def Hamiltonian(q,delta,v,U1,U2,V):
     Vp = V*cmath.exp(-1j*np.pi*delta) 
     Vm = V*cmath.exp(1j*np.pi*delta)
 
@@ -25,7 +25,7 @@ def _1p1D_1Dgrat2L_X_k_delta(q,delta,v,U1,U2,V):
     return Hamiltonian 
 
 ##### FUNCTION: The derivative of the Hamiltonian with respect to q 
-def dq_1p1D_1Dgrat2L_X_k_delta(v):
+def dH_q(v):
     dHdq = np.array(
         [
             [v,0.0,0.0,0.0],
@@ -38,7 +38,7 @@ def dq_1p1D_1Dgrat2L_X_k_delta(v):
     return dHdq 
 
 ##### FUNCTION: The derivative of the Hamiltonian with respect to delta
-def ddelta_1p1D_1Dgrat2L_X_k_delta(delta,V):
+def dH_delta(delta,V):
     Vp = V*cmath.exp(-1j*np.pi*delta) 
     Vm = V*cmath.exp(1j*np.pi*delta)
 
@@ -53,33 +53,23 @@ def ddelta_1p1D_1Dgrat2L_X_k_delta(delta,V):
 
     return dHddelta 
 
+##### FUNCTION: calculate the product <V1|M|V2> 
+def mul(V1,M,V2):
+    Prod = np.matmul((V1.conjugate()).transpose(),np.matmul(M,V2))
+
+    return Prod 
+
 ##### FUNCTION: function to calculate the Berry curvature 
-def Berry_curvature_q_delta(q,delta,v,U1,U2,V):
-    H = _1p1D_1Dgrat2L_X_k_delta(q,delta,v,U1,U2,V) 
-    dHdq = dq_1p1D_1Dgrat2L_X_k_delta(v)
-    dHddelta = ddelta_1p1D_1Dgrat2L_X_k_delta(delta,V) 
+def Berry_curvature_q_delta(dH1,dH2,E,V):
+    F = np.zeros(4)
 
-    evalues,evectors = sla.eigh(H,eigvals_only=False) 
+    for n in range(4):
+        for m in range(4):
+            if (m != n):
+                F[n] = F[n] -2*np.imag(mul(V[:,n],dH1,V[:,m])*mul(V[:,m],dH2,V[:,n])) \
+                    / (E[n]-E[m])**2
 
-    curvature = np.zeros(4)
-
-    for i in range(4):
-        Vector_i = evectors[:,i] 
-
-        for n in range(4):
-            if (n != i):
-                Vector_n = evectors[:,n]
-
-                S1 = np.matmul( (Vector_i.conjugate()).transpose(),
-                                np.matmul(dHdq,Vector_n))
-                S2 = np.matmul( (Vector_n.conjugate()).transpose(),
-                                np.matmul(dHddelta,Vector_i))
-                
-                S = -2.0*np.imag(S1*S2)/(evalues[i]-evalues[n])**2 
-
-                curvature[i] = curvature[i] + S 
-
-    return evalues,curvature 
+    return F 
 
 ##### The MAIN program goes here
 def main():
@@ -102,10 +92,10 @@ def main():
     delta_array = np.linspace(-0.5,0.5,Ndelta) 
 
     ### Arrays of energy 
-    Energy = np.zeros((Nk,Ndelta,4))
+    Energy_array = np.zeros((Nk,Ndelta,4))
 
     ### Array of Berry curvature 
-    Berry_curvature = np.zeros((Nk,Ndelta,4))
+    F_array = np.zeros((Nk,Ndelta,4))
 
     ### Array of Chern number 
     Chern_number = np.zeros(4)
@@ -115,13 +105,20 @@ def main():
         for j in range(Ndelta):
             q = k_array[i]
             delta = delta_array[j] 
-            evalues,Berry_curvature[i,j,:] = Berry_curvature_q_delta(q,delta,v,U1,U2,V) 
-            Energy[i,j,:] = evalues 
 
-    print(Berry_curvature)
+            H = Hamiltonian(q,delta,v,U1,U2,V)
+            dHq = dH_q(v)
+            dHdelta = dH_delta(delta,V) 
+
+            energy,states = sla.eigh(H)
+
+            Energy_array[i,j,:] = energy 
+            F_array[i,j,:] = Berry_curvature_q_delta(dHq,dHdelta,energy,states)
+
+    #print(F_array)
 
     ### Calculate the Chern numbers 
-    Chern_number = np.sum(Berry_curvature,axis = (0,1))*2.0*Kmax/(Nk*Ndelta*2.0*np.pi)
+    Chern_number = np.sum(F_array,axis = (0,1))*2.0*Kmax/(Nk*Ndelta*2.0*np.pi)
 
     print('# Chern numbers = ')    
     print(Chern_number)
@@ -129,7 +126,7 @@ def main():
     ### Plot the figure 
     X,Y = np.meshgrid(k_array+0.5,delta_array) 
 
-    maxabs = abs(Berry_curvature).max() 
+    maxabs = abs(F_array).max() 
     vmin, vmax = -maxabs, maxabs 
     norm = colors.Normalize(vmin=vmin,vmax=vmax)
 
@@ -146,7 +143,7 @@ def main():
         plt.savefig('Berry_curvature_Band_'+str(i+1)+'.png')
     """
     fig,ax = plt.subplots()
-    ax.pcolormesh(X,Y,Berry_curvature[:,:,0].T,shading='gouraud',cmap=cmap)
+    ax.pcolormesh(X,Y,F_array[:,:,0].T,shading='gouraud',cmap=cmap)
     ax.set_xlabel('q',fontsize=14)
     ax.set_ylabel(r'$\delta$',fontsize=14)
     ax.set_title('Band 1')
@@ -154,7 +151,7 @@ def main():
     plt.savefig('Berry_curvature_Band_1.png')
 
     fig,ax = plt.subplots()
-    ax.pcolormesh(X,Y,Berry_curvature[:,:,1].T,shading='gouraud',cmap=cmap)
+    ax.pcolormesh(X,Y,F_array[:,:,1].T,shading='gouraud',cmap=cmap)
     ax.set_xlabel('q',fontsize=14)
     ax.set_ylabel(r'$\delta$',fontsize=14)
     ax.set_title('Band 2')
@@ -162,7 +159,7 @@ def main():
     plt.savefig('Berry_curvature_Band_2.png')
 
     fig,ax = plt.subplots()
-    ax.pcolormesh(X,Y,Berry_curvature[:,:,2].T,shading='gouraud',cmap=cmap)
+    ax.pcolormesh(X,Y,F_array[:,:,2].T,shading='gouraud',cmap=cmap)
     ax.set_xlabel('q',fontsize=14)
     ax.set_ylabel(r'$\delta$',fontsize=14)
     ax.set_title('Band 3')
@@ -170,7 +167,7 @@ def main():
     plt.savefig('Berry_curvature_Band_3.png')
 
     fig,ax = plt.subplots()
-    ax.pcolormesh(X,Y,Berry_curvature[:,:,3].T,shading='gouraud',cmap=cmap)
+    ax.pcolormesh(X,Y,F_array[:,:,3].T,shading='gouraud',cmap=cmap)
     ax.set_xlabel('q',fontsize=14)
     ax.set_ylabel(r'$\delta$',fontsize=14)
     ax.set_title('Band 4')
@@ -208,20 +205,20 @@ def main():
 
     fig,ax = plt.subplots(subplot_kw={'projection':'3d'}) 
     scamap = plt.cm.ScalarMappable(norm=norm,cmap=cmap)
-    fcolors1 = scamap.to_rgba(Berry_curvature[:,:,0].T)   
-    ax.plot_surface(X,Y,Energy[:,:,0].T,linewidth=1e-7,
+    fcolors1 = scamap.to_rgba(F_array[:,:,0].T)   
+    ax.plot_surface(X,Y,Energy_array[:,:,0].T,linewidth=1e-7,
                     facecolors=fcolors1,cmap=cmap)
 
-    fcolors2 = scamap.to_rgba(Berry_curvature[:,:,1].T)  
-    ax.plot_surface(X,Y,Energy[:,:,1].T,linewidth=1e-7,
+    fcolors2 = scamap.to_rgba(F_array[:,:,1].T)  
+    ax.plot_surface(X,Y,Energy_array[:,:,1].T,linewidth=1e-7,
                     facecolors=fcolors2,cmap=cmap)
     
-    fcolors3 = scamap.to_rgba(Berry_curvature[:,:,2].T)  
-    ax.plot_surface(X,Y,Energy[:,:,2].T,linewidth=1e-7,
+    fcolors3 = scamap.to_rgba(F_array[:,:,2].T)  
+    ax.plot_surface(X,Y,Energy_array[:,:,2].T,linewidth=1e-7,
                     facecolors=fcolors3,cmap=cmap)
     
-    fcolors4 = scamap.to_rgba(Berry_curvature[:,:,3].T)  
-    ax.plot_surface(X,Y,Energy[:,:,3].T,linewidth=1e-7,
+    fcolors4 = scamap.to_rgba(F_array[:,:,3].T)  
+    ax.plot_surface(X,Y,Energy_array[:,:,3].T,linewidth=1e-7,
                     facecolors=fcolors4,cmap=cmap)
     
     ax.set_xlabel(r'$k a / (2 \ pi)$',fontsize=14)

@@ -2,6 +2,9 @@ import numpy as np
 import scipy 
 import scipy.linalg as sla 
 import matplotlib.pyplot as plt 
+from matplotlib import cm,colors 
+from mpl_toolkits.mplot3d import Axes3D 
+from matplotlib.colors import LightSource 
 
 def Hamiltonian(kx,ky,U,V,Delta,v):
     diag = U - V + 0.5*v**2 * kx**2/U 
@@ -63,13 +66,14 @@ def main():
     V = 1.5*U 
     Delta = 0.1*U 
 
-    Nx = 2001
-    Ny = 2001
+    Nx = 201
+    Ny = 201
     Kx = np.linspace(-0.5,0.5,Nx)
     Ky = np.linspace(-0.5,0.5,Ny)
     dx = (Kx.max()-Kx.min())/(Nx-1)
     dy = (Ky.max()-Ky.min())/(Ny-1)
 
+    Energy_array = np.zeros((Nx,Ny,2))
     F_array = np.zeros((Nx,Ny,2))
 
     
@@ -84,6 +88,7 @@ def main():
 
             energy,states = sla.eigh(H) 
 
+            Energy_array[i,j,:] = energy 
             F_array[i,j,:] = Berry_curvature(dHx,dHy,energy,states)
             
     C1 = np.sum(np.sum(F_array[:,:,0]))*dx*dy/(2.0*np.pi)
@@ -92,7 +97,7 @@ def main():
     C2 = np.sum(np.sum(F_array[:,:,1]))*dx*dy/(2.0*np.pi)
     print('Chern number C2 = '+str(C2))
 
-    """
+    
     X,Y = np.meshgrid(Kx,Ky)
     #print('X = ')
     #print(X)
@@ -101,12 +106,15 @@ def main():
     #print(Y)
  
     fig,ax = plt.subplots(subplot_kw={'projection':'3d'})
-    ax.plot_surface(X,Y,F_array[:,:,0].T)
-    ax.plot_surface(X,Y,F_array[:,:,1].T)
+    #ax.plot_surface(X,Y,Energy_array[:,:,0].T,
+    #                rstride=1,cstride=1,
+    #                facecolors=F_array[:,:,0].T)
+    ax.plot_surface(X,Y,Energy_array[:,:,0].T)
+    ax.plot_surface(X,Y,Energy_array[:,:,1].T)
     ax.set_xlabel('kx',fontsize=14)
     ax.set_ylabel('ky',fontsize=14)
     plt.show()
-    """
+    
 
 if __name__ == '__main__':
     main()

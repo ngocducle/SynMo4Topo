@@ -37,7 +37,13 @@ int main()
     float dHx[2][2];
     float dHy[2][2];
 
-    
+    for (int i = 0; i<Nx; i++)
+    {
+        for (int j = 0; j<Ny; j++)
+        {
+            
+        }
+    }
      
 
     return 0; 
