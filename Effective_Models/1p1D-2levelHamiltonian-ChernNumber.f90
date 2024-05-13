@@ -1,4 +1,17 @@
 program ChernNumber 
+
+!!!!! ============================================================================== !!!!! 
+!!!                                                                                    !!!
+!!!         Calculate the Chern number for the Hamiltonian:                            !!!
+!!!                                                                                    !!!
+!!!      H = [ U - V + (v^2/2U)*kx^2, -(v*Delta/U)*kx - i*V*ky;                        !!! 
+!!!           -(v*Delta/U)*kx + i*V*ky, -U + V - (v^2/2U)*kx^2 ]                       !!!
+!!!                                                                                    !!!
+!!!!! ============================================================================== !!!!! 
+
+!!! To compile:
+!   gfortran -llapack 1p1D-2levelHamiltonian-ChernNumber.f90
+
 implicit none 
 
 real(8),parameter :: math_pi = 3.141592653589793d0
@@ -45,8 +58,8 @@ dHy(2,1) = -dHy(1,2)
 dHy(2,2) = 0.0 
 
 !!!!!  Allocate the arrays of momenta,energy and Berry curvature
-Nx = 201
-Ny = 201  
+Nx = 2001
+Ny = 2001  
 allocate(kx_scan(Nx))
 allocate(ky_scan(Ny))
 allocate(Energy1(Nx,Ny))

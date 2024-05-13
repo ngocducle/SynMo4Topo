@@ -63,8 +63,8 @@ def main():
     V = 1.5*U 
     Delta = 0.1*U 
 
-    Nx = 201
-    Ny = 201
+    Nx = 2001
+    Ny = 2001
     Kx = np.linspace(-0.5,0.5,Nx)
     Ky = np.linspace(-0.5,0.5,Ny)
     dx = (Kx.max()-Kx.min())/(Nx-1)
