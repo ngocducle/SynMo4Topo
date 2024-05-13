@@ -54,22 +54,22 @@ def dH_delta(delta,V):
     return dHddelta 
 
 ##### FUNCTION: calculate the product <V1|M|V2> 
-def mul(V1,M,V2):
-    Prod = np.matmul((V1.conjugate()).transpose(),np.matmul(M,V2))
+#def mul(V1,M,V2):
+#    Prod = np.matmul((V1.conjugate()).transpose(),np.matmul(M,V2))
 
-    return Prod 
+#    return Prod 
 
 ##### FUNCTION: function to calculate the Berry curvature 
-def Berry_curvature_q_delta(dH1,dH2,E,V):
-    F = np.zeros(4)
+#def Berry_curvature_q_delta(dH1,dH2,E,V):
+#    F = np.zeros(4)
 
-    for n in range(4):
-        for m in range(4):
-            if (m != n):
-                F[n] = F[n] -2*np.imag(mul(V[:,n],dH1,V[:,m])*mul(V[:,m],dH2,V[:,n])) \
-                    / (E[n]-E[m])**2
+#    for n in range(4):
+#        for m in range(4):
+#            if (m != n):
+#                F[n] = F[n] -2*np.imag(mul(V[:,n],dH1,V[:,m])*mul(V[:,m],dH2,V[:,n])) \
+#                    / (E[n]-E[m])**2
 
-    return F 
+#    return F 
 
 ##### The MAIN program goes here
 def main():
@@ -110,11 +110,44 @@ def main():
             dHq = dH_q(v)
             dHdelta = dH_delta(delta,V) 
 
-            energy,states = sla.eigh(H)
+            # The i-th element of E is the i-th energy eigenvalue
+            # The j-th column of states is the eigenstate corresponding to E[j] 
+            E,states = sla.eigh(H)
 
-            Energy_array[i,j,:] = energy 
-            F_array[i,j,:] = Berry_curvature_q_delta(dHq,dHdelta,energy,states)
+            # We save the energy eigenvalues to the array Energy_array 
+            Energy_array[i,j,:] = E
+            
+            #F_array[i,j,:] = Berry_curvature_q_delta(dHq,dHdelta,E,states)
 
+            ### ATTENTION! The formula to evaluate the Berry curvature is:
+            #
+            #   F_{q delta}^n = \sum_{m \ne n} (-2)*<n| dHq |m><m | dHdelta |n>/(En-Em)^2
+            #
+            # In fact: <n| dHq |m> and <m| dHdelta |n> are the matrix elements of 
+            # the operators dHq and dHdelta in the basis of the energy eigenstates 
+            # of the Hamiltonian
+            #
+            # Therefore, we reexpress the matrices dHq and dHdelta in the basis of 
+            # eigenstates. The transformation is done by the formula:
+            #
+            #   A' = states^{\dagger}*A*states 
+            #
+            # here A = dHq or dHdelta
+            # and the j-th column of states is the eigenvector corresponding
+            # to the j-th eigenvalue
+            dHqe = np.matmul( (states.conjugate()).transpose(), np.matmul(dHq,states) )
+            dHdeltae = np.matmul((states.conjugate()).transpose(), np.matmul(dHdelta,states)) 
+
+            #print(dHqe)
+            #print(dHdeltae)
+
+            for n in range(4):
+                for m in range(4):
+                    if (m != n):
+                        val = -2*np.imag(dHqe[n,m]*dHdeltae[m,n]) / (E[n]-E[m])**2 
+                        F_array[i,j,n] = F_array[i,j,n] + val 
+
+    #print(Energy_array)
     #print(F_array)
 
     ### Calculate the Chern numbers 
