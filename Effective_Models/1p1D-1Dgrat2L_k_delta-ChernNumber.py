@@ -3,7 +3,7 @@ import scipy
 import scipy.linalg as sla
 import cmath 
 import matplotlib.pyplot as plt
-from matplotlib import cm, colors 
+from matplotlib import cm,colors 
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.colors import LightSource 
 
@@ -53,24 +53,6 @@ def dH_delta(delta,V):
 
     return dHddelta 
 
-##### FUNCTION: calculate the product <V1|M|V2> 
-#def mul(V1,M,V2):
-#    Prod = np.matmul((V1.conjugate()).transpose(),np.matmul(M,V2))
-
-#    return Prod 
-
-##### FUNCTION: function to calculate the Berry curvature 
-#def Berry_curvature_q_delta(dH1,dH2,E,V):
-#    F = np.zeros(4)
-
-#    for n in range(4):
-#        for m in range(4):
-#            if (m != n):
-#                F[n] = F[n] -2*np.imag(mul(V[:,n],dH1,V[:,m])*mul(V[:,m],dH2,V[:,n])) \
-#                    / (E[n]-E[m])**2
-
-#    return F 
-
 ##### The MAIN program goes here
 def main():
     U = 0.0208
@@ -116,8 +98,6 @@ def main():
 
             # We save the energy eigenvalues to the array Energy_array 
             Energy_array[i,j,:] = E
-            
-            #F_array[i,j,:] = Berry_curvature_q_delta(dHq,dHdelta,E,states)
 
             ### ATTENTION! The formula to evaluate the Berry curvature is:
             #
@@ -128,7 +108,7 @@ def main():
             # of the Hamiltonian
             #
             # Therefore, we reexpress the matrices dHq and dHdelta in the basis of 
-            # eigenstates. The transformation is done by the formula:
+            # the eigenstates. The transformation is done by the formula:
             #
             #   A' = states^{\dagger}*A*states 
             #
@@ -153,10 +133,12 @@ def main():
     ### Calculate the Chern numbers 
     Chern_number = np.sum(F_array,axis = (0,1))*2.0*Kmax/(Nk*Ndelta*2.0*np.pi)
 
-    print('# Chern numbers = ')    
-    print(Chern_number)
+    print('# Chern numbers C1 = '+str(Chern_number[0]))
+    print('# Chern numbers C2 = '+str(Chern_number[1]))
+    print('# Chern numbers C3 = '+str(Chern_number[2]))
+    print('# Chern numbers C4 = '+str(Chern_number[3]))    
 
-    ### Plot the figure 
+    ### Plot the 2D maps of the Berry curvature of the 4 bands 
     X,Y = np.meshgrid(k_array+0.5,delta_array) 
     cmap = 'coolwarm'
 
@@ -206,8 +188,9 @@ def main():
                  orientation='vertical',
                  shrink=0.4,
                  ax = ax)
-    plt.savefig('Bands.png')    
     ax.view_init(elev=5,azim=45,roll=0)
+    plt.savefig('Bands.png')    
+
     plt.show()
     
 if __name__ == '__main__':
