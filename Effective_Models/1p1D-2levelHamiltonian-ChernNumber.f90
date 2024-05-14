@@ -1,184 +1,188 @@
 program ChernNumber 
-
-!!!!! ============================================================================== !!!!! 
-!!!                                                                                    !!!
-!!!         Calculate the Chern number for the Hamiltonian:                            !!!
-!!!                                                                                    !!!
-!!!      H = [ U - V + (v^2/2U)*kx^2, -(v*Delta/U)*kx - i*V*ky;                        !!! 
-!!!           -(v*Delta/U)*kx + i*V*ky, -U + V - (v^2/2U)*kx^2 ]                       !!!
-!!!                                                                                    !!!
-!!!!! ============================================================================== !!!!! 
-
-!!! To compile:
-!   gfortran -llapack 1p1D-2levelHamiltonian-ChernNumber.f90
-
 implicit none 
 
-real(8),parameter :: math_pi = 3.141592653589793d0
+real(8),parameter :: math_pi = 3.141592653589793d0 
 
-integer(8) :: Nx,Ny
-integer(8) :: i,j,k,l 
+integer(8) :: i,j,m,n 
+integer(8) :: Nx,Ny 
+
 real(8) :: velocity,U,V,Delta 
-real(8) :: kx,ky,kx_min,kx_max,ky_min,ky_max,dkx,dky
-real(8) :: Chern1,Chern2 
-complex(8) :: F1,F2
+real(8) :: kx_max,dkx,ky_max,dky,kx,ky,val 
+real(8) :: C1,C2   
 
-real(8),dimension(:), allocatable :: kx_scan,ky_scan 
-real(8),dimension(:,:), allocatable :: Energy1,Energy2
+real(8), dimension(:), allocatable :: kx_array,ky_array 
+real(8), dimension(:,:,:), allocatable :: F_array,E ! array of Berry curvature and energy 
 
-complex(8),dimension(2) :: State1,State2 
-complex(8),dimension(2,2) :: Hamiltonian,dHx,dHy 
-complex(8),dimension(:,:), allocatable :: Berry_curvature1,Berry_curvature2
+complex(8),dimension(2,2) :: Hamiltonian,dHx,dHy,dHxe,dHye 
+complex(8),dimension(2,2) :: States,StatesH
+!complex(8),dimension(2,2) :: ProdL,ProdR 
+!complex(8),dimension(:,:,:), allocatable :: F_array ! array of Berry curvature 
 
-!!! ===============================================================================
-!!! The variables for LAPACK routine 
-!!! ATTENTION! Please never change the type of the variables 
-integer :: info,lwork,lapackdim  
-double precision, dimension(:),allocatable :: rwork 
-complex(8), dimension(:),allocatable :: work 
-real(8), dimension(:),allocatable :: eigenvalues
+!!! ==========================================================================
+!!! The variables for LAPACK routine
+!!! ATTENTION! Please never change the type of the variables
+integer :: info !,lwork,lapackdim 
+double precision, dimension(6) :: rwork 
+complex(8), dimension(128) :: work 
+real(8),dimension(2) :: eigenvalues 
 
-!!!!! The parameters of the model 
+!lapackdim = 2 
+!lwork = 128 
+
+!!! The velocity 
 velocity = 0.5
-print*,'# velocity = ',velocity 
+print*,'v = ',velocity 
 
-U = 0.02
-print*,'# U = ', U 
+!!! The parameter U  
+U = 0.02 
+print*,'U = ',U 
 
+!!! The parameter V
 V = 1.5*U 
-print*,'# V = ', V 
+print*,'V = ',V 
 
+!!! The parameter Delta 
 Delta = 0.1*U 
-print*,'# Delta = ', Delta 
+print*,'Delta = ',Delta 
 
-!!!!! The matrix dH/dy 
-dHy(1,1) = 0.0
-dHy(1,2) = cmplx(0.0,-V,8)
-dHy(2,1) = -dHy(1,2)
-dHy(2,2) = 0.0 
-
-!!!!!  Allocate the arrays of momenta,energy and Berry curvature
-Nx = 2001
-Ny = 2001  
-allocate(kx_scan(Nx))
-allocate(ky_scan(Ny))
-allocate(Energy1(Nx,Ny))
-allocate(Energy2(Nx,Ny))
-allocate(Berry_curvature1(Nx,Ny))
-allocate(Berry_curvature2(Nx,Ny))
-
-!!!!! The array of kx 
-kx_min = -0.5d0 
+!!! The array of kx 
+Nx = 201
 kx_max = 0.5d0 
-dkx = (kx_max-kx_min)/(Nx-1)
+dkx = 2*kx_max/(Nx-1) 
+
+allocate(kx_array(Nx))
+
 do i = 1,Nx 
-    kx_scan(i) = kx_min+(i-1)*dkx  
-    !print*, kx_scan(i) 
+    kx_array(i) = -kx_max + (i-1)*dkx 
 end do ! i-loop 
 
-!!!!! The array of ky 
-ky_min = -0.5d0 
+!!! The array of ky 
+Ny = 201 
 ky_max = 0.5d0 
-dky = (ky_max-ky_min)/(Ny-1) 
-do j = 1,Ny 
-    ky_scan(j) = -0.5+(j-1)*dky  
-    !print*, ky_scan(j)
-end do ! j-loop 
+dky = 2*ky_max/(Ny-1)
 
-!!!!! Initiate the Chern numbers of  band 1 and band 2 
-Chern1 = 0.0d0 
-Chern2 = 0.0d0 
+allocate(ky_array(Ny))
 
-!!!!! LAPACK allocations 
-lapackdim = 2 
-lwork = 128 
-allocate(work(lwork))
-allocate(rwork(6))
-allocate(eigenvalues(2))
+do i = 1,Ny 
+    ky_array(i) = -ky_max + (i-1)*dky 
+end do ! i-loop 
 
-!!!!! We scan over the momenta kx and ky 
-do j = 1,Ny 
+!!! Allocate the arrays of energy and Berry curvature 
+allocate(E(Nx,Ny,2))
+allocate(F_array(Nx,Ny,2))
+
+!!!!! We scan over the momenta 
 do i = 1,Nx 
-    !!! Take the values of kx and ky 
-    kx = kx_scan(i)
-    ky = ky_scan(j) 
+do j = 1,Ny 
+
+    kx = kx_array(i)
+    ky = ky_array(j)
 
     !!! The Hamiltonian H(kx,ky)
-    Hamiltonian(1,1) = cmplx(U - V + 0.5*velocity**2 * kx**2/U,0.0d0,8)  
-    Hamiltonian(1,2) = cmplx(-velocity*Delta/U * kx, -V*ky,8) 
-    Hamiltonian(2,1) = cmplx(-velocity*Delta/U * kx,  V*ky,8)
+    Hamiltonian(1,1) = cmplx(U-V+0.5*velocity**2*kx**2/U,0.0d0,8)
+    Hamiltonian(1,2) = cmplx(-velocity*Delta*kx/U,-V*ky,8)
+    Hamiltonian(2,1) = cmplx(-velocity*Delta*kx/U,V*ky,8)
     Hamiltonian(2,2) = -Hamiltonian(1,1)
-    !print*,Hamiltonian 
 
-    !!! Diagonalization 
-    call zheev('V','U',lapackdim,Hamiltonian,2,eigenvalues,work,128,rwork,info)
-    !print*,'# LAPACK info',info 
-    !print*, eigenvalues(1),eigenvalues(2)
+    !print*,'Hamiltonian = '
+    !print*,Hamiltonian(1,:)
+    !print*,Hamiltonian(2,:) 
 
-    !!! The energies of the bands 
-    Energy1(i,j) = eigenvalues(1)
-    Energy2(i,j) = eigenvalues(2) 
+    !!! The derivative of the Hamiltonian with respect to x 
+    dHx(1,1) = cmplx(velocity**2 * kx / U, 0.0d0,8) 
+    dHx(1,2) = cmplx(-velocity * Delta / U,0.0d0,8)  
+    dHx(2,1) = cmplx(-velocity * Delta / U,0.0d0,8) 
+    dHx(2,2) = -dHx(1,1)  
 
-    !!! The eigenstates 
-    State1(1) = Hamiltonian(1,1)
-    State1(2) = Hamiltonian(2,1)
-    State2(1) = Hamiltonian(1,2)
-    State2(2) = Hamiltonian(2,2) 
+    !print*,'dH/dx = '
+    !print*,dHx(1,:)
+    !print*,dHx(2,:)
 
-    !print*,State1(1),State1(2)
-    !print*,State2(1),State2(2)
+    !!! The derivative of the Hamiltonian with respect to y 
+    dHy(1,1) = cmplx(0.0d0,0.0d0,8)  
+    dHy(1,2) = cmplx(0.0d0,-V,8)
+    dHy(2,1) = cmplx(0.0d0,V,8)
+    dHy(2,2) = cmplx(0.0d0,0.0d0,8)
 
-    !!! The matrix dH/dx 
-    dHx(1,1) = velocity**2 * kx/U 
-    dHx(1,2) = -velocity*Delta/U 
-    dHx(2,1) = -velocity*Delta/U 
-    dHx(2,2) = -dHx(1,1) 
+    !print*,'dH/dy = '
+    !print*,dHy(1,:)
+    !print*,dHy(2,:)
 
-    !!! Berry curvature and Chern number of band 1 
-    F1 = cmplx(0.0,0.0)
-    F2 = cmplx(0.0,0.0)
+    !!! LAPACK diagonalization 
+    States = Hamiltonian
+    call zheev('V','U',2,States,2,eigenvalues,work,128,rwork,info) 
+    !print*,'# LAPACK info', info 
 
-    do l = 1,2 
-    do k = 1,2 
-        F1 = F1 + conjg(State1(k))*dHx(k,l)*State2(l)
-        F2 = F2 + conjg(State2(k))*dHy(k,l)*State1(l)
-    end do ! k-loop 
-    end do ! l-loop 
+    E(i,j,1) = eigenvalues(1)
+    E(i,j,2) = eigenvalues(2)
 
-    Berry_curvature1(i,j) = Berry_curvature1(i,j) &
-        & -2*aimag(F1*F2)/(eigenvalues(1)-eigenvalues(2))**2
+    !print*,'States = ' 
+    !print*,States(1,:)
+    !print*,States(2,:) 
 
-    Chern1 = Chern1 + Berry_curvature1(i,j)
+    ! The matrix StatesH = States^{\dagger}
+    StatesH = transpose(conjg(States))
+    !print*,'States^{\dagger| = '
+    !print*,StatesH(1,:)
+    !print*,StatesH(2,:)
 
-    !!! Berry curvature and Chern number of band 2 
-    F1 = cmplx(0.0,0.0)
-    F2 = cmplx(0.0,0.0)
+    !!! ATTENTION! The formula to evaluate the Berry curvature is:
+    !
+    ! F_{xy}^n = \sum_{m \ne n| (-2)*<n|dHx|m><m|dHy|n> / (En-Em)^2 
+    !
+    ! In fact: <n|dHx|m> and <m|dHy|n> are the matrix elements of 
+    ! the operators dHx and dHy in the basis of the energy eigenstates 
+    ! of the Hamiltonian 
+    ! 
+    ! Therefore, we reexpress the matrices dHx and dHy in the basis of 
+    ! the eigenstates. The transformation is done by the formula:
+    ! 
+    !   A' = StatesH*A*States 
+    !
+    ! here A = dHx or dHy 
+    ! and the j-th column of States is the eigenvector corresponding 
+    ! to the j-th eigenvalue (j is not the loop index in this program)
+    dHxe = matmul(StatesH,matmul(dHx,States))
+    dHye = matmul(StatesH,matmul(dHy,States))
 
-    do l = 1,2 
-    do k = 1,2 
-        F1 = F1 + conjg(State2(k))*dHx(k,l)*State1(l)
-        F2 = F2 + conjg(State1(k))*dHy(k,l)*State2(l) 
-    end do ! k-loop 
-    end do ! l-loop 
+    !!! We calculate the Berry curvature 
+    do n = 1,2
+        F_array(i,j,n) = 0.0d0 
 
-    Berry_curvature2(i,j) = Berry_curvature2(i,j) &
-        & -2*aimag(F1*F2)/(eigenvalues(1)-eigenvalues(2))**2
+        do m = 1,2 
+            if (m /= n) then 
+                val = -2.0d0*aimag(dHxe(n,m)*dHye(m,n))/(eigenvalues(n)-eigenvalues(m))**2
+                F_array(i,j,n) = F_array(i,j,n) + val 
+            end if ! m/=n IF
+        end do ! m-loop 
+    end do ! n-loop 
 
-    Chern2 = Chern2 + Berry_curvature2(i,j)
+end do ! j-loop 
+end do ! i-loop 
 
+!!! Calculate  the Chern numbers 
+C1 = sum(F_array(:,:,1))*dkx*dky/(2.0*math_pi)
+print*,'Chern number C1 = ', C1 
+
+C2 = sum(F_array(:,:,2))*dkx*dky/(2.0*math_pi)
+print*,'Chern number C2 = ', C2 
+
+!!!!! Print the data to file
+open(unit = 1,file='1p1D-2levelHamiltonian.txt') 
+100 format (' ',f12.8,' ',f12.8,' ',f12.8,' ',f12.8)
+
+do n=1,2 
+do j=1,Ny 
+do i=1,Nx 
+    write(unit=1,fmt=100) kx_array(i),ky_array(j),E(i,j,n),F_array(i,j,n)
 end do ! i-loop 
 end do ! j-loop 
+end do ! n-loop 
 
-!!!!! Chern number of band 1 
-Chern1 = Chern1*dkx*dky/(2.0*math_pi)
-print*,'# Chern1 = ', Chern1 
+close(1)
 
-!!!!! Chern number of band 2 
-Chern2 = Chern2*dkx*dky/(2.0*math_pi)
-print*,'# Chern2 = ', Chern2 
-
-deallocate(work)
-deallocate(rwork)
-deallocate(eigenvalues)
+!!! Deallocate the arrays 
+deallocate(E)
+deallocate(F_array)
 
 end program ChernNumber 

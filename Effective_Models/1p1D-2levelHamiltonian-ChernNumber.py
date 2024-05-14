@@ -49,7 +49,7 @@ def main():
 
     Nx = 201
     Ny = 201
-    Kx = np.linspace(-0.1,0.1,Nx)
+    Kx = np.linspace(-0.5,0.5,Nx)
     Ky = np.linspace(-0.5,0.5,Ny)
     dx = (Kx.max()-Kx.min())/(Nx-1)
     dy = (Ky.max()-Ky.min())/(Ny-1)
@@ -88,7 +88,7 @@ def main():
             #
             # here A = dHx or dHy
             # and the j-th column of states is the eigenvector coresponding 
-            # to the j-th eigenvalue
+            # to the j-th eigenvalue (j is not the loop index in this program)
             dHxe = np.matmul((states.conjugate()).transpose(), np.matmul(dHx,states))
             dHye = np.matmul((states.conjugate()).transpose(), np.matmul(dHy,states))
 
@@ -104,6 +104,7 @@ def main():
     C2 = np.sum(np.sum(F_array[:,:,1]))*dx*dy/(2.0*np.pi)
     print('Chern number C2 = '+str(C2))
 
+    """
     ### Plot the 2D maps of the Berry curvature of the 2 bands 
     X,Y = np.meshgrid(Kx,Ky)
     #print('X = ')
@@ -156,6 +157,7 @@ def main():
     plt.savefig('Bands.png')
 
     plt.show()
+    """
     
 if __name__ == '__main__':
     main()
