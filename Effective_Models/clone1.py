@@ -72,8 +72,8 @@ def main():
 
     ### Array of intrinsic momenta
     Ndelta = 201
-    delta_array = np.linspace(-0.5,0.5,Ndelta) 
-    ddelta = (delta_array.max() - delta_array.min())/(Ndelta-1)
+    delta_array = np.linspace(-0.5,0.0,Ndelta) 
+    ddelta = (k_array.max() - k_array.min())/(Ndelta-1)
 
     ### Arrays of energy 
     Energy_array = np.zeros((Nk,Ndelta,4))

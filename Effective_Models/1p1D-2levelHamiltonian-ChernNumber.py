@@ -104,7 +104,7 @@ def main():
     C2 = np.sum(np.sum(F_array[:,:,1]))*dx*dy/(2.0*np.pi)
     print('Chern number C2 = '+str(C2))
 
-    """
+    
     ### Plot the 2D maps of the Berry curvature of the 2 bands 
     X,Y = np.meshgrid(Kx,Ky)
     #print('X = ')
@@ -157,7 +157,7 @@ def main():
     plt.savefig('Bands.png')
 
     plt.show()
-    """
+    
     
 if __name__ == '__main__':
     main()
