@@ -140,6 +140,16 @@ def main():
     print('# Chern number C3 = '+str(Chern_number[2]))
     print('# Chern number C4 = '+str(Chern_number[3]))    
 
+    ### Print the results to a file
+    for n in range(4): 
+        with open('1p1D-1Dgrat2L-k-delta-Farray-'+str(n+1)+'.txt','w') as file:
+            for i in range(Nk):
+                for j in range(Ndelta):
+                    file.write('%.8f    ' % k_array[i])
+                    file.writelines('%.8f    ' % delta_array[j])
+                    file.writelines('%.8f    ' % F_array[i,j,n])
+                    file.write('\n')
+
     ### Plot the 2D maps of the Berry curvature of the 4 bands 
     X,Y = np.meshgrid(k_array+0.5,delta_array) 
     cmap = 'coolwarm'
@@ -172,12 +182,21 @@ def main():
         fig.colorbar(cm.ScalarMappable(norm=norm,cmap='bone'),ax = ax)
         plt.savefig('Abs_Berry_curvature_Band_'+str(i+1)+'.png')
 
-    ### Plot the dispersion surface with Berry curvature    
-    maxabs = abs(F_array).max() 
-    F_array_3D = np.sinh(20.0*F_array/maxabs)
-    vmin, vmax = -1, 1 
+    ### Plot the dispersion surface with Berry curvature     
+    F_array_3D = F_array
+    maxabs = abs(F_array_3D).max()
+    vmin, vmax = -maxabs,maxabs  
     norm = colors.Normalize(vmin=vmin,vmax=vmax)
     scamap = plt.cm.ScalarMappable(norm=norm,cmap=cmap)
+
+    ### Check for the symmetry of F_array_3D
+    #print(F_array_3D.max())
+    #print(F_array_3D.min())
+
+    #for i in range(Nk):
+    #    print(str(F_array_3D[i,99,2])+','
+    #         +str(F_array_3D[i,100,2])+','
+    #         +str(F_array_3D[i,101,2]))
 
     linewidth=0 
 
@@ -185,18 +204,23 @@ def main():
     
     fcolors1 = scamap.to_rgba(F_array_3D[:,:,0].T)   
     ax.plot_surface(X,Y,Energy_array[:,:,0].T,linewidth=linewidth,
+                    antialiased='True',rstride=5,cstride=5,
                     facecolors=fcolors1,cmap=cmap)
 
     fcolors2 = scamap.to_rgba(F_array_3D[:,:,1].T)  
+    print(np.shape(fcolors2)) 
     ax.plot_surface(X,Y,Energy_array[:,:,1].T,linewidth=linewidth,
+                    antialiased='True',rstride=1,cstride=5,
                     facecolors=fcolors2,cmap=cmap)
     
     fcolors3 = scamap.to_rgba(F_array_3D[:,:,2].T)  
     ax.plot_surface(X,Y,Energy_array[:,:,2].T,linewidth=linewidth,
+                    antialiased='True',rstride=1,cstride=5,
                     facecolors=fcolors3,cmap=cmap)
     
     fcolors4 = scamap.to_rgba(F_array_3D[:,:,3].T)  
     ax.plot_surface(X,Y,Energy_array[:,:,3].T,linewidth=linewidth,
+                    antialiased='True',rstride=5,cstride=5,
                     facecolors=fcolors4,cmap=cmap)
     
     ax.set_xlabel(r'$k a / (2 \ pi)$',fontsize=14)

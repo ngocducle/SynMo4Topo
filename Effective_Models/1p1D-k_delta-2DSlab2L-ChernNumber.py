@@ -88,23 +88,23 @@ def main():
     v2 = 0.35
 
     U = -0.016615673 
-    DeltaU = 0.001
+    DeltaU = 0.01*U
     U1 = U+DeltaU 
     U2 = U-DeltaU 
 
     W = 0.001744918
-    DeltaW = 0.001
+    DeltaW = 0.01*W 
     W1 = W+DeltaW 
     W2 = W-DeltaW 
 
     d0 = 0.35 
-    dist = 0.05 
+    dist = 0.4
     V0 = 0.044
     V = V0*np.exp(-dist/d0)
 
     ### The array of intrinsic momenta
     Nk = 201
-    Kmax = 0.5
+    Kmax = 0.50
     k_array = np.linspace(-Kmax,Kmax,Nk)
     dk = (k_array.max() - k_array.min())/(Nk-1)
 
@@ -375,64 +375,281 @@ def main():
     plt.savefig('Abs_Berry_curvature_Band_8.png')
     
     ### Plot the dispersion surface with Berry curvature 
-    F_array_1_3D = np.sinh(20.0*F_array1/maxabs) 
-    F_array_2_3D = np.sinh(20.0*F_array2/maxabs)
-    F_array_3_3D = np.sinh(20.0*F_array3/maxabs) 
-    F_array_4_3D = np.sinh(20.0*F_array4/maxabs)
-    F_array_5_3D = np.sinh(20.0*F_array5/maxabs) 
-    F_array_6_3D = np.sinh(20.0*F_array6/maxabs)
-    F_array_7_3D = np.sinh(20.0*F_array7/maxabs) 
-    F_array_8_3D = np.sinh(20.0*F_array8/maxabs)
-    vmin,vmax = -1,1 
+    def amplify(signal,maxabs):
+        A = 0.5 #/maxabs 
+        #amplified = np.tanh(A*signal)
+        #amplified = signal 
+        amplified = np.log(abs(signal))
+
+        return amplified 
+
+    F_array_1_3D = amplify(F_array1,maxabs) 
+    F_array_2_3D = amplify(F_array2,maxabs) 
+    F_array_3_3D = amplify(F_array3,maxabs) 
+    F_array_4_3D = amplify(F_array4,maxabs) 
+    F_array_5_3D = amplify(F_array5,maxabs) 
+    F_array_6_3D = amplify(F_array6,maxabs) 
+    F_array_7_3D = amplify(F_array7,maxabs) 
+    F_array_8_3D = amplify(F_array8,maxabs) 
+
+    maxabs_3D = np.max( [abs(F_array_1_3D).max(), abs(F_array_2_3D).max(),
+                      abs(F_array_3_3D).max(), abs(F_array_4_3D).max(),
+                      abs(F_array_5_3D).max(), abs(F_array_6_3D).max(),
+                      abs(F_array_7_3D).max(), abs(F_array_8_3D).max(),
+                      ] )
+
+    vmin,vmax = -maxabs_3D,maxabs_3D 
     norm = colors.Normalize(vmin=vmin,vmax=vmax)
     cmap = 'coolwarm'
     scamap = plt.cm.ScalarMappable(norm=norm,cmap=cmap)
 
     linewidth = 0 
+    rstride=10
+    cstride=10
 
+    ### Plot all the 8 bands 
     fig,ax = plt.subplots(subplot_kw={'projection':'3d'})
 
     fcolors1 = scamap.to_rgba(F_array_1_3D.T) 
     ax.plot_surface(X,Y,Energy1.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
                     facecolors=fcolors1,cmap=cmap)
     
     fcolors2 = scamap.to_rgba(F_array_2_3D.T) 
     ax.plot_surface(X,Y,Energy2.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
                     facecolors=fcolors2,cmap=cmap)
     
     fcolors3 = scamap.to_rgba(F_array_3_3D.T)
     ax.plot_surface(X,Y,Energy3.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
                     facecolors=fcolors3,cmap=cmap)
     
     fcolors4 = scamap.to_rgba(F_array_4_3D.T)
     ax.plot_surface(X,Y,Energy4.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
                     facecolors=fcolors4,cmap=cmap)
     
     fcolors5 = scamap.to_rgba(F_array_5_3D.T) 
     ax.plot_surface(X,Y,Energy5.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
                     facecolors=fcolors5,cmap=cmap)
     
     fcolors6 = scamap.to_rgba(F_array_6_3D.T) 
     ax.plot_surface(X,Y,Energy6.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
                     facecolors=fcolors6,cmap=cmap) 
     
     fcolors7 = scamap.to_rgba(F_array_7_3D.T)
     ax.plot_surface(X,Y,Energy7.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
                     facecolors=fcolors7,cmap=cmap)
     
     fcolors8 = scamap.to_rgba(F_array_8_3D.T) 
     ax.plot_surface(X,Y,Energy8.T,linewidth=linewidth,
+                    antialiased='True',rstride=1,cstride=1,
                     facecolors=fcolors8,cmap=cmap)
 
     ax.set_xlabel(r'$k a / (2\pi)$',fontsize=14)
     ax.set_ylabel(r'$\delta$',fontsize=14)
     fig.colorbar(scamap,
-                 orientation='vertical',
-                 shrink=0.4,
-                 ax = ax)
-    ax.view_init(elev=5,azim=45,roll=0)
+                orientation='vertical',
+                shrink=0.4,
+                ax = ax)
+    ax.view_init(elev=5,azim=75,roll=0)
     plt.savefig('Bands.png')
 
+    ### Plot band 1 + band 2 
+    linewidth = 0 
+    rstride=1
+    cstride=1
+
+    fig,ax = plt.subplots(subplot_kw={'projection':'3d'})
+
+    fcolors1 = scamap.to_rgba(F_array_1_3D.T) 
+    ax.plot_surface(X,Y,Energy1.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors1,cmap=cmap)
+    
+    fcolors2 = scamap.to_rgba(F_array_2_3D.T) 
+    ax.plot_surface(X,Y,Energy2.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors2,cmap=cmap)
+    
+    ax.set_xlabel(r'$k a / (2\pi)$',fontsize=14)
+    ax.set_ylabel(r'$\delta$',fontsize=14)
+    ax.set_title('Bands 1 + 2',fontsize=14)
+    fig.colorbar(scamap,
+                orientation='vertical',
+                shrink=0.4,
+                ax = ax)
+    ax.view_init(elev=5,azim=75,roll=0)
+    plt.savefig('Bands_1_2.png')
+
+    ### Plot band 2 + band 3 
+    linewidth = 0 
+    rstride=1
+    cstride=1
+
+    fig,ax = plt.subplots(subplot_kw={'projection':'3d'})
+
+    fcolors2 = scamap.to_rgba(F_array_2_3D.T) 
+    ax.plot_surface(X,Y,Energy2.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors2,cmap=cmap)
+    
+    fcolors3 = scamap.to_rgba(F_array_3_3D.T) 
+    ax.plot_surface(X,Y,Energy3.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors3,cmap=cmap)
+    
+    ax.set_xlabel(r'$k a / (2\pi)$',fontsize=14)
+    ax.set_ylabel(r'$\delta$',fontsize=14)
+    ax.set_title('Bands 2 + 3',fontsize=14)
+    fig.colorbar(scamap,
+                orientation='vertical',
+                shrink=0.4,
+                ax = ax)
+    ax.view_init(elev=5,azim=75,roll=0)
+    plt.savefig('Bands_2_3.png')
+
+    ### Plot band 3 + band 4 
+    linewidth = 0 
+    rstride=1
+    cstride=1
+
+    fig,ax = plt.subplots(subplot_kw={'projection':'3d'})
+
+    fcolors3 = scamap.to_rgba(F_array_3_3D.T) 
+    ax.plot_surface(X,Y,Energy3.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors3,cmap=cmap)
+    
+    fcolors4 = scamap.to_rgba(F_array_4_3D.T) 
+    ax.plot_surface(X,Y,Energy4.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors4,cmap=cmap)
+    
+    ax.set_xlabel(r'$k a / (2\pi)$',fontsize=14)
+    ax.set_ylabel(r'$\delta$',fontsize=14)
+    ax.set_title('Bands 3 + 4',fontsize=14)
+    fig.colorbar(scamap,
+                orientation='vertical',
+                shrink=0.4,
+                ax = ax)
+    ax.view_init(elev=5,azim=75,roll=0)
+    plt.savefig('Bands_3_4.png')
+
+    ### Plot band 4 + band 5 
+    linewidth = 0 
+    rstride=1
+    cstride=1
+
+    fig,ax = plt.subplots(subplot_kw={'projection':'3d'})
+
+    fcolors4 = scamap.to_rgba(F_array_4_3D.T) 
+    ax.plot_surface(X,Y,Energy4.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors4,cmap=cmap)
+    
+    fcolors5 = scamap.to_rgba(F_array_5_3D.T) 
+    ax.plot_surface(X,Y,Energy4.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors5,cmap=cmap)
+    
+    ax.set_xlabel(r'$k a / (2\pi)$',fontsize=14)
+    ax.set_ylabel(r'$\delta$',fontsize=14)
+    ax.set_title('Bands 4 + 5',fontsize=14)
+    fig.colorbar(scamap,
+                orientation='vertical',
+                shrink=0.4,
+                ax = ax)
+    ax.view_init(elev=5,azim=75,roll=0)
+    plt.savefig('Bands_4_5.png')
+
+    ### Plot band 5 + band 6 
+    linewidth = 0 
+    rstride=1
+    cstride=1
+
+    fig,ax = plt.subplots(subplot_kw={'projection':'3d'})
+
+    fcolors5 = scamap.to_rgba(F_array_5_3D.T) 
+    ax.plot_surface(X,Y,Energy5.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors5,cmap=cmap)
+    
+    fcolors6 = scamap.to_rgba(F_array_6_3D.T) 
+    ax.plot_surface(X,Y,Energy6.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors6,cmap=cmap)
+    
+    ax.set_xlabel(r'$k a / (2\pi)$',fontsize=14)
+    ax.set_ylabel(r'$\delta$',fontsize=14)
+    ax.set_title('Bands 5 + 6',fontsize=14)
+    fig.colorbar(scamap,
+                orientation='vertical',
+                shrink=0.4,
+                ax = ax)
+    ax.view_init(elev=5,azim=75,roll=0)
+    plt.savefig('Bands_5_6.png')
+
+    ### Plot band 6 + band 7 
+    linewidth = 0 
+    rstride=1
+    cstride=1
+
+    fig,ax = plt.subplots(subplot_kw={'projection':'3d'})
+
+    fcolors6 = scamap.to_rgba(F_array_6_3D.T) 
+    ax.plot_surface(X,Y,Energy6.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors6,cmap=cmap)
+    
+    fcolors7 = scamap.to_rgba(F_array_7_3D.T) 
+    ax.plot_surface(X,Y,Energy7.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors7,cmap=cmap)
+    
+    ax.set_xlabel(r'$k a / (2\pi)$',fontsize=14)
+    ax.set_ylabel(r'$\delta$',fontsize=14)
+    ax.set_title('Bands 6 + 7',fontsize=14)
+    fig.colorbar(scamap,
+                orientation='vertical',
+                shrink=0.4,
+                ax = ax)
+    ax.view_init(elev=5,azim=75,roll=0)
+    plt.savefig('Bands_6_7.png')
+
+    ### Plot band 7 + band 8 
+    linewidth = 0 
+    rstride=1
+    cstride=1
+
+    fig,ax = plt.subplots(subplot_kw={'projection':'3d'})
+
+    fcolors7 = scamap.to_rgba(F_array_7_3D.T) 
+    ax.plot_surface(X,Y,Energy7.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors7,cmap=cmap)
+    
+    fcolors8 = scamap.to_rgba(F_array_8_3D.T) 
+    ax.plot_surface(X,Y,Energy8.T,linewidth=linewidth,
+                    antialiased='True',rstride=rstride,cstride=cstride,
+                    facecolors=fcolors8,cmap=cmap)
+    
+    ax.set_xlabel(r'$k a / (2\pi)$',fontsize=14)
+    ax.set_ylabel(r'$\delta$',fontsize=14)
+    ax.set_title('Bands 7 + 8',fontsize=14)
+    fig.colorbar(scamap,
+                orientation='vertical',
+                shrink=0.4,
+                ax = ax)
+    ax.view_init(elev=5,azim=75,roll=0)
+    plt.savefig('Bands_6_7.png')
+
+
+    ### Show the plot 
     plt.show()
     
 if __name__ == "__main__":
