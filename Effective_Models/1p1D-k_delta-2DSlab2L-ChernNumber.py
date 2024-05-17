@@ -221,7 +221,7 @@ def main():
     for i in range(2):
         for j in range(4):
             ax[i,j].pcolormesh(X,Y,F_array[:,:,4*i+j].T,shading='gouraud',cmap=cmap)
-            ax[i,j].set_xlabel('q',fontsize=14)
+            ax[i,j].set_xlabel('k',fontsize=14)
             ax[i,j].set_title('Band '+str(4*i+j+1))
             ax[i,j].set_aspect('equal')
 
@@ -244,7 +244,7 @@ def main():
     for i in range(2):
         for j in range(4):
             ax[i,j].pcolormesh(X,Y,abs(F_array[:,:,4*i+j]).T,shading='gouraud',cmap=cmap)
-            ax[i,j].set_xlabel('q',fontsize=14)
+            ax[i,j].set_xlabel('k',fontsize=14)
             ax[i,j].set_title('Band '+str(4*i+j+1))
             ax[i,j].set_aspect('equal')
 

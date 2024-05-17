@@ -7,92 +7,100 @@ from matplotlib import cm,colors
 
 ##### FUNCTION: Hamiltonian of 2D photonic crystal slab bilayer with 
 ###   kx = ky = k, delta_x = delta_y = delta 
-def Hamiltonian(q,delta,omega1,U1,W1,v1,omega2,U2,W2,v2,V):
+def Hamiltonian(qx,deltax,omega1,U1,W1,v1,omega2,U2,W2,v2,V):
     Hamiltonian = np.zeros((8,8),dtype=complex)
 
     K = 2.0*np.pi 
 
     ### Block (1,1)
-    Hamiltonian[0,0] = omega1 + np.sqrt(2.0)*v1*q
+    Hamiltonian[0,0] = omega1 + v1*qx/np.sqrt(2.0)
     Hamiltonian[0,1] = W1 
     Hamiltonian[0,2] = W1 
     Hamiltonian[0,3] = U1 
 
     Hamiltonian[1,0] = W1 
-    Hamiltonian[1,1] = omega1 
+    Hamiltonian[1,1] = omega1 + v1*qx/np.sqrt(2.0)
     Hamiltonian[1,2] = U1 
     Hamiltonian[1,3] = W1 
 
     Hamiltonian[2,0] = W1 
     Hamiltonian[2,1] = U1 
-    Hamiltonian[2,2] = omega1  
+    Hamiltonian[2,2] = omega1 - v1*qx/np.sqrt(2.0) 
     Hamiltonian[2,3] = W1  
 
     Hamiltonian[3,0] = U1 
     Hamiltonian[3,1] = W1 
     Hamiltonian[3,2] = W1 
-    Hamiltonian[3,3] = omega1 -np.sqrt(2.0)*v1*q 
+    Hamiltonian[3,3] = omega1 -v1*qx/np.sqrt(2.0) 
 
     ### Block (1,2)
-    Hamiltonian[0,4] = V*cmath.exp(-1j*delta*K)
-    Hamiltonian[1,5] = V 
-    Hamiltonian[2,6] = V 
-    Hamiltonian[3,7] = V*cmath.exp(1j*delta*K) 
+    Hamiltonian[0,4] = V*cmath.exp(-1j*0.5*deltax*K)
+    Hamiltonian[1,5] = V*cmath.exp(-1j*0.5*deltax*K) 
+    Hamiltonian[2,6] = V*cmath.exp(1j*0.5*deltax*K) 
+    Hamiltonian[3,7] = V*cmath.exp(1j*0.5*deltax*K) 
 
     ### Block (2,1)
-    Hamiltonian[4,0] = V*cmath.exp(1j*delta*K)
-    Hamiltonian[5,1] = V 
-    Hamiltonian[6,2] = V 
-    Hamiltonian[7,3] = V*cmath.exp(-1j*delta*K)
+    Hamiltonian[4,0] = V*cmath.exp(1j*0.5*deltax*K)
+    Hamiltonian[5,1] = V*cmath.exp(1j*0.5*deltax*K) 
+    Hamiltonian[6,2] = V*cmath.exp(-1j*0.5*deltax*K)
+    Hamiltonian[7,3] = V*cmath.exp(-1j*0.5*deltax*K)
 
     ### Block (2,2)
-    Hamiltonian[4,4] = omega2 + np.sqrt(2.0)*v2*q 
+    Hamiltonian[4,4] = omega2 + v2*qx/np.sqrt(2.0) 
     Hamiltonian[4,5] = W2 
     Hamiltonian[4,6] = W2 
     Hamiltonian[4,7] = U2 
 
     Hamiltonian[5,4] = W2 
-    Hamiltonian[5,5] = omega2
+    Hamiltonian[5,5] = omega2 + v2*qx/np.sqrt(2.0)
     Hamiltonian[5,6] = U2 
     Hamiltonian[5,7] = W2 
 
     Hamiltonian[6,4] = W2 
     Hamiltonian[6,5] = U2 
-    Hamiltonian[6,6] = omega2  
+    Hamiltonian[6,6] = omega2 - v2*qx/np.sqrt(2.0) 
     Hamiltonian[6,7] = W2 
     
     Hamiltonian[7,4] = U2 
     Hamiltonian[7,5] = W2 
     Hamiltonian[7,6] = W2 
-    Hamiltonian[7,7] = omega2 - np.sqrt(2.0)*v2*q 
+    Hamiltonian[7,7] = omega2 - v2*qx/np.sqrt(2.0) 
 
     return Hamiltonian
 
 ##### FUNCTION: the derivative of the Hamiltonian with respect to 
 ###   the intrinsic momentum k
-def dH_q(v1,v2):
-    dHq = np.zeros((8,8),dtype=complex)
+def dH_qx(v1,v2):
+    dHqx = np.zeros((8,8),dtype=complex)
 
-    dHq[0,0] = np.sqrt(2.0)*v1 
-    dHq[3,3] = -np.sqrt(2.0)*v1 
-    dHq[4,4] = np.sqrt(2.0)*v2 
-    dHq[7,7] = -np.sqrt(2.0)*v2 
+    dHqx[0,0] = v1/np.sqrt(2.0)
+    dHqx[1,1] = v1/np.sqrt(2.0)
+    dHqx[2,2] = -v1/np.sqrt(2.0)
+    dHqx[3,3] = -v1/np.sqrt(2.0)   
+    dHqx[4,4] = v2/np.sqrt(2.0)
+    dHqx[5,5] = v2/np.sqrt(2.0)
+    dHqx[6,6] = -v2/np.sqrt(2.0)  
+    dHqx[7,7] = -v2/np.sqrt(2.0) 
 
-    return dHq 
+    return dHqx  
 
 ##### FUNCTION: the derivative of the Hamiltonian with respect to 
 ###   the synthetic momentum delta 
-def dH_delta(V,delta):
-    dHdelta = np.zeros((8,8),dtype=complex)
+def dH_deltax(V,deltax):
+    dHdeltax = np.zeros((8,8),dtype=complex)
 
     K = 2.0*np.pi 
 
-    dHdelta[0,4] = -1j*K*V*cmath.exp(-1j*delta*K)
-    dHdelta[3,7] = 1j*K*V*cmath.exp(1j*delta*K)
-    dHdelta[4,0] = 1j*K*V*cmath.exp(1j*delta*K)
-    dHdelta[7,3] = -1j*K*V*cmath.exp(-1j*delta*K)
+    dHdeltax[0,4] = -1j*0.5*K*V*cmath.exp(-1j*0.5*deltax*K)
+    dHdeltax[1,5] = -1j*0.5*K*V*cmath.exp(-1j*0.5*deltax*K)
+    dHdeltax[2,6] = 1j*0.5*K*V*cmath.exp(1j*0.5*deltax*K) 
+    dHdeltax[3,7] = 1j*0.5*K*V*cmath.exp(1j*0.5*deltax*K)
+    dHdeltax[4,0] = 1j*0.5*K*V*cmath.exp(1j*0.5*deltax*K) 
+    dHdeltax[5,1] = 1j*0.5*K*V*cmath.exp(1j*0.5*deltax*K) 
+    dHdeltax[6,2] = -1j*0.5*K*V*cmath.exp(-1j*0.5*deltax*K)
+    dHdeltax[7,3] = -1j*0.5*K*V*cmath.exp(-1j*0.5*deltax*K)
 
-    return dHdelta 
+    return dHdeltax 
 
 ##### The MAIN program goes here 
 def main():
@@ -102,33 +110,34 @@ def main():
     v2 = 0.35 
 
     U = -0.016615673 
-    DeltaU = 0.05*U
+    DeltaU = 0.01*U
     U1 = U+DeltaU 
     U2 = U-DeltaU 
 
     W = 0.001744918
-    DeltaW = 0.05*W 
+    DeltaW = 0.01*W 
     W1 = W+DeltaW 
     W2 = W-DeltaW 
 
     d0 = 0.35 
-    dist = 0.4
+    dist = 0.05
     V0 = 0.044
     V = V0*np.exp(-dist/d0)
 
     ### The array of intrinsic momenta k
     Nk = 201
-    Kmax = 0.10
-    k_array = np.linspace(-Kmax,Kmax,Nk)
-    dk = (k_array.max() - k_array.min())/(Nk-1)
+    Kmax = 0.02
+    kx_array = np.linspace(-Kmax,Kmax,Nk)
+    dkx = (kx_array.max() - kx_array.min())/(Nk-1)
 
     ### The array of synthetic momenta delta 
     Ndelta = 201 
-    delta_array = np.linspace(-0.5,0.5,Ndelta)
-    ddelta = (delta_array.max() - delta_array.min())/(Ndelta-1)
+    delta_r = 0.05 
+    deltax_array = np.linspace(0.5-delta_r,0.5+delta_r,Ndelta)
+    ddeltax = (deltax_array.max() - deltax_array.min())/(Ndelta-1)
 
-    ### The derivative dH/dk 
-    dHq = dH_q(v1,v2)
+    ### The derivative dH/dkx 
+    dHqx = dH_qx(v1,v2)
 
     ### Arrays of energy 
     Energy_array = np.zeros((Nk,Ndelta,8))
@@ -141,18 +150,18 @@ def main():
 
     ##### We scan over the intrinsic and synthetic momenta 
     for i in range(Nk):
-        k = k_array[i]
+        kx = kx_array[i]
         
         for j in range(Ndelta):
-            delta = delta_array[j]
+            deltax = deltax_array[j]
         
             ### The Hamiltonian 
-            H = Hamiltonian(k,delta,omega1,U1,W1,v1,omega2,U2,W2,v2,V)
+            H = Hamiltonian(kx,deltax,omega1,U1,W1,v1,omega2,U2,W2,v2,V)
             #print('H = ')
             #print(H)
 
             ### The derivative dH/ddelta 
-            dHdelta = dH_delta(V,delta)
+            dHdeltax = dH_deltax(V,deltax)
 
             ### Diagonalize the Hamitonian
             E,states = sla.eigh(H)
@@ -176,17 +185,17 @@ def main():
             # here A = dHq or dHdelta
             # and the j-th column of states is the eigenvector corresponding
             # to the j-th eigenvalue
-            dHqe = np.matmul((states.conjugate()).transpose(),np.matmul(dHq,states))
-            dHdeltae = np.matmul((states.conjugate()).transpose(),np.matmul(dHdelta,states))
+            dHqxe = np.matmul((states.conjugate()).transpose(),np.matmul(dHqx,states))
+            dHdeltaxe = np.matmul((states.conjugate()).transpose(),np.matmul(dHdeltax,states))
 
             for n in range(8):
                 for m in range(8):
                     if (m != n):
-                        val = -2.0*np.imag(dHqe[n,m]*dHdeltae[m,n]) / (E[n]-E[m])**2
+                        val = -2.0*np.imag(dHqxe[n,m]*dHdeltaxe[m,n]) / (E[n]-E[m])**2
                         F_array[i,j,n] = F_array[i,j,n] + val 
 
     ### Calculate the Chern numbers 
-    Chern_number = np.sum(F_array,axis=(0,1))*dk*ddelta/(2.0*np.pi)
+    Chern_number = np.sum(F_array,axis=(0,1))*dkx*ddeltax/(2.0*np.pi)
 
     print('# Chern number C1 = '+str(Chern_number[0]))
     print('# Chern number C2 = '+str(Chern_number[1]))
@@ -202,8 +211,8 @@ def main():
         with open('1p1D-k_delta_2DSlab2L-ChernNumber-'+str(n+1)+'.txt','w') as file:
             for i in range(Nk):
                 for j in range(Ndelta):
-                    file.write('%.8f    ' % k_array[i])
-                    file.writelines('%.8f   ' % delta_array[j])
+                    file.write('%.8f    ' % kx_array[i])
+                    file.writelines('%.8f   ' % deltax_array[j])
                     file.writelines('%.8f   ' % F_array[i,j,n])
                     file.write('\n')
 
@@ -211,7 +220,7 @@ def main():
     maxabs = abs(F_array).max()
 
     ### Plot the 2D maps of the Berry curvature of the 8 bands 
-    X,Y = np.meshgrid(k_array+0.5,delta_array)
+    X,Y = np.meshgrid(kx_array+0.5,deltax_array)
     cmap = 'coolwarm'
 
     fig,ax = plt.subplots(2,4,sharex=True,sharey=True,figsize=(16,10))
@@ -221,12 +230,12 @@ def main():
     for i in range(2):
         for j in range(4):
             ax[i,j].pcolormesh(X,Y,F_array[:,:,4*i+j].T,shading='gouraud',cmap=cmap)
-            ax[i,j].set_xlabel('q',fontsize=14)
+            ax[i,j].set_xlabel('k_x',fontsize=14)
             ax[i,j].set_title('Band '+str(4*i+j+1))
             ax[i,j].set_aspect('equal')
 
-    ax[0,0].set_ylabel(r'$\delta$',fontsize=14)
-    ax[1,0].set_ylabel(r'$\delta$',fontsize=14)
+    ax[0,0].set_ylabel(r'$\delta_x$',fontsize=14)
+    ax[1,0].set_ylabel(r'$\delta_x$',fontsize=14)
     
     fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),
         orientation='vertical',
@@ -234,7 +243,7 @@ def main():
         ax=ax)
     
     ### Plot the 2D maps of the absolute value of the Berry curvature of the 8 bands 
-    X,Y = np.meshgrid(k_array+0.5,delta_array)
+    X,Y = np.meshgrid(kx_array+0.5,deltax_array)
     cmap = 'bone'
 
     fig,ax = plt.subplots(2,4,sharex=True,sharey=True,figsize=(16,10))
@@ -244,12 +253,12 @@ def main():
     for i in range(2):
         for j in range(4):
             ax[i,j].pcolormesh(X,Y,abs(F_array[:,:,4*i+j]).T,shading='gouraud',cmap=cmap)
-            ax[i,j].set_xlabel('q',fontsize=14)
+            ax[i,j].set_xlabel('k_x',fontsize=14)
             ax[i,j].set_title('Band '+str(4*i+j+1))
             ax[i,j].set_aspect('equal')
 
-    ax[0,0].set_ylabel(r'$\delta$',fontsize=14)
-    ax[1,0].set_ylabel(r'$\delta$',fontsize=14)
+    ax[0,0].set_ylabel(r'$\delta_x$',fontsize=14)
+    ax[1,0].set_ylabel(r'$\delta_x$',fontsize=14)
     
     fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),
         orientation='vertical',
@@ -284,17 +293,17 @@ def main():
                         facecolors=fcolors,
                         cmap=cmap)
         
-    ax.set_xlabel(r'$k a / (2 \ pi)$',fontsize=14)
-    ax.set_ylabel(r'$\delta$',fontsize=14)
+    ax.set_xlabel(r'$k_x a / (2 \ pi)$',fontsize=14)
+    ax.set_ylabel(r'$\delta_x$',fontsize=14)
     fig.colorbar(scamap,
                  orientation='vertical',
                  shrink=0.4,
                  ax = ax)
-    ax.view_init(elev=5,azim=75,roll=0)
+    ax.view_init(elev=10,azim=75,roll=0)
     plt.savefig('Bands.png')        
 
     ### Plot the dispersion surfaces of couples of bands 
-    for i in range(6):
+    for i in range(0,8,4):
         fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
                           figsize=(12,10)) 
         fcolors1 = scamap.to_rgba(F_array_3D[:,:,i].T) 
@@ -317,15 +326,35 @@ def main():
                         cstride=1,
                         facecolors=fcolors2,
                         cmap=cmap)
-        ax.set_xlabel(r'$k a / (2 \ pi)$',fontsize=14)
-        ax.set_ylabel(r'$\delta$',fontsize=14)
-        ax.set_title('Bands '+str(i+1)+'+'+str(i+2),fontsize=14)
+        fcolors3 = scamap.to_rgba(F_array_3D[:,:,i+2].T) 
+        ax.plot_surface(X[:,xmin:xmax],
+                        Y[:,xmin:xmax],
+                        Energy_array[xmin:xmax,:,i+2].T,
+                        linewidth=linewidth,
+                        antialiased='True',
+                        rstride=1,
+                        cstride=1,
+                        facecolors=fcolors3,
+                        cmap=cmap)
+        fcolors4 = scamap.to_rgba(F_array_3D[:,:,i+3].T) 
+        ax.plot_surface(X[:,xmin:xmax],
+                        Y[:,xmin:xmax],
+                        Energy_array[xmin:xmax,:,i+3].T,
+                        linewidth=linewidth,
+                        antialiased='True',
+                        rstride=1,
+                        cstride=1,
+                        facecolors=fcolors4,
+                        cmap=cmap)
+        ax.set_xlabel(r'$k_x a / (2 \ pi)$',fontsize=14)
+        ax.set_ylabel(r'$\delta_x$',fontsize=14)
+        ax.set_title('Bands-'+str(i+1)+'-'+str(i+2)+'-'+str(i+3)+'-'+str(i+4),fontsize=14)
         fig.colorbar(scamap,
                      orientation='vertical',
                      shrink=0.4,
                      ax = ax)
-        ax.view_init(elev=5,azim=75,roll=0)
-        plt.savefig('Bands-'+str(i+1)+'-'+str(i+2)+'.png')     
+        ax.view_init(elev=10,azim=75,roll=0)
+        plt.savefig('Bands-'+str(i+1)+'-'+str(i+2)+'-'+str(i+3)+'-'+str(i+4)+'.png')     
 
     ### Show the figures        
     plt.show()
