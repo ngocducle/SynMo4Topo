@@ -101,13 +101,15 @@ def main():
     v1 = 0.35
     v2 = 0.35 
 
-    U = -0.016615673 
-    DeltaU = 0.05*U
+    U = -0.016615673
+    pU = -0.00038
+    DeltaU = pU*U
     U1 = U+DeltaU 
     U2 = U-DeltaU 
 
     W = 0.001744918
-    DeltaW = 0.05*W 
+    pW = -0.01 
+    DeltaW = pW*W 
     W1 = W+DeltaW 
     W2 = W-DeltaW 
 
@@ -118,7 +120,7 @@ def main():
 
     ### The array of intrinsic momenta k
     Nk = 201
-    Kmax = 0.10
+    Kmax = 0.1
     k_array = np.linspace(-Kmax,Kmax,Nk)
     dk = (k_array.max() - k_array.min())/(Nk-1)
 
@@ -233,6 +235,8 @@ def main():
         shrink=0.5,
         ax=ax)
     
+    plt.savefig('Berry_curvature_maps_pU'+str(pU)+'_pW'+str(pW)+'.png')
+    
     ### Plot the 2D maps of the absolute value of the Berry curvature of the 8 bands 
     X,Y = np.meshgrid(k_array+0.5,delta_array)
     cmap = 'bone'
@@ -255,11 +259,14 @@ def main():
         orientation='vertical',
         shrink=0.5,
         ax=ax)
+    plt.savefig('Abs_Berry_curvature_maps_pU'+str(pU)+'_pW'+str(pW)+'.png')
+    
     
     ### Plot the dispersion surfaces with Berry curvature 
     ### All the 8 bands 
     F_array_3D = F_array 
     maxabs = abs(F_array_3D).max() 
+    maxabs = 300 
     vmin, vmax = -maxabs,maxabs 
     cmap = 'coolwarm'
     norm = colors.Normalize(vmin=vmin,vmax=vmax)
@@ -279,19 +286,20 @@ def main():
                         Energy_array[xmin:xmax,:,i].T,
                         linewidth=linewidth,
                         antialiased='True',
-                        rstride=10,
-                        cstride=10,
+                        rstride=1,
+                        cstride=1,
                         facecolors=fcolors,
                         cmap=cmap)
         
     ax.set_xlabel(r'$k a / (2 \ pi)$',fontsize=14)
     ax.set_ylabel(r'$\delta$',fontsize=14)
+    ax.set_title(r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),fontsize=14)
     fig.colorbar(scamap,
                  orientation='vertical',
                  shrink=0.4,
                  ax = ax)
     ax.view_init(elev=5,azim=75,roll=0)
-    plt.savefig('Bands.png')        
+    plt.savefig('Bands_pU'+str(pU)+'_pW'+str(pW)+'.png')        
 
     ### Plot the dispersion surfaces of couples of bands 
     for i in range(6):
@@ -319,13 +327,14 @@ def main():
                         cmap=cmap)
         ax.set_xlabel(r'$k a / (2 \ pi)$',fontsize=14)
         ax.set_ylabel(r'$\delta$',fontsize=14)
-        ax.set_title('Bands '+str(i+1)+'+'+str(i+2),fontsize=14)
+        #ax.set_title('Bands '+str(i+1)+'+'+str(i+2),fontsize=14)
+        ax.set_title(r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),fontsize=14)
         fig.colorbar(scamap,
                      orientation='vertical',
                      shrink=0.4,
                      ax = ax)
         ax.view_init(elev=5,azim=75,roll=0)
-        plt.savefig('Bands-'+str(i+1)+'-'+str(i+2)+'.png')     
+        plt.savefig('Bands_'+str(i+1)+'_'+str(i+2)+'_pU'+str(pU)+'_pW'+str(pW)+'.png')     
 
     ### Show the figures        
     plt.show()
