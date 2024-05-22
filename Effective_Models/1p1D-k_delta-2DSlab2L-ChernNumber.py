@@ -6,14 +6,14 @@ import matplotlib.pyplot as plt
 from matplotlib import cm,colors 
 
 ##### FUNCTION: Hamiltonian of 2D photonic crystal slab bilayer with 
-###   kx = ky = k, delta_x = delta_y = delta 
-def Hamiltonian(q,delta,omega1,U1,W1,v1,omega2,U2,W2,v2,V):
+###   kx = ky = k, q_x = q_y = q  
+def Hamiltonian(k,q,omega1,U1,W1,v1,omega2,U2,W2,v2,V):
     Hamiltonian = np.zeros((8,8),dtype=complex)
 
     K = 2.0*np.pi 
 
     ### Block (1,1)
-    Hamiltonian[0,0] = omega1 + np.sqrt(2.0)*v1*q
+    Hamiltonian[0,0] = omega1 + np.sqrt(2.0)*v1*k
     Hamiltonian[0,1] = W1 
     Hamiltonian[0,2] = W1 
     Hamiltonian[0,3] = U1 
@@ -31,22 +31,22 @@ def Hamiltonian(q,delta,omega1,U1,W1,v1,omega2,U2,W2,v2,V):
     Hamiltonian[3,0] = U1 
     Hamiltonian[3,1] = W1 
     Hamiltonian[3,2] = W1 
-    Hamiltonian[3,3] = omega1 -np.sqrt(2.0)*v1*q 
+    Hamiltonian[3,3] = omega1 -np.sqrt(2.0)*v1*k 
 
     ### Block (1,2)
-    Hamiltonian[0,4] = V*cmath.exp(-1j*delta*K)
+    Hamiltonian[0,4] = V*cmath.exp(-1j*q*K)
     Hamiltonian[1,5] = V 
     Hamiltonian[2,6] = V 
-    Hamiltonian[3,7] = V*cmath.exp(1j*delta*K) 
+    Hamiltonian[3,7] = V*cmath.exp(1j*q*K) 
 
     ### Block (2,1)
-    Hamiltonian[4,0] = V*cmath.exp(1j*delta*K)
+    Hamiltonian[4,0] = V*cmath.exp(1j*q*K)
     Hamiltonian[5,1] = V 
     Hamiltonian[6,2] = V 
-    Hamiltonian[7,3] = V*cmath.exp(-1j*delta*K)
+    Hamiltonian[7,3] = V*cmath.exp(-1j*q*K)
 
     ### Block (2,2)
-    Hamiltonian[4,4] = omega2 + np.sqrt(2.0)*v2*q 
+    Hamiltonian[4,4] = omega2 + np.sqrt(2.0)*v2*k 
     Hamiltonian[4,5] = W2 
     Hamiltonian[4,6] = W2 
     Hamiltonian[4,7] = U2 
@@ -64,35 +64,35 @@ def Hamiltonian(q,delta,omega1,U1,W1,v1,omega2,U2,W2,v2,V):
     Hamiltonian[7,4] = U2 
     Hamiltonian[7,5] = W2 
     Hamiltonian[7,6] = W2 
-    Hamiltonian[7,7] = omega2 - np.sqrt(2.0)*v2*q 
+    Hamiltonian[7,7] = omega2 - np.sqrt(2.0)*v2*k 
 
     return Hamiltonian
 
 ##### FUNCTION: the derivative of the Hamiltonian with respect to 
 ###   the intrinsic momentum k
-def dH_q(v1,v2):
-    dHq = np.zeros((8,8),dtype=complex)
+def dH_k(v1,v2):
+    dHk = np.zeros((8,8),dtype=complex)
 
-    dHq[0,0] = np.sqrt(2.0)*v1 
-    dHq[3,3] = -np.sqrt(2.0)*v1 
-    dHq[4,4] = np.sqrt(2.0)*v2 
-    dHq[7,7] = -np.sqrt(2.0)*v2 
+    dHk[0,0] = np.sqrt(2.0)*v1 
+    dHk[3,3] = -np.sqrt(2.0)*v1 
+    dHk[4,4] = np.sqrt(2.0)*v2 
+    dHk[7,7] = -np.sqrt(2.0)*v2 
 
-    return dHq 
+    return dHk  
 
 ##### FUNCTION: the derivative of the Hamiltonian with respect to 
-###   the synthetic momentum delta 
-def dH_delta(V,delta):
-    dHdelta = np.zeros((8,8),dtype=complex)
+###   the synthetic momentum q 
+def dH_q(V,q):
+    dHq = np.zeros((8,8),dtype=complex)
 
     K = 2.0*np.pi 
 
-    dHdelta[0,4] = -1j*K*V*cmath.exp(-1j*delta*K)
-    dHdelta[3,7] = 1j*K*V*cmath.exp(1j*delta*K)
-    dHdelta[4,0] = 1j*K*V*cmath.exp(1j*delta*K)
-    dHdelta[7,3] = -1j*K*V*cmath.exp(-1j*delta*K)
+    dHq[0,4] = -1j*K*V*cmath.exp(-1j*q*K)
+    dHq[3,7] = 1j*K*V*cmath.exp(1j*q*K)
+    dHq[4,0] = 1j*K*V*cmath.exp(1j*q*K)
+    dHq[7,3] = -1j*K*V*cmath.exp(-1j*q*K)
 
-    return dHdelta 
+    return dHq 
 
 ##### The MAIN program goes here 
 def main():
@@ -102,7 +102,7 @@ def main():
     v2 = 0.35 
 
     U = -0.016615673
-    pU = -0.00038
+    pU = 0.0183
     DeltaU = pU*U
     U1 = U+DeltaU 
     U2 = U-DeltaU 
@@ -125,18 +125,18 @@ def main():
     dk = (k_array.max() - k_array.min())/(Nk-1)
 
     ### The array of synthetic momenta delta 
-    Ndelta = 201 
-    delta_array = np.linspace(-0.5,0.5,Ndelta)
-    ddelta = (delta_array.max() - delta_array.min())/(Ndelta-1)
+    Nq = 201 
+    q_array = np.linspace(-0.5,0.5,Nq)
+    dq = (q_array.max() - q_array.min())/(Nq-1)
 
     ### The derivative dH/dk 
-    dHq = dH_q(v1,v2)
+    dHk = dH_k(v1,v2)
 
     ### Arrays of energy 
-    Energy_array = np.zeros((Nk,Ndelta,8))
+    Energy_array = np.zeros((Nk,Nq,8))
 
     ### Array of Berry curvature 
-    F_array = np.zeros((Nk,Ndelta,8))
+    F_array = np.zeros((Nk,Nq,8))
 
     ### Array of Chern number 
     Chern_number = np.zeros(8)
@@ -145,16 +145,16 @@ def main():
     for i in range(Nk):
         k = k_array[i]
         
-        for j in range(Ndelta):
-            delta = delta_array[j]
+        for j in range(Nq):
+            q = q_array[j]
         
             ### The Hamiltonian 
-            H = Hamiltonian(k,delta,omega1,U1,W1,v1,omega2,U2,W2,v2,V)
+            H = Hamiltonian(k,q,omega1,U1,W1,v1,omega2,U2,W2,v2,V)
             #print('H = ')
             #print(H)
 
             ### The derivative dH/ddelta 
-            dHdelta = dH_delta(V,delta)
+            dHq = dH_q(V,q)
 
             ### Diagonalize the Hamitonian
             E,states = sla.eigh(H)
@@ -164,31 +164,31 @@ def main():
 
             ### ATTENTION! The formula to evaluate the Berry curvature is:
             #
-            # F_{q delta}^n = \sum_{m \ne n} (-2)*<n| dHq |m><m | dHdelta |n>/(En-Em)^2
+            # F_{kq}^n = \sum_{m \ne n} (-2)*<n| dHk |m><m | dHq |n>/(En-Em)^2
             #
-            # In fact: <n| dHq |m> and <m| dHdelta |n> are the matrix elements of 
-            # the operators dHq and dHdelta in the basis of the energy eigenstates 
+            # In fact: <n| dHk |m> and <m| dHq |n> are the matrix elements of 
+            # the operators dHk and dHq in the basis of the energy eigenstates 
             # of the Hamiltonian
             #
-            # Therefore, we reexpress the matrices dHq and dHdelta in the basis of 
+            # Therefore, we reexpress the matrices dHk and dHq in the basis of 
             # the eigenstates. The transformation is done by the formula:
             #
             #   A' = states^{\dagger}*A*states 
             #
-            # here A = dHq or dHdelta
+            # here A = dHk or dHq 
             # and the j-th column of states is the eigenvector corresponding
             # to the j-th eigenvalue
+            dHke = np.matmul((states.conjugate()).transpose(),np.matmul(dHk,states))
             dHqe = np.matmul((states.conjugate()).transpose(),np.matmul(dHq,states))
-            dHdeltae = np.matmul((states.conjugate()).transpose(),np.matmul(dHdelta,states))
 
             for n in range(8):
                 for m in range(8):
                     if (m != n):
-                        val = -2.0*np.imag(dHqe[n,m]*dHdeltae[m,n]) / (E[n]-E[m])**2
+                        val = -2.0*np.imag(dHke[n,m]*dHqe[m,n]) / (E[n]-E[m])**2
                         F_array[i,j,n] = F_array[i,j,n] + val 
 
     ### Calculate the Chern numbers 
-    Chern_number = np.sum(F_array,axis=(0,1))*dk*ddelta/(2.0*np.pi)
+    Chern_number = np.sum(F_array,axis=(0,1))*dk*dq/(2.0*np.pi)
 
     print('# Chern number C1 = '+str(Chern_number[0]))
     print('# Chern number C2 = '+str(Chern_number[1]))
@@ -203,9 +203,9 @@ def main():
     for n in range(8):
         with open('1p1D-k_delta_2DSlab2L-ChernNumber-'+str(n+1)+'.txt','w') as file:
             for i in range(Nk):
-                for j in range(Ndelta):
+                for j in range(Nq):
                     file.write('%.8f    ' % k_array[i])
-                    file.writelines('%.8f   ' % delta_array[j])
+                    file.writelines('%.8f   ' % q_array[j])
                     file.writelines('%.8f   ' % F_array[i,j,n])
                     file.write('\n')
 
@@ -213,7 +213,7 @@ def main():
     maxabs = abs(F_array).max()
 
     ### Plot the 2D maps of the Berry curvature of the 8 bands 
-    X,Y = np.meshgrid(k_array+0.5,delta_array)
+    X,Y = np.meshgrid(k_array+0.5,q_array)
     cmap = 'coolwarm'
 
     fig,ax = plt.subplots(2,4,sharex=True,sharey=True,figsize=(16,10))
@@ -238,7 +238,7 @@ def main():
     plt.savefig('Berry_curvature_maps_pU'+str(pU)+'_pW'+str(pW)+'.png')
     
     ### Plot the 2D maps of the absolute value of the Berry curvature of the 8 bands 
-    X,Y = np.meshgrid(k_array+0.5,delta_array)
+    X,Y = np.meshgrid(k_array+0.5,q_array)
     cmap = 'bone'
 
     fig,ax = plt.subplots(2,4,sharex=True,sharey=True,figsize=(16,10))
@@ -252,8 +252,8 @@ def main():
             ax[i,j].set_title('Band '+str(4*i+j+1))
             ax[i,j].set_aspect('equal')
 
-    ax[0,0].set_ylabel(r'$\delta$',fontsize=14)
-    ax[1,0].set_ylabel(r'$\delta$',fontsize=14)
+    ax[0,0].set_ylabel('q',fontsize=14)
+    ax[1,0].set_ylabel('q$',fontsize=14)
     
     fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),
         orientation='vertical',
@@ -291,8 +291,8 @@ def main():
                         facecolors=fcolors,
                         cmap=cmap)
         
-    ax.set_xlabel(r'$k a / (2 \ pi)$',fontsize=14)
-    ax.set_ylabel(r'$\delta$',fontsize=14)
+    ax.set_xlabel('k',fontsize=14)
+    ax.set_ylabel('q',fontsize=14)
     ax.set_title(r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),fontsize=14)
     fig.colorbar(scamap,
                  orientation='vertical',
@@ -325,8 +325,8 @@ def main():
                         cstride=1,
                         facecolors=fcolors2,
                         cmap=cmap)
-        ax.set_xlabel(r'$k a / (2 \ pi)$',fontsize=14)
-        ax.set_ylabel(r'$\delta$',fontsize=14)
+        ax.set_xlabel('k',fontsize=14)
+        ax.set_ylabel('q',fontsize=14)
         #ax.set_title('Bands '+str(i+1)+'+'+str(i+2),fontsize=14)
         ax.set_title(r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),fontsize=14)
         fig.colorbar(scamap,
