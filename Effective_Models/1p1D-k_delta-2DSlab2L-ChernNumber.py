@@ -102,13 +102,13 @@ def main():
     v2 = 0.35 
 
     U = -0.016615673
-    pU = 0.0183
+    pU = -0.009
     DeltaU = pU*U
     U1 = U+DeltaU 
     U2 = U-DeltaU 
 
     W = 0.001744918
-    pW = -0.01 
+    pW = 0.01 
     DeltaW = pW*W 
     W1 = W+DeltaW 
     W2 = W-DeltaW 
@@ -227,8 +227,8 @@ def main():
             ax[i,j].set_title('Band '+str(4*i+j+1))
             ax[i,j].set_aspect('equal')
 
-    ax[0,0].set_ylabel(r'$\delta$',fontsize=14)
-    ax[1,0].set_ylabel(r'$\delta$',fontsize=14)
+    ax[0,0].set_ylabel('q',fontsize=14)
+    ax[1,0].set_ylabel('q',fontsize=14)
     
     fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),
         orientation='vertical',
@@ -293,6 +293,7 @@ def main():
         
     ax.set_xlabel('k',fontsize=14)
     ax.set_ylabel('q',fontsize=14)
+    ax.set_zlabel('E',fontsize=14)
     ax.set_title(r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),fontsize=14)
     fig.colorbar(scamap,
                  orientation='vertical',
@@ -327,6 +328,7 @@ def main():
                         cmap=cmap)
         ax.set_xlabel('k',fontsize=14)
         ax.set_ylabel('q',fontsize=14)
+        ax.set_zlabel('E',fontsize=14)
         #ax.set_title('Bands '+str(i+1)+'+'+str(i+2),fontsize=14)
         ax.set_title(r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),fontsize=14)
         fig.colorbar(scamap,
@@ -335,6 +337,54 @@ def main():
                      ax = ax)
         ax.view_init(elev=5,azim=75,roll=0)
         plt.savefig('Bands_'+str(i+1)+'_'+str(i+2)+'_pU'+str(pU)+'_pW'+str(pW)+'.png')     
+
+    ### Select a band n (2<= n <= 7) and plot it together with bands n-1 and n+1 
+    select = 2 
+    fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
+                          figsize=(12,10)) 
+    fcolors1 = scamap.to_rgba(F_array_3D[:,:,select-2].T) 
+    ax.plot_surface(X[:,xmin:xmax],
+                    Y[:,xmin:xmax],
+                    Energy_array[xmin:xmax,:,select-2].T,
+                    linewidth=linewidth,
+                    antialiased='True',
+                    rstride=1,
+                    cstride=1,
+                    facecolors=fcolors1,
+                    cmap=cmap)
+    fcolors2 = scamap.to_rgba(F_array_3D[:,:,select-1].T) 
+    ax.plot_surface(X[:,xmin:xmax],
+                    Y[:,xmin:xmax],
+                    Energy_array[xmin:xmax,:,select-1].T,
+                    linewidth=linewidth,
+                    antialiased='True',
+                    rstride=1,
+                    cstride=1,
+                    facecolors=fcolors2,
+                    cmap=cmap)
+    fcolors3 = scamap.to_rgba(F_array_3D[:,:,select].T) 
+    ax.plot_surface(X[:,xmin:xmax],
+                    Y[:,xmin:xmax],
+                    Energy_array[xmin:xmax,:,select].T,
+                    linewidth=linewidth,
+                    antialiased='True',
+                    rstride=1,
+                    cstride=1,
+                    facecolors=fcolors3,
+                    cmap=cmap)
+    ax.set_xlabel('k',fontsize=14)
+    ax.set_ylabel('q',fontsize=14)
+    ax.set_zlabel('E',fontsize=14)
+    #ax.set_title('Bands '+str(i+1)+'+'+str(i+2),fontsize=14)
+    ax.set_title(r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),fontsize=14)
+    fig.colorbar(scamap,
+                 orientation='vertical',
+                 shrink=0.4,
+                 ax = ax)
+    ax.view_init(elev=5,azim=75,roll=0)
+    plt.savefig('Bands_'+str(select-1)+'_'+str(select)+'_'+str(select+1)
+                +'_pU'+str(pU)+'_pW'+str(pW)+'.png')     
+
 
     ### Show the figures        
     plt.show()
