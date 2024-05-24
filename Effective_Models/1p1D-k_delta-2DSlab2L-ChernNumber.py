@@ -120,13 +120,13 @@ def main():
 
     ### The array of intrinsic momenta k
     Nk = 201
-    Kmax = 0.1
+    Kmax = 0.0025
     k_array = np.linspace(-Kmax,Kmax,Nk)
     dk = (k_array.max() - k_array.min())/(Nk-1)
 
     ### The array of synthetic momenta delta 
     Nq = 201 
-    q_array = np.linspace(-0.5,0.5,Nq)
+    q_array = np.linspace(0.48,0.52,Nq)
     dq = (q_array.max() - q_array.min())/(Nq-1)
 
     ### The derivative dH/dk 
@@ -253,7 +253,7 @@ def main():
             ax[i,j].set_aspect('equal')
 
     ax[0,0].set_ylabel('q',fontsize=14)
-    ax[1,0].set_ylabel('q$',fontsize=14)
+    ax[1,0].set_ylabel('q',fontsize=14)
     
     fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),
         orientation='vertical',
@@ -266,7 +266,7 @@ def main():
     ### All the 8 bands 
     F_array_3D = F_array 
     maxabs = abs(F_array_3D).max() 
-    maxabs = 300 
+    maxabs = maxabs 
     vmin, vmax = -maxabs,maxabs 
     cmap = 'coolwarm'
     norm = colors.Normalize(vmin=vmin,vmax=vmax)
@@ -276,6 +276,7 @@ def main():
     xmin = 0  # int(Nk/2) - 20
     xmax = Nk # int(Nk/2) + 20 
 
+    
     fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
                           figsize=(12,10)) 
 
@@ -301,9 +302,11 @@ def main():
                  ax = ax)
     ax.view_init(elev=5,azim=75,roll=0)
     plt.savefig('Bands_pU'+str(pU)+'_pW'+str(pW)+'.png')        
+    
+    
 
     ### Plot the dispersion surfaces of couples of bands 
-    for i in range(6):
+    for i in range(1):
         fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
                           figsize=(12,10)) 
         fcolors1 = scamap.to_rgba(F_array_3D[:,:,i].T) 
@@ -326,11 +329,13 @@ def main():
                         cstride=1,
                         facecolors=fcolors2,
                         cmap=cmap)
+        #ax.plot_surface(X,Y,Energy_array[:,:,i].T) 
+        #ax.plot_surface(X,Y,Energy_array[:,:,i+1].T)
         ax.set_xlabel('k',fontsize=14)
         ax.set_ylabel('q',fontsize=14)
         ax.set_zlabel('E',fontsize=14)
         #ax.set_title('Bands '+str(i+1)+'+'+str(i+2),fontsize=14)
-        ax.set_title(r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),fontsize=14)
+        ax.set_title('Bands '+str(i+1)+'+'+str(i+2)+r'; $\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),fontsize=14)
         fig.colorbar(scamap,
                      orientation='vertical',
                      shrink=0.4,
@@ -338,6 +343,7 @@ def main():
         ax.view_init(elev=5,azim=75,roll=0)
         plt.savefig('Bands_'+str(i+1)+'_'+str(i+2)+'_pU'+str(pU)+'_pW'+str(pW)+'.png')     
 
+    
     ### Select a band n (2<= n <= 7) and plot it together with bands n-1 and n+1 
     select = 2 
     fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
@@ -384,7 +390,34 @@ def main():
     ax.view_init(elev=5,azim=75,roll=0)
     plt.savefig('Bands_'+str(select-1)+'_'+str(select)+'_'+str(select+1)
                 +'_pU'+str(pU)+'_pW'+str(pW)+'.png')     
+    
 
+    ### Check for the dispersion of couple of bands select and select+1 
+    ### k-direction with varying value of q 
+    select = 0 
+
+    fig,ax = plt.subplots(1,2,figsize=(10,8),sharey=True)
+    ax[0].plot(0.5+k_array,Energy_array[:,100,select],color='red',label='q = '+str(round(q_array[100],6))) 
+    ax[0].plot(0.5+k_array,Energy_array[:,100,select+1],color='red')
+    ax[0].plot(0.5+k_array,Energy_array[:,145,select],color='green',label='q = '+str(round(q_array[145],6))) 
+    ax[0].plot(0.5+k_array,Energy_array[:,145,select+1],color='green')
+    ax[0].plot(0.5+k_array,Energy_array[:,180,select],color='blue',label='q = '+str(round(q_array[180],6)))
+    ax[0].plot(0.5+k_array,Energy_array[:,180,select+1],color='blue')
+    ax[0].set_xlabel('k',fontsize=14)
+    ax[0].set_ylabel('E',fontsize=14) 
+    ax[0].legend(fontsize=14,loc='upper center')
+
+    ax[1].plot(q_array,Energy_array[100,:,select],color=[0.5,0,0],label='k = '+str(round(0.5+k_array[100],6))) 
+    ax[1].plot(q_array,Energy_array[100,:,select+1],color=[0.5,0,0])
+    ax[1].plot(q_array,Energy_array[145,:,select],color=[0,0.5,0],label='k = '+str(round(0.5+k_array[145],6))) 
+    ax[1].plot(q_array,Energy_array[145,:,select+1],color=[0,0.5,0])
+    ax[1].plot(q_array,Energy_array[180,:,select],color=[0,0,0.5],label='k = '+str(round(0.5+k_array[180],6)))
+    ax[1].plot(q_array,Energy_array[180,:,select+1],color=[0,0,0.5])
+    ax[1].set_xlabel('q',fontsize=14)
+    ax[1].legend(fontsize=14,loc='upper center')
+
+    plt.yticks(fontsize=14)
+    plt.savefig('Bands_'+str(select+1)+'_'+str(select+2)+'_dispersion_k_q.png')
 
     ### Show the figures        
     plt.show()
