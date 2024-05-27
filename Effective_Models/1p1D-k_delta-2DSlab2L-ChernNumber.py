@@ -114,16 +114,16 @@ def main():
     v2 = 0.35 
 
     # Anisotropic coefficient along the diagonals 
-    alpha = -0.10
+    alpha = 0.05
 
     U = -0.016615673
-    pU = 0.00 
+    pU = -0.009
     DeltaU = pU*U
     U1 = U+DeltaU 
     U2 = U-DeltaU 
 
     W = 0.001744918
-    pW = 0.00 
+    pW = 0.01 
     DeltaW = pW*W 
     W1 = W+DeltaW 
     W2 = W-DeltaW 
@@ -135,13 +135,13 @@ def main():
 
     ### The array of intrinsic momenta k
     Nk = 201
-    Kmax = 0.025
+    Kmax = 0.01 
     k_array = np.linspace(-Kmax,Kmax,Nk)
     dk = (k_array.max() - k_array.min())/(Nk-1)
 
     ### The array of synthetic momenta delta 
     Nq = 201 
-    q_array = np.linspace(0.50,0.55,Nq)
+    q_array = np.linspace(0.35,0.65,Nq)
     dq = (q_array.max() - q_array.min())/(Nq-1)
 
     ### The derivative dH/dk 
@@ -242,6 +242,7 @@ def main():
     cmap = 'coolwarm'
 
     fig,ax = plt.subplots(2,4,sharex=True,sharey=True,figsize=(16,10))
+    maxabs = 0.001*maxabs 
     vmin,vmax = -maxabs,maxabs 
     norm = colors.Normalize(vmin=vmin,vmax=vmax)
 
@@ -250,7 +251,7 @@ def main():
             ax[i,j].pcolormesh(X,Y,F_array[:,:,4*i+j].T,shading='gouraud',cmap=cmap)
             ax[i,j].set_xlabel('k',fontsize=14)
             ax[i,j].set_title('Band '+str(4*i+j+1))
-            ax[i,j].set_aspect('equal')
+            #ax[i,j].set_aspect('equal')
 
     ax[0,0].set_ylabel('q',fontsize=14)
     ax[1,0].set_ylabel('q',fontsize=14)
@@ -297,7 +298,7 @@ def main():
     ### ----------------------------------------------------------------------------------
     F_array_3D = F_array 
     maxabs = abs(F_array_3D).max() 
-    maxabs = maxabs 
+    maxabs = 0.01*maxabs 
     vmin, vmax = -maxabs,maxabs 
     cmap = 'coolwarm'
     norm = colors.Normalize(vmin=vmin,vmax=vmax)
@@ -339,10 +340,10 @@ def main():
     ### -------------------------------------------------------------------------------
     ### Plot the dispersion surfaces of couples of bands 
     ### -------------------------------------------------------------------------------
-    for i in range(2,3):
+    for i in range(0,2):
         fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
                           figsize=(12,10)) 
-        """fcolors1 = scamap.to_rgba(F_array_3D[:,:,i].T) 
+        fcolors1 = scamap.to_rgba(F_array_3D[:,:,i].T) 
         ax.plot_surface(X[:,xmin:xmax],
                         Y[:,xmin:xmax],
                         Energy_array[xmin:xmax,:,i].T,
@@ -361,9 +362,9 @@ def main():
                         rstride=1,
                         cstride=1,
                         facecolors=fcolors2,
-                        cmap=cmap)"""
-        ax.plot_surface(X,Y,Energy_array[:,:,i].T,cmap='spring') 
-        ax.plot_surface(X,Y,Energy_array[:,:,i+1].T,cmap='summer')
+                        cmap=cmap)
+        #ax.plot_surface(X,Y,Energy_array[:,:,i].T,cmap='spring') 
+        #ax.plot_surface(X,Y,Energy_array[:,:,i+1].T,cmap='summer')
         ax.set_xlabel('k',fontsize=14)
         ax.set_ylabel('q',fontsize=14)
         ax.set_zlabel('E',fontsize=14)
@@ -374,14 +375,14 @@ def main():
                      orientation='vertical',
                      shrink=0.4,
                      ax = ax)
-        ax.view_init(elev=5,azim=75,roll=0)
+        ax.view_init(elev=15,azim=45,roll=0)
         plt.savefig('Bands_'+str(i+1)+'_'+str(i+2)+'_pU'+str(pU)+'_pW'+str(pW)+
                     '_alpha'+str(alpha)+'.png')     
 
     ### ----------------------------------------------------------------------------------
     ### Select a band select = n (2<= n <= 7) and plot it together with bands n-1 and n+1 
     ### ----------------------------------------------------------------------------------
-    select = 3
+    select = 2
     fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
                           figsize=(12,10)) 
     fcolors1 = scamap.to_rgba(F_array_3D[:,:,select-2].T) 
@@ -432,7 +433,7 @@ def main():
     ### Check for the dispersion of couple of bands select and select+1  
     ### (1 <= select <= 7)
     ### k-direction with varying value of q 
-    select = 3  
+    select = 1 
 
     fig,ax = plt.subplots(1,2,figsize=(10,8),sharey=True)
     ax[0].plot(k_array,Energy_array[:,100,select-1],color='red',label='q = '+str(round(q_array[100],6))) 
