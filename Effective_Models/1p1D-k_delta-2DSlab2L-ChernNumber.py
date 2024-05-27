@@ -5,30 +5,36 @@ import cmath
 import matplotlib.pyplot as plt 
 from matplotlib import cm,colors 
 
+##### ============================================================================
 ##### FUNCTION: Hamiltonian of 2D photonic crystal slab bilayer with 
 ###   kx = ky = k, q_x = q_y = q  
-def Hamiltonian(k,q,omega1,U1,W1,v1,omega2,U2,W2,v2,V):
+def Hamiltonian(k,q,omega1,U1,W1,v1,omega2,U2,W2,v2,V,alpha):
     Hamiltonian = np.zeros((8,8),dtype=complex)
 
     K = 2.0*np.pi 
+
+    U1D = U1*(1+alpha)
+    U1A = U1*(1-alpha)
+    U2D = U2*(1+alpha)
+    U2A = U2*(1-alpha)
 
     ### Block (1,1)
     Hamiltonian[0,0] = omega1 + np.sqrt(2.0)*v1*k
     Hamiltonian[0,1] = W1 
     Hamiltonian[0,2] = W1 
-    Hamiltonian[0,3] = U1 
+    Hamiltonian[0,3] = U1D 
 
     Hamiltonian[1,0] = W1 
     Hamiltonian[1,1] = omega1 
-    Hamiltonian[1,2] = U1 
+    Hamiltonian[1,2] = U1A 
     Hamiltonian[1,3] = W1 
 
     Hamiltonian[2,0] = W1 
-    Hamiltonian[2,1] = U1 
+    Hamiltonian[2,1] = U1A 
     Hamiltonian[2,2] = omega1  
     Hamiltonian[2,3] = W1  
 
-    Hamiltonian[3,0] = U1 
+    Hamiltonian[3,0] = U1D 
     Hamiltonian[3,1] = W1 
     Hamiltonian[3,2] = W1 
     Hamiltonian[3,3] = omega1 -np.sqrt(2.0)*v1*k 
@@ -49,25 +55,26 @@ def Hamiltonian(k,q,omega1,U1,W1,v1,omega2,U2,W2,v2,V):
     Hamiltonian[4,4] = omega2 + np.sqrt(2.0)*v2*k 
     Hamiltonian[4,5] = W2 
     Hamiltonian[4,6] = W2 
-    Hamiltonian[4,7] = U2 
+    Hamiltonian[4,7] = U2D 
 
     Hamiltonian[5,4] = W2 
     Hamiltonian[5,5] = omega2
-    Hamiltonian[5,6] = U2 
+    Hamiltonian[5,6] = U2A 
     Hamiltonian[5,7] = W2 
 
     Hamiltonian[6,4] = W2 
-    Hamiltonian[6,5] = U2 
+    Hamiltonian[6,5] = U2A 
     Hamiltonian[6,6] = omega2  
     Hamiltonian[6,7] = W2 
     
-    Hamiltonian[7,4] = U2 
+    Hamiltonian[7,4] = U2D  
     Hamiltonian[7,5] = W2 
     Hamiltonian[7,6] = W2 
     Hamiltonian[7,7] = omega2 - np.sqrt(2.0)*v2*k 
 
     return Hamiltonian
 
+##### =============================================================================
 ##### FUNCTION: the derivative of the Hamiltonian with respect to 
 ###   the intrinsic momentum k
 def dH_k(v1,v2):
@@ -80,6 +87,7 @@ def dH_k(v1,v2):
 
     return dHk  
 
+##### =============================================================================
 ##### FUNCTION: the derivative of the Hamiltonian with respect to 
 ###   the synthetic momentum q 
 def dH_q(V,q):
@@ -94,15 +102,22 @@ def dH_q(V,q):
 
     return dHq 
 
-##### The MAIN program goes here 
+##### ============================================================================= #
+#####                                                                               #
+#####                       The MAIN program goes here                              #
+#####                                                                               #
+##### ============================================================================= # 
 def main():
     omega1 = 0.300464408
     omega2 = 0.300464408 
     v1 = 0.35
     v2 = 0.35 
 
+    # Anisotropic coefficient along the diagonals 
+    alpha = -0.10
+
     U = -0.016615673
-    pU = 0.00
+    pU = 0.00 
     DeltaU = pU*U
     U1 = U+DeltaU 
     U2 = U-DeltaU 
@@ -120,13 +135,13 @@ def main():
 
     ### The array of intrinsic momenta k
     Nk = 201
-    Kmax = 0.1
+    Kmax = 0.025
     k_array = np.linspace(-Kmax,Kmax,Nk)
     dk = (k_array.max() - k_array.min())/(Nk-1)
 
     ### The array of synthetic momenta delta 
     Nq = 201 
-    q_array = np.linspace(0.0,1.0,Nq)
+    q_array = np.linspace(0.50,0.55,Nq)
     dq = (q_array.max() - q_array.min())/(Nq-1)
 
     ### The derivative dH/dk 
@@ -149,7 +164,7 @@ def main():
             q = q_array[j]
         
             ### The Hamiltonian 
-            H = Hamiltonian(k,q,omega1,U1,W1,v1,omega2,U2,W2,v2,V)
+            H = Hamiltonian(k,q,omega1,U1,W1,v1,omega2,U2,W2,v2,V,alpha)
             #print('H = ')
             #print(H)
 
@@ -187,7 +202,11 @@ def main():
                         val = -2.0*np.imag(dHke[n,m]*dHqe[m,n]) / (E[n]-E[m])**2
                         F_array[i,j,n] = F_array[i,j,n] + val 
 
-    ### Calculate the Chern numbers 
+
+
+    ##### ============================================================================
+    ###                         Calculate the Chern numbers 
+    ##### ============================================================================
     Chern_number = np.sum(F_array,axis=(0,1))*dk*dq/(2.0*np.pi)
 
     print('# Chern number C1 = '+str(Chern_number[0]))
@@ -199,7 +218,9 @@ def main():
     print('# Chern number C7 = '+str(Chern_number[6]))
     print('# Chern number C8 = '+str(Chern_number[7]))
 
-    ### Print the results to a file 
+    ##### =============================================================================
+    ###                         Print the results to a file 
+    ##### =============================================================================
     for n in range(8):
         with open('1p1D-k_delta_2DSlab2L-ChernNumber-'+str(n+1)+'.txt','w') as file:
             for i in range(Nk):
@@ -209,11 +230,15 @@ def main():
                     file.writelines('%.8f   ' % F_array[i,j,n])
                     file.write('\n')
 
+
+    ##### =============================================================================
+    #####           Plot the 2D maps of the Berry curvature of the 8 bands 
+    ##### ============================================================================= 
     ### The maximal absolute value of the Berry curvature of all the 8 bands 
     maxabs = abs(F_array).max()
 
-    ### Plot the 2D maps of the Berry curvature of the 8 bands 
-    X,Y = np.meshgrid(k_array+0.5,q_array)
+    ### The arrays of domains and colormap 
+    X,Y = np.meshgrid(k_array,q_array)
     cmap = 'coolwarm'
 
     fig,ax = plt.subplots(2,4,sharex=True,sharey=True,figsize=(16,10))
@@ -235,10 +260,13 @@ def main():
         shrink=0.5,
         ax=ax)
     
-    plt.savefig('Berry_curvature_maps_pU'+str(pU)+'_pW'+str(pW)+'.png')
+    plt.savefig('Berry_curvature_maps_pU'+str(pU)+'_pW'+str(pW)+
+                '_alpha'+str(alpha)+'.png')
     
-    ### Plot the 2D maps of the absolute value of the Berry curvature of the 8 bands 
-    X,Y = np.meshgrid(k_array+0.5,q_array)
+    ##### ================================================================================
+    ###    Plot the 2D maps of the absolute value of the Berry curvature of the 8 bands 
+    ##### ================================================================================
+    X,Y = np.meshgrid(k_array,q_array)
     cmap = 'bone'
 
     fig,ax = plt.subplots(2,4,sharex=True,sharey=True,figsize=(16,10))
@@ -259,11 +287,14 @@ def main():
         orientation='vertical',
         shrink=0.5,
         ax=ax)
-    plt.savefig('Abs_Berry_curvature_maps_pU'+str(pU)+'_pW'+str(pW)+'.png')
+    plt.savefig('Abs_Berry_curvature_maps_pU'+str(pU)+'_pW'+str(pW)+
+                '_alpha'+str(alpha)+'.png')
     
-    
-    ### Plot the dispersion surfaces with Berry curvature 
+    ##### ================================================================================
+    ###                Plot the dispersion surfaces with Berry curvature 
+    ##### ================================================================================
     ### All the 8 bands 
+    ### ----------------------------------------------------------------------------------
     F_array_3D = F_array 
     maxabs = abs(F_array_3D).max() 
     maxabs = maxabs 
@@ -295,21 +326,23 @@ def main():
     ax.set_xlabel('k',fontsize=14)
     ax.set_ylabel('q',fontsize=14)
     ax.set_zlabel('E',fontsize=14)
-    ax.set_title(r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),fontsize=14)
+    ax.set_title(r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW)
+                 +r', $\alpha = $'+str(alpha),fontsize=14)
     fig.colorbar(scamap,
                  orientation='vertical',
                  shrink=0.4,
                  ax = ax)
     ax.view_init(elev=5,azim=75,roll=0)
-    plt.savefig('Bands_pU'+str(pU)+'_pW'+str(pW)+'.png')        
+    plt.savefig('Bands_pU'+str(pU)+'_pW'+str(pW)+'_alpha'+str(alpha)+'.png')        
     
     
-
+    ### -------------------------------------------------------------------------------
     ### Plot the dispersion surfaces of couples of bands 
-    for i in range(1):
+    ### -------------------------------------------------------------------------------
+    for i in range(2,3):
         fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
                           figsize=(12,10)) 
-        fcolors1 = scamap.to_rgba(F_array_3D[:,:,i].T) 
+        """fcolors1 = scamap.to_rgba(F_array_3D[:,:,i].T) 
         ax.plot_surface(X[:,xmin:xmax],
                         Y[:,xmin:xmax],
                         Energy_array[xmin:xmax,:,i].T,
@@ -328,24 +361,27 @@ def main():
                         rstride=1,
                         cstride=1,
                         facecolors=fcolors2,
-                        cmap=cmap)
-        #ax.plot_surface(X,Y,Energy_array[:,:,i].T) 
-        #ax.plot_surface(X,Y,Energy_array[:,:,i+1].T)
+                        cmap=cmap)"""
+        ax.plot_surface(X,Y,Energy_array[:,:,i].T,cmap='spring') 
+        ax.plot_surface(X,Y,Energy_array[:,:,i+1].T,cmap='summer')
         ax.set_xlabel('k',fontsize=14)
         ax.set_ylabel('q',fontsize=14)
         ax.set_zlabel('E',fontsize=14)
-        #ax.set_title('Bands '+str(i+1)+'+'+str(i+2),fontsize=14)
-        ax.set_title('Bands '+str(i+1)+'+'+str(i+2)+r'; $\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),fontsize=14)
+        ax.set_title('Bands '+str(i+1)+'+'+str(i+2)+r'; $\Delta U/U = $'+str(pU)+
+                     ', $\Delta W/W = $'+str(pW)+r', $\alpha = $'+str(alpha),
+                     fontsize=14)
         fig.colorbar(scamap,
                      orientation='vertical',
                      shrink=0.4,
                      ax = ax)
         ax.view_init(elev=5,azim=75,roll=0)
-        plt.savefig('Bands_'+str(i+1)+'_'+str(i+2)+'_pU'+str(pU)+'_pW'+str(pW)+'.png')     
+        plt.savefig('Bands_'+str(i+1)+'_'+str(i+2)+'_pU'+str(pU)+'_pW'+str(pW)+
+                    '_alpha'+str(alpha)+'.png')     
 
-    
-    ### Select a band n (2<= n <= 7) and plot it together with bands n-1 and n+1 
-    select = 2 
+    ### ----------------------------------------------------------------------------------
+    ### Select a band select = n (2<= n <= 7) and plot it together with bands n-1 and n+1 
+    ### ----------------------------------------------------------------------------------
+    select = 3
     fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
                           figsize=(12,10)) 
     fcolors1 = scamap.to_rgba(F_array_3D[:,:,select-2].T) 
@@ -381,46 +417,53 @@ def main():
     ax.set_xlabel('k',fontsize=14)
     ax.set_ylabel('q',fontsize=14)
     ax.set_zlabel('E',fontsize=14)
-    #ax.set_title('Bands '+str(i+1)+'+'+str(i+2),fontsize=14)
-    ax.set_title(r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),fontsize=14)
+    ax.set_title('Bands '+str(select-1)+'+'+str(select)+'+'+str(select+1)+';'
+                 +r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW)
+                 +r', $\alpha = $'+str(alpha),fontsize=14)
     fig.colorbar(scamap,
                  orientation='vertical',
                  shrink=0.4,
                  ax = ax)
     ax.view_init(elev=5,azim=75,roll=0)
     plt.savefig('Bands_'+str(select-1)+'_'+str(select)+'_'+str(select+1)
-                +'_pU'+str(pU)+'_pW'+str(pW)+'.png')     
+                +'_pU'+str(pU)+'_pW'+str(pW)+'_alpha'+str(alpha)+'.png')     
     
 
-    ### Check for the dispersion of couple of bands select and select+1 
+    ### Check for the dispersion of couple of bands select and select+1  
+    ### (1 <= select <= 7)
     ### k-direction with varying value of q 
-    select = 0 
+    select = 3  
 
-    fig,ax = plt.subplots(1,2,figsize=(10,8),sharey=False)
-    ax[0].plot(k_array,Energy_array[:,100,select],color='red',label='q = '+str(round(q_array[100],6))) 
-    ax[0].plot(k_array,Energy_array[:,100,select+1],color='red')
-    #ax[0].plot(k_array,Energy_array[:,145,select],color='green',label='q = '+str(round(q_array[145],6))) 
-    #ax[0].plot(k_array,Energy_array[:,145,select+1],color='green')
-    #ax[0].plot(k_array,Energy_array[:,180,select],color='blue',label='q = '+str(round(q_array[180],6)))
-    #ax[0].plot(k_array,Energy_array[:,180,select+1],color='blue')
+    fig,ax = plt.subplots(1,2,figsize=(10,8),sharey=True)
+    ax[0].plot(k_array,Energy_array[:,100,select-1],color='red',label='q = '+str(round(q_array[100],6))) 
+    ax[0].plot(k_array,Energy_array[:,100,select],color='red')
+    #ax[0].plot(k_array,Energy_array[:,145,select-1],color='green',label='q = '+str(round(q_array[145],6))) 
+    #ax[0].plot(k_array,Energy_array[:,145,select],color='green')
+    #ax[0].plot(k_array,Energy_array[:,180,select-1],color='blue',label='q = '+str(round(q_array[180],6)))
+    #ax[0].plot(k_array,Energy_array[:,180,select],color='blue')
     ax[0].set_xlabel('k',fontsize=14)
     ax[0].set_ylabel('E',fontsize=14) 
-    ax[0].legend(fontsize=14,loc='upper center')
+    ax[0].legend(fontsize=14,loc='center',bbox_to_anchor=(0.275,-0.625,0.5,1))
+    ax[0].set_title('Bands '+str(select)+'+'+str(select+1)+r', $\alpha = $'+str(alpha),fontsize=14)
 
-    ax[1].plot(q_array,Energy_array[100,:,select],color=[0.5,0,0],label='k = '+str(round(k_array[100],6))) 
-    ax[1].plot(q_array,Energy_array[100,:,select+1],color=[0.5,0,0])
-    #ax[1].plot(q_array,Energy_array[145,:,select],color=[0,0.5,0],label='k = '+str(round(k_array[145],6))) 
-    #ax[1].plot(q_array,Energy_array[145,:,select+1],color=[0,0.5,0])
-    #ax[1].plot(q_array,Energy_array[180,:,select],color=[0,0,0.5],label='k = '+str(round(k_array[180],6)))
-    #ax[1].plot(q_array,Energy_array[180,:,select+1],color=[0,0,0.5])
+    ax[1].plot(q_array,Energy_array[100,:,select-1],color=[0.5,0,0],label='k = '+str(round(k_array[100],6))) 
+    ax[1].plot(q_array,Energy_array[100,:,select],color=[0.5,0,0])
+    #ax[1].plot(q_array,Energy_array[145,:,select-1],color=[0,0.5,0],label='k = '+str(round(k_array[145],6))) 
+    #ax[1].plot(q_array,Energy_array[145,:,select],color=[0,0.5,0])
+    #ax[1].plot(q_array,Energy_array[180,:,select-1],color=[0,0,0.5],label='k = '+str(round(k_array[180],6)))
+    #ax[1].plot(q_array,Energy_array[180,:,select],color=[0,0,0.5])
     ax[1].set_xlabel('q',fontsize=14)
-    ax[1].legend(fontsize=14,loc='upper center')
+    ax[1].legend(fontsize=14,loc='center',bbox_to_anchor=(0.275,-0.625,0.5,1)) 
+    ax[1].set_title('Bands '+str(select)+'+'+str(select+1)+r', $\alpha = $'+str(alpha),fontsize=14)
+    
 
     plt.yticks(fontsize=14)
-    plt.savefig('Bands_'+str(select+1)+'_'+str(select+2)+'_dispersion_k_q.png')
+    plt.savefig('Bands_'+str(select)+'_'+str(select+1)+'_dispersion_k_q.png')
 
+    ##### ============================================================================
     ### Show the figures        
     plt.show()
+##### ================================================================================ 
 
 if __name__ == "__main__":
     main()
