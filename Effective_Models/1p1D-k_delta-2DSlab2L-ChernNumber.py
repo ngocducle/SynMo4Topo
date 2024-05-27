@@ -102,13 +102,13 @@ def main():
     v2 = 0.35 
 
     U = -0.016615673
-    pU = -0.009
+    pU = 0.00
     DeltaU = pU*U
     U1 = U+DeltaU 
     U2 = U-DeltaU 
 
     W = 0.001744918
-    pW = 0.01 
+    pW = 0.00 
     DeltaW = pW*W 
     W1 = W+DeltaW 
     W2 = W-DeltaW 
@@ -120,13 +120,13 @@ def main():
 
     ### The array of intrinsic momenta k
     Nk = 201
-    Kmax = 0.0025
+    Kmax = 0.1
     k_array = np.linspace(-Kmax,Kmax,Nk)
     dk = (k_array.max() - k_array.min())/(Nk-1)
 
     ### The array of synthetic momenta delta 
     Nq = 201 
-    q_array = np.linspace(0.48,0.52,Nq)
+    q_array = np.linspace(0.0,1.0,Nq)
     dq = (q_array.max() - q_array.min())/(Nq-1)
 
     ### The derivative dH/dk 
@@ -396,23 +396,23 @@ def main():
     ### k-direction with varying value of q 
     select = 0 
 
-    fig,ax = plt.subplots(1,2,figsize=(10,8),sharey=True)
-    ax[0].plot(0.5+k_array,Energy_array[:,100,select],color='red',label='q = '+str(round(q_array[100],6))) 
-    ax[0].plot(0.5+k_array,Energy_array[:,100,select+1],color='red')
-    ax[0].plot(0.5+k_array,Energy_array[:,145,select],color='green',label='q = '+str(round(q_array[145],6))) 
-    ax[0].plot(0.5+k_array,Energy_array[:,145,select+1],color='green')
-    ax[0].plot(0.5+k_array,Energy_array[:,180,select],color='blue',label='q = '+str(round(q_array[180],6)))
-    ax[0].plot(0.5+k_array,Energy_array[:,180,select+1],color='blue')
+    fig,ax = plt.subplots(1,2,figsize=(10,8),sharey=False)
+    ax[0].plot(k_array,Energy_array[:,100,select],color='red',label='q = '+str(round(q_array[100],6))) 
+    ax[0].plot(k_array,Energy_array[:,100,select+1],color='red')
+    #ax[0].plot(k_array,Energy_array[:,145,select],color='green',label='q = '+str(round(q_array[145],6))) 
+    #ax[0].plot(k_array,Energy_array[:,145,select+1],color='green')
+    #ax[0].plot(k_array,Energy_array[:,180,select],color='blue',label='q = '+str(round(q_array[180],6)))
+    #ax[0].plot(k_array,Energy_array[:,180,select+1],color='blue')
     ax[0].set_xlabel('k',fontsize=14)
     ax[0].set_ylabel('E',fontsize=14) 
     ax[0].legend(fontsize=14,loc='upper center')
 
-    ax[1].plot(q_array,Energy_array[100,:,select],color=[0.5,0,0],label='k = '+str(round(0.5+k_array[100],6))) 
+    ax[1].plot(q_array,Energy_array[100,:,select],color=[0.5,0,0],label='k = '+str(round(k_array[100],6))) 
     ax[1].plot(q_array,Energy_array[100,:,select+1],color=[0.5,0,0])
-    ax[1].plot(q_array,Energy_array[145,:,select],color=[0,0.5,0],label='k = '+str(round(0.5+k_array[145],6))) 
-    ax[1].plot(q_array,Energy_array[145,:,select+1],color=[0,0.5,0])
-    ax[1].plot(q_array,Energy_array[180,:,select],color=[0,0,0.5],label='k = '+str(round(0.5+k_array[180],6)))
-    ax[1].plot(q_array,Energy_array[180,:,select+1],color=[0,0,0.5])
+    #ax[1].plot(q_array,Energy_array[145,:,select],color=[0,0.5,0],label='k = '+str(round(k_array[145],6))) 
+    #ax[1].plot(q_array,Energy_array[145,:,select+1],color=[0,0.5,0])
+    #ax[1].plot(q_array,Energy_array[180,:,select],color=[0,0,0.5],label='k = '+str(round(k_array[180],6)))
+    #ax[1].plot(q_array,Energy_array[180,:,select+1],color=[0,0,0.5])
     ax[1].set_xlabel('q',fontsize=14)
     ax[1].legend(fontsize=14,loc='upper center')
 

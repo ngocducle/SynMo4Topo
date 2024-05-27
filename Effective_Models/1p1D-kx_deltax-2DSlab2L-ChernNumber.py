@@ -110,12 +110,14 @@ def main():
     v2 = 0.35 
 
     U = -0.016615673 
-    DeltaU = 0.01*U
+    pU = -0.01
+    DeltaU = pU*U
     U1 = U+DeltaU 
     U2 = U-DeltaU 
 
     W = 0.001744918
-    DeltaW = 0.01*W 
+    pW = -0.01 
+    DeltaW = pW*W 
     W1 = W+DeltaW 
     W2 = W-DeltaW 
 
@@ -126,13 +128,13 @@ def main():
 
     ### The array of intrinsic momenta k
     Nk = 201
-    Kmax = 0.02
+    Kmax = 0.011
     kx_array = np.linspace(-Kmax,Kmax,Nk)
     dkx = (kx_array.max() - kx_array.min())/(Nk-1)
 
     ### The array of synthetic momenta q 
     Nq = 201 
-    q_r = 0.05 
+    q_r = 0.05
     qx_array = np.linspace(0.5-q_r,0.5+q_r,Nq)
     dqx = (qx_array.max() - qx_array.min())/(Nq-1)
 
@@ -230,12 +232,12 @@ def main():
     for i in range(2):
         for j in range(4):
             ax[i,j].pcolormesh(X,Y,F_array[:,:,4*i+j].T,shading='gouraud',cmap=cmap)
-            ax[i,j].set_xlabel('k_x',fontsize=14)
+            ax[i,j].set_xlabel(r'$k_x$',fontsize=14)
             ax[i,j].set_title('Band '+str(4*i+j+1))
             ax[i,j].set_aspect('equal')
 
-    ax[0,0].set_ylabel(r'$\delta_x$',fontsize=14)
-    ax[1,0].set_ylabel(r'$\delta_x$',fontsize=14)
+    ax[0,0].set_ylabel(r'$q_x$',fontsize=14)
+    ax[1,0].set_ylabel(r'$q_x$',fontsize=14)
     
     fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),
         orientation='vertical',
@@ -253,12 +255,12 @@ def main():
     for i in range(2):
         for j in range(4):
             ax[i,j].pcolormesh(X,Y,abs(F_array[:,:,4*i+j]).T,shading='gouraud',cmap=cmap)
-            ax[i,j].set_xlabel('k_x',fontsize=14)
+            ax[i,j].set_xlabel(r'$k_x$',fontsize=14)
             ax[i,j].set_title('Band '+str(4*i+j+1))
             ax[i,j].set_aspect('equal')
 
-    ax[0,0].set_ylabel(r'$\delta_x$',fontsize=14)
-    ax[1,0].set_ylabel(r'$\delta_x$',fontsize=14)
+    ax[0,0].set_ylabel(r'$q_x$',fontsize=14)
+    ax[1,0].set_ylabel(r'$q_x$',fontsize=14)
     
     fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),
         orientation='vertical',
@@ -269,6 +271,7 @@ def main():
     ### All the 8 bands 
     F_array_3D = F_array 
     maxabs = abs(F_array_3D).max() 
+    maxabs = 0.1*maxabs 
     vmin, vmax = -maxabs,maxabs 
     cmap = 'coolwarm'
     norm = colors.Normalize(vmin=vmin,vmax=vmax)
@@ -293,14 +296,15 @@ def main():
                         facecolors=fcolors,
                         cmap=cmap)
         
-    ax.set_xlabel(r'$k_x a / (2 \ pi)$',fontsize=14)
-    ax.set_ylabel(r'$\delta_x$',fontsize=14)
+    ax.set_xlabel(r'$k_x$',fontsize=14)
+    ax.set_ylabel(r'$q_x$',fontsize=14)
+    ax.set_title(r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),fontsize=14)
     fig.colorbar(scamap,
                  orientation='vertical',
                  shrink=0.4,
                  ax = ax)
     ax.view_init(elev=10,azim=75,roll=0)
-    plt.savefig('Bands.png')        
+    plt.savefig('Bands'+'_pU'+str(pU)+'_pW'+str(pW)+'.png')        
 
     ### Plot the dispersion surfaces of couples of bands 
     for i in range(0,8,4):
@@ -346,15 +350,18 @@ def main():
                         cstride=1,
                         facecolors=fcolors4,
                         cmap=cmap)
-        ax.set_xlabel(r'$k_x a / (2 \ pi)$',fontsize=14)
-        ax.set_ylabel(r'$\delta_x$',fontsize=14)
-        ax.set_title('Bands-'+str(i+1)+'-'+str(i+2)+'-'+str(i+3)+'-'+str(i+4),fontsize=14)
+        ax.set_xlabel(r'$k_x$',fontsize=14)
+        ax.set_ylabel(r'$q_x$',fontsize=14)
+        ax.set_title('Bands-'+str(i+1)+'-'+str(i+2)+'-'+str(i+3)+'-'+str(i+4)+'; '+
+                     r'$\Delta U/U = $'+str(pU)+', $\Delta W/W = $'+str(pW),
+                     fontsize=14)
         fig.colorbar(scamap,
                      orientation='vertical',
                      shrink=0.4,
                      ax = ax)
         ax.view_init(elev=10,azim=75,roll=0)
-        plt.savefig('Bands-'+str(i+1)+'-'+str(i+2)+'-'+str(i+3)+'-'+str(i+4)+'.png')     
+        plt.savefig('Bands-'+str(i+1)+'-'+str(i+2)+'-'+str(i+3)+'-'+str(i+4)
+                    +'_pU'+str(pU)+'_pW'+str(pW)+'.png')     
 
     ### Show the figures        
     plt.show()
