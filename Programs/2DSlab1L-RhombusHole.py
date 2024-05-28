@@ -4,6 +4,7 @@ from meep import mpb
 
 import sys 
 sys.path.insert(0,'../src/')
+from Materials import * 
 
 ##### The main program goes here 
 def main():
@@ -20,8 +21,8 @@ def main():
 
     ### The part of the momentum space to plot the band structure 
     # Choose between: 'BZ', 'Gamma-M', 'M', 'M-vicinity'
-    kSpace = 'BZ'
-    print('# The part of the momentum space to simulate:'+kSpace) 
+    #kSpace = 'BZ'
+    #print('# The part of the momentum space to simulate:'+kSpace) 
 
     ### The k-point at which we plot the field profile 
     k_field = mp.Vector3(0.5,0.5,0.0)   # M-point 
@@ -52,7 +53,24 @@ def main():
         mp.Vector3(-(1-alpha_d)*c,  (1-alpha_d)*c, 0.0 )
     ]
 
+    ### Number of bands 
+    num_bands = 20 
+    print('# The number of bands to simulateL '+str(num_bands))
 
+    ### Number of k-points to interpolate between the 2 high-symmetry points 
+    Nk = 29 
+    print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
+
+    ### Show figure (Yes/No)
+    show_fig = 'Yes'
+    print('# Show the figure: '+str(show_fig))
+
+    ### Materials 
+    # The material forming the structure 
+    Mater = Si 
+
+    # The envionment 
+    Envir = PMMA 
 
 
 
