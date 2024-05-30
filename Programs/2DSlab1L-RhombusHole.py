@@ -5,6 +5,9 @@ from meep import mpb
 import sys 
 sys.path.insert(0,'../src/')
 from ModeSolvers import _2DSlab1LRhombusHole 
+from DielectricProfile import *
+from BandStructure import *  
+from ExportData import * 
 from Materials import * 
 
 ##### The main program goes here 
@@ -30,17 +33,17 @@ def main():
     print('# The k-point at which we plot the field profile:'+str(k_field))
 
     ### Resolution 
-    resolution = mp.Vector3(8,8,8)  # pixels/a 
+    resolution = mp.Vector3(32,32,16)  # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters 
     h = 0.35       # Thickness of the slab 
     Lz = 5.0       # The height of the unit cell along the z-direction 
-    c = 0.3        # The mean of the projections of the diagonals vertices (0<= mean_d <0.5)
-    e = 0.2        # The anisotropy between the two diagonals (-1<=alpha_d<=1)
+    b = 0.35       # The mean of the projections of the diagonals vertices (0<= mean_d <0.5)
+    e = -0.05      # The anisotropy between the two diagonals (-1<=alpha_d<=1)
 
     print('# Thickness of the slab h = '+str(h))
-    print('# Mean half-axis of the rhombus c = '+str(c))
+    print('# The projection of mean half-axis of the rhombus on the edges b = '+str(b))
     print('# The height of the simulation cell Lz = '+str(Lz))
 
     ### The vertices of the rhombus hole 
@@ -48,10 +51,10 @@ def main():
     # If alpha = 0 then the hole is a square 
     # If alpha < 0 then the diagonal x=y is shorter than the diagonal x=-y 
     vertices = [
-        mp.Vector3( (1+e)*c,  (1+e)*c, 0.0 ),
-        mp.Vector3( (1-e)*c, -(1-e)*c, 0.0 ),
-        mp.Vector3(-(1+e)*c, -(1+e)*c, 0.0 ),
-        mp.Vector3(-(1-e)*c,  (1-e)*c, 0.0 )
+        mp.Vector3( (1+e)*b,  (1+e)*b, 0.0 ),
+        mp.Vector3( (1-e)*b, -(1-e)*b, 0.0 ),
+        mp.Vector3(-(1+e)*b, -(1+e)*b, 0.0 ),
+        mp.Vector3(-(1-e)*b,  (1-e)*b, 0.0 )
     ]
 
     ### Number of bands 
@@ -74,12 +77,20 @@ def main():
     Envir = PMMA 
 
     # The set of k-points 
+    kSpace = 'BZ'
     k_points = [
         mp.Vector3(0.0,0.0,0.0),    # Gamma 
         mp.Vector3(0.5,0.0,0.0),    # X
         mp.Vector3(0.5,0.5,0.0),    # M
-        mp.Vector3(0.0,0.0,0.0)     # Gamma 
+        mp.Vector3(0.0,0.0,0.0),    # Gamma 
+        mp.Vector3(0.0,0.5,0.0),    # Y 
+        mp.Vector3(-0.5,0.5,0.0),   # M  
     ]
+
+    k_points = mp.interpolate(Nk,k_points)
+
+    # Show the figure
+    show_fig = 'Yes'
 
     ############################################################################
     #                                                                          #
@@ -88,12 +99,80 @@ def main():
     ############################################################################
 
     ### Define the mode solver 
-    ms = _2DSlab1LRhombusHole(h,Lz,c,e,vertices,
+    ms = _2DSlab1LRhombusHole(h,Lz,b,e,vertices,
                               num_bands,k_points,resolution,Mater,Envir)
+    
+    ### Run the simulation 
+    if polarization == 'all':
+        ms.run()
+    elif polarization == 'zeven':
+        ms.run_zeven()
+    elif polarization == 'zodd':
+        ms.run_zodd()
+    else:
+        print('ERROR! The polarization does not belong to the allowed list')
+        exit()
+
+    ### Extract the frequencies of the modes from the ModeSolver
+    freqs = ms.all_freqs 
+
+    ### The number of elements in k_points 
+    number = np.arange(len(ms.k_points))
+
+    ### The title and the name of the files
+    namesave = '2DSlab1L-RhombusHole-h_'+str(h)+'-b_'+str(b) \
+        +'-e_'+str(e)+'-'+polarization 
+    
+    ### Output the dielectric profile along the z-direction with projected (X,Y)
+    x = 0.499 
+    y = 0.499 
+    zmin = -0.5*Lz 
+    zmax = 0.5*Lz 
+    Nz = 50 
+
+    # Calculate the dielectric profile along the z-direction at fixed (x,y)
+    z_array,epsilon_z_array = DielectricProfileZ(ms,x,y,zmin,zmax,Nz)
+
+    # Plot the dielectric profile, the name of the figure is:
+    #           namesave+'-epsilon-z.png'
+    PlotDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave,show_fig)
+
+    ### Output the dielectric profile with Ncellx x Ncelly unit cells 
+    ### for zmin <= z <= zmax, with Nz values of z 
+    Ncellx = 5
+    Ncelly = 5 
+    zmin = -0.2*Lz 
+    zmax =  0.2*Lz 
+    Nx = 300 
+    Ny = 300 
+    Nz = 9 
+
+    # Calculate the dielectric profile in planes parallel to Oxy 
+    x_plot,y_plot,z_array,epsilon_xy_array \
+        = DielectricProfileXY(ms,Ncellx,Ncelly,zmin,zmax,Nx,Ny,Nz)
+    
+    # Plot the dielectric profile, the name of the figure is:
+    #       namesave+'-z_'+str(k)+'.png'
+    # where k is the number of the value of z in the array z_array 
+    PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave,show_fig)
+
+    # Print the dielectric profile to the file:
+    #       namesave+'-epsilon-xy.txt'
+    PrintDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave)
 
 
 
+    ### Print the band structure to file 
+    PrintBandStructure(freqs,number,namesave)
 
+    ### Plot the band structure 
+    if kSpace == 'BZ':
+        PlotBand_BrillouinZone_Scell_Rhole(number,freqs,Nk,namesave,show_fig)
+    elif kSpace == 'M-vicinity':
+        PlotBand_M(number,freqs,Nk,namesave,show_fig)
+    else:
+        print('ERROR! The k-point has not been in the allowed list yet')
+        exit()
 
 ##### Run the MAIN program 
 if __name__ == "__main__":
