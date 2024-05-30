@@ -4,6 +4,7 @@ from meep import mpb
 
 import sys 
 sys.path.insert(0,'../src/')
+from ModeSolvers import _2DSlab1LRhombusHole 
 from Materials import * 
 
 ##### The main program goes here 
@@ -33,10 +34,10 @@ def main():
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters 
-    h = 0.35        # Thickness of the slab 
+    h = 0.35       # Thickness of the slab 
     Lz = 5.0       # The height of the unit cell along the z-direction 
-    c = 0.3    # The mean of the projections of the diagonals vertices (0<= mean_d <0.5)
-    alpha_d = 0.2   # The anisotropy between the two diagonals (-1<=alpha_d<=1)
+    c = 0.3        # The mean of the projections of the diagonals vertices (0<= mean_d <0.5)
+    e = 0.2        # The anisotropy between the two diagonals (-1<=alpha_d<=1)
 
     print('# Thickness of the slab h = '+str(h))
     print('# Mean half-axis of the rhombus c = '+str(c))
@@ -47,10 +48,10 @@ def main():
     # If alpha = 0 then the hole is a square 
     # If alpha < 0 then the diagonal x=y is shorter than the diagonal x=-y 
     vertices = [
-        mp.Vector3( (1+alpha_d)*c,  (1+alpha_d)*c, 0.0 ),
-        mp.Vector3( (1-alpha_d)*c, -(1-alpha_d)*c, 0.0 ),
-        mp.Vector3(-(1+alpha_d)*c, -(1+alpha_d)*c, 0.0 ),
-        mp.Vector3(-(1-alpha_d)*c,  (1-alpha_d)*c, 0.0 )
+        mp.Vector3( (1+e)*c,  (1+e)*c, 0.0 ),
+        mp.Vector3( (1-e)*c, -(1-e)*c, 0.0 ),
+        mp.Vector3(-(1+e)*c, -(1+e)*c, 0.0 ),
+        mp.Vector3(-(1-e)*c,  (1-e)*c, 0.0 )
     ]
 
     ### Number of bands 
@@ -71,6 +72,24 @@ def main():
 
     # The envionment 
     Envir = PMMA 
+
+    # The set of k-points 
+    k_points = [
+        mp.Vector3(0.0,0.0,0.0),    # Gamma 
+        mp.Vector3(0.5,0.0,0.0),    # X
+        mp.Vector3(0.5,0.5,0.0),    # M
+        mp.Vector3(0.0,0.0,0.0)     # Gamma 
+    ]
+
+    ############################################################################
+    #                                                                          #
+    #                       Here the simulation starts                         #
+    #                                                                          #
+    ############################################################################
+
+    ### Define the mode solver 
+    ms = _2DSlab1LRhombusHole(h,Lz,c,e,vertices,
+                              num_bands,k_points,resolution,Mater,Envir)
 
 
 

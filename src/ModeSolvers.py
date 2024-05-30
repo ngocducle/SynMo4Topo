@@ -369,3 +369,48 @@ def _2DSlab2LSquareHole(h,Lz,edge,dist,delta1,delta2,
 
     ### Return the mode solver
     return ModeSolver
+
+##### FUNCTION: ModeSolver 2D photonic crystal slab bilayer with rhombus holes
+def _2DSlab1LRhombusHole(h,Lz,c,e,vertices,
+                         num_bands,k_points,resolution,Mater,Envir):
+    ### Define the lattice
+    geometry_lattice = mp.Lattice(
+        size = mp.Vector3(1.0,1.0,Lz),
+        basis1 = mp.Vector3(1.0,0.0),
+        basis2 = mp.Vector3(0.0,1.0)
+    )
+
+    ### Define the geometry 
+    geometry = [
+        mp.Block(
+            center = mp.Vector3(0.0,0.0,0.0),
+            size = mp.Vector3(1.0,1.0,mp.inf),
+            material = Envir
+        ),
+
+        mp.Block(
+            center = mp.Vector3(0.0,0.0,0.0),
+            size = mp.Vector3(1.0,1.0,h),
+            material = Mater 
+        ),
+
+        mp.Prism(
+            vertices = vertices,
+            height = h, 
+            axis = mp.Vector3(0.0,0.0,1.0),
+            center = mp.Vector3(0.0,0.0,0.0),
+            material = Envir 
+        )
+    ]
+
+    ### The mode solver 
+    ModeSolver = mpb.ModeSolver(
+        geometry = geometry,
+        geometry_lattice = geometry_lattice,
+        k_points = k_points,
+        resolution = resolution,
+        num_bands = num_bands 
+    )
+
+    ### Return the mode solver 
+    return ModeSolver
