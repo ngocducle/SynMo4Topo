@@ -30,28 +30,7 @@ def main():
 
     ### Number of bands 
     num_bands = 20 
-    print('# The number of bands to simulateL '+str(num_bands))
-
-    ### Geometrical parameters 
-    h = 0.35       # Thickness of the slab 
-    Lz = 5.0       # The height of the unit cell along the z-direction 
-    b = 0.35       # The mean of the projections of the diagonals vertices (0<= mean_d <0.5)
-    e = -0.05      # The anisotropy between the two diagonals (-1<=alpha_d<=1)
-
-    print('# Thickness of the slab h = '+str(h))
-    print('# The projection of mean half-axis of the rhombus on the edges b = '+str(b))
-    print('# The height of the simulation cell Lz = '+str(Lz))
-
-    ### The vertices of the rhombus hole 
-    # If e > 0 then the diagonal x=y is longer than the diagonal x=-y 
-    # If e = 0 then the hole is a square 
-    # If e < 0 then the diagonal x=y is shorter than the diagonal x=-y 
-    vertices = [
-        mp.Vector3( (1+e)*b,  (1+e)*b, 0.0 ),
-        mp.Vector3( (1-e)*b, -(1-e)*b, 0.0 ),
-        mp.Vector3(-(1+e)*b, -(1+e)*b, 0.0 ),
-        mp.Vector3(-(1-e)*b,  (1-e)*b, 0.0 )
-    ]
+    print('# The number of bands to simulate: '+str(num_bands))
 
     ### The k-point at which we plot the field profile 
     k_field = mp.Vector3(0.5,0.5,0.0)   # M-point 
@@ -89,9 +68,6 @@ def main():
 
     k_points = mp.interpolate(Nk,k_points)
 
-    # Show the figure
-    show_fig = 'Yes'
-
     ### Calculate the dispersion for the light cone with Envir and k_points
     lightcone = LightCone(Envir,k_points,resolution)
 
@@ -100,6 +76,27 @@ def main():
     #                       Here the simulation starts                         #
     #                                                                          #
     ############################################################################
+
+    ### Geometrical parameters 
+    h = 0.35       # Thickness of the slab 
+    Lz = 5.0       # The height of the unit cell along the z-direction 
+    b = 0.35       # The mean of the projections of the diagonals vertices (0<= mean_d <0.5)
+    e = -0.05      # The anisotropy between the two diagonals (-1<=alpha_d<=1)
+
+    print('# Thickness of the slab h = '+str(h))
+    print('# The projection of mean half-axis of the rhombus on the edges b = '+str(b))
+    print('# The height of the simulation cell Lz = '+str(Lz))
+
+    ### The vertices of the rhombus hole 
+    # If e > 0 then the diagonal x=y is longer than the diagonal x=-y 
+    # If e = 0 then the hole is a square 
+    # If e < 0 then the diagonal x=y is shorter than the diagonal x=-y 
+    vertices = [
+        mp.Vector3( (1+e)*b,  (1+e)*b, 0.0 ),
+        mp.Vector3( (1-e)*b, -(1-e)*b, 0.0 ),
+        mp.Vector3(-(1+e)*b, -(1+e)*b, 0.0 ),
+        mp.Vector3(-(1-e)*b,  (1-e)*b, 0.0 )
+    ]
 
     ### Define the mode solver 
     ms = _2DSlab1LRhombusHole(h,Lz,b,e,vertices,
