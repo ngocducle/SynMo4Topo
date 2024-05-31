@@ -42,11 +42,11 @@ def main():
 
     ### The array of the mean of the projections of the diagonals 
     ### onto the x and y directions
-    Nb = 3
+    Nb = 36
     b_array = np.linspace(0.1,0.45,Nb)
 
     ### The array of the anisotropy between the two diagonals (-1<=e<=1)
-    Ne = 3 
+    Ne = 21
     e_array = np.linspace(-0.1,0.1,Ne)
 
     ### The k-point at which we plot the field profile 
@@ -80,7 +80,7 @@ def main():
         mp.Vector3(0.5,0.5,0.0),    # M
         mp.Vector3(0.0,0.0,0.0),    # Gamma 
         mp.Vector3(0.0,0.5,0.0),    # Y 
-        mp.Vector3(-0.5,0.5,0.0),   # M  
+        mp.Vector3(0.5,0.5,0.0),    # M  
     ]
 
     k_points = mp.interpolate(Nk,k_points)
