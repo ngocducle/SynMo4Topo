@@ -9,6 +9,7 @@ from DielectricProfile import *
 from BandStructure import *  
 from ExportData import * 
 from Materials import * 
+from LightCone import LightCone 
 
 ##### The main program goes here 
 def main():
@@ -33,7 +34,7 @@ def main():
     print('# The k-point at which we plot the field profile:'+str(k_field))
 
     ### Resolution 
-    resolution = mp.Vector3(32,32,16)  # pixels/a 
+    resolution = mp.Vector3(8,8,8)  # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Geometrical parameters 
@@ -91,6 +92,9 @@ def main():
 
     # Show the figure
     show_fig = 'Yes'
+
+    ### Calculate the dispersion for the light cone with Envir and k_points
+    lightcone = LightCone(Envir,k_points,resolution)
 
     ############################################################################
     #                                                                          #
@@ -163,11 +167,14 @@ def main():
 
 
     ### Print the band structure to file 
+    #print(np.shape(lightcone))
+    #print(lightcone)
+
     PrintBandStructure(freqs,number,namesave)
 
     ### Plot the band structure 
     if kSpace == 'BZ':
-        PlotBand_BrillouinZone_Scell_Rhole(number,freqs,Nk,namesave,show_fig)
+        PlotBand_BrillouinZone_Scell_Rhole(number,freqs,Nk,lightcone,namesave,show_fig)
     elif kSpace == 'M-vicinity':
         PlotBand_M(number,freqs,Nk,namesave,show_fig)
     else:
