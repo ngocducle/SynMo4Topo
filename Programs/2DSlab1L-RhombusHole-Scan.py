@@ -32,6 +32,22 @@ def main():
     num_bands = 20 
     print('# The number of bands to simulate: '+str(num_bands))
 
+    ### The array of thickness 
+    Nh = 20 
+    h_array = np.linspace(0.1,0.5,Nh) 
+
+    ### The array of the mean of the projections of the diagonals 
+    ### onto the x and y directions
+    Nb = 20
+    b_array = np.linspace(0.1,0.45,Nb)
+
+    ### The array of the anisotropy between the two diagonals (-1<=e<=1)
+    Ne = 20 
+    e_array = np.linspace(-0.1,0.1,Ne)
+
+    ### The height of the unit cell along the z-direction 
+    Lz = 5.0
+
     ### The k-point at which we plot the field profile 
     k_field = mp.Vector3(0.5,0.5,0.0)   # M-point 
     print('# The k-point at which we plot the field profile:'+str(k_field))
@@ -78,13 +94,13 @@ def main():
     ############################################################################
 
     ### Geometrical parameters 
-    h = 0.35       # Thickness of the slab 
-    Lz = 5.0       # The height of the unit cell along the z-direction 
+    h = 0.35       # Thickness of the slab        
     b = 0.35       # The mean of the projections of the diagonals vertices (0<= mean_d <0.5)
     e = -0.05      # The anisotropy between the two diagonals (-1<=alpha_d<=1)
 
     print('# Thickness of the slab h = '+str(h))
     print('# The projection of mean half-axis of the rhombus on the edges b = '+str(b))
+    print('# The anisotropy between the two diagonals e = '+str(e))
     print('# The height of the simulation cell Lz = '+str(Lz))
 
     ### The vertices of the rhombus hole 

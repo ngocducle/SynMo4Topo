@@ -35,11 +35,12 @@ def main():
     ### Geometrical parameters 
     h = 0.35       # Thickness of the slab 
     Lz = 5.0       # The height of the unit cell along the z-direction 
-    b = 0.35       # The mean of the projections of the diagonals vertices (0<= mean_d <0.5)
-    e = -0.05      # The anisotropy between the two diagonals (-1<=alpha_d<=1)
+    b = 0.35       # The mean of the projections of the diagonals vertices (0<= b <0.5)
+    e = -0.05      # The anisotropy between the two diagonals (-1<= e <=1)
 
     print('# Thickness of the slab h = '+str(h))
     print('# The projection of mean half-axis of the rhombus on the edges b = '+str(b))
+    print('# The anisotropy between the two diagonals e = '+str(e))
     print('# The height of the simulation cell Lz = '+str(Lz))
 
     ### The vertices of the rhombus hole 
