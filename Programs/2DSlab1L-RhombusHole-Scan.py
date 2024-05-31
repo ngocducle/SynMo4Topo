@@ -11,6 +11,8 @@ from ExportData import *
 from Materials import * 
 from LightCone import LightCone 
 
+import os 
+
 ##### The main program goes here 
 def main():
     ##################################################################################
@@ -25,16 +27,18 @@ def main():
     print('# Polarization = '+polarization)
 
     ### Resolution 
-    resolution = mp.Vector3(8,8,8)  # pixels/a 
+    resolution = mp.Vector3(32,32,32)  # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Number of bands 
-    num_bands = 20 
+    num_bands = 40 
     print('# The number of bands to simulate: '+str(num_bands))
 
-    ### The array of thickness 
-    Nh = 3
-    h_array = np.linspace(0.1,0.5,Nh) 
+    ### The thickness of the slab 
+    h = 0.35       
+
+    ### The height of the unit cell along the z-direction 
+    Lz = 5.0
 
     ### The array of the mean of the projections of the diagonals 
     ### onto the x and y directions
@@ -44,9 +48,6 @@ def main():
     ### The array of the anisotropy between the two diagonals (-1<=e<=1)
     Ne = 3 
     e_array = np.linspace(-0.1,0.1,Ne)
-
-    ### The height of the unit cell along the z-direction 
-    Lz = 5.0
 
     ### The k-point at which we plot the field profile 
     k_field = mp.Vector3(0.5,0.5,0.0)   # M-point 
@@ -95,15 +96,7 @@ def main():
     #for ih in range(Nh):
     for b in b_array:
         for e in e_array: 
-                ### Geometrical parameters 
-            h = 0.35       # Thickness of the slab        
-            #b = 0.35       # The mean of the projections of the diagonals vertices (0<= mean_d <0.5)
-            #e = -0.05      # The anisotropy between the two diagonals (-1<=alpha_d<=1)
-
-            #h = h_array[ih]
-            #b = b_array[ib]
-            #e = e_array[ie]
-
+            ### Geometrical parameters 
             print('# Thickness of the slab h = '+str(h))
             print('# The projection of mean half-axis of the rhombus on the edges b = '+str(b))
             print('# The anisotropy between the two diagonals e = '+str(e))
@@ -144,57 +137,64 @@ def main():
             ### The title and the name of the files
             namesave = '2DSlab1L-RhombusHole-h_'+str(h)+'-b_'+str(b) \
                     +'-e_'+str(e)+'-'+polarization 
+            
+            os.mkdir('./'+str(namesave)) 
+            os.chdir('./'+str(namesave))
+            
     
-                ### Output the dielectric profile along the z-direction with projected (X,Y)
-                #x = 0.499 
-                #y = 0.499 
-                #zmin = -0.5*Lz 
-                #zmax = 0.5*Lz 
-                #Nz = 50 
+            ### Output the dielectric profile along the z-direction with projected (X,Y)
+            x = 0.499 
+            y = 0.499 
+            zmin = -0.5*Lz 
+            zmax = 0.5*Lz 
+            Nz = 50 
 
-                # Calculate the dielectric profile along the z-direction at fixed (x,y)
-                #z_array,epsilon_z_array = DielectricProfileZ(ms,x,y,zmin,zmax,Nz)
+            # Calculate the dielectric profile along the z-direction at fixed (x,y)
+            z_array,epsilon_z_array = DielectricProfileZ(ms,x,y,zmin,zmax,Nz)
 
-                # Plot the dielectric profile, the name of the figure is:
-                #           namesave+'-epsilon-z.png'
-                #PlotDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave,show_fig)
+            # Plot the dielectric profile, the name of the figure is:
+            #           namesave+'-epsilon-z.png'
+            PlotDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave,show_fig)
 
-                ### Output the dielectric profile with Ncellx x Ncelly unit cells 
-                ### for zmin <= z <= zmax, with Nz values of z 
-                #Ncellx = 5
-                #Ncelly = 5 
-                #zmin = -0.2*Lz 
-                #zmax =  0.2*Lz 
-                #Nx = 300 
-                #Ny = 300 
-                #Nz = 9 
+            ### Output the dielectric profile with Ncellx x Ncelly unit cells 
+            ### for zmin <= z <= zmax, with Nz values of z 
+            Ncellx = 5
+            Ncelly = 5 
+            zmin = -0.2*Lz 
+            zmax =  0.2*Lz 
+            Nx = 300 
+            Ny = 300 
+            Nz = 9 
 
-                # Calculate the dielectric profile in planes parallel to Oxy 
-                #x_plot,y_plot,z_array,epsilon_xy_array \
-                #    = DielectricProfileXY(ms,Ncellx,Ncelly,zmin,zmax,Nx,Ny,Nz)
+            # Calculate the dielectric profile in planes parallel to Oxy 
+            x_plot,y_plot,z_array,epsilon_xy_array \
+                = DielectricProfileXY(ms,Ncellx,Ncelly,zmin,zmax,Nx,Ny,Nz)
     
-                # Plot the dielectric profile, the name of the figure is:
-                #       namesave+'-z_'+str(k)+'.png'
-                # where k is the number of the value of z in the array z_array 
-                #PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave,show_fig)
+            # Plot the dielectric profile, the name of the figure is:
+            #       namesave+'-z_'+str(k)+'.png'
+            # where k is the number of the value of z in the array z_array 
+            PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave,show_fig)
 
-                # Print the dielectric profile to the file:
-                #       namesave+'-epsilon-xy.txt'
-                #PrintDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave)
+            # Print the dielectric profile to the file:
+            #       namesave+'-epsilon-xy.txt'
+            PrintDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave)
 
 
 
-                ### Print the band structure to file 
-                #PrintBandStructure(freqs,number,namesave)
+            ### Print the band structure to file 
+            PrintBandStructure(freqs,number,namesave)
 
-                ### Plot the band structure 
+            ### Plot the band structure 
             if kSpace == 'BZ':
                 PlotBand_BrillouinZone_Scell_Rhole(number,freqs,Nk,lightcone,namesave,show_fig)
             elif kSpace == 'M-vicinity':
                 PlotBand_M(number,freqs,Nk,namesave,show_fig)
             else:
                 print('ERROR! The k-point has not been in the allowed list yet')
-                exit()          
+                exit()   
+
+            ### Move to the initial directory 
+            os.chdir('..')
 
 ##### Run the MAIN program 
 if __name__ == "__main__":
