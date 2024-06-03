@@ -30,7 +30,7 @@ def main():
 
     ### Number of bands 
     num_bands = 20 
-    print('# The number of bands to simulateL '+str(num_bands))
+    print('# The number of bands to simulate: '+str(num_bands))
 
     ### Geometrical parameters 
     h = 0.35       # Thickness of the slab 
@@ -85,7 +85,7 @@ def main():
         mp.Vector3(0.5,0.5,0.0),    # M
         mp.Vector3(0.0,0.0,0.0),    # Gamma 
         mp.Vector3(0.0,0.5,0.0),    # Y 
-        mp.Vector3(-0.5,0.5,0.0),   # M  
+        mp.Vector3(0.5,0.5,0.0),   # M  
     ]
 
     k_points = mp.interpolate(Nk,k_points)

@@ -370,7 +370,7 @@ def _2DSlab2LSquareHole(h,Lz,edge,dist,delta1,delta2,
     ### Return the mode solver
     return ModeSolver
 
-##### FUNCTION: ModeSolver 2D photonic crystal slab bilayer with rhombus holes
+##### FUNCTION: ModeSolver 2D photonic crystal slab monolayer with rhombus holes
 def _2DSlab1LRhombusHole(h,Lz,b,e,vertices,
                          num_bands,k_points,resolution,Mater,Envir):
     ### Define the lattice
@@ -414,3 +414,64 @@ def _2DSlab1LRhombusHole(h,Lz,b,e,vertices,
 
     ### Return the mode solver 
     return ModeSolver
+
+##### FUNCTION: ModeSolver 2D photonic crystal slab bilayer with rhombus holes
+def _2DSlab2LRhombusHole(h1,b1,e1,vertices1,
+                         h2,b2,e2,vertices2,
+                         Lz,dist,deltax,deltay,
+                         num_bands,k_points,resolution,Mater,Envir):
+    ### Define the lattice
+    geometry_lattice = mp.Lattice(
+        size = mp.Vector3(1.0,1.0,Lz),
+        basis1 = mp.Vector3(1.0,0.0),
+        basis2 = mp.Vector3(0.0,1.0)
+    )
+
+    ### Define the geometry 
+    geometry = [
+        mp.Block(
+            center = mp.Vector3(0.0,0.0,0.0),
+            size = mp.Vector3(1.0,1.0,mp.inf),
+            material = Envir 
+        ),
+
+        mp.Block(
+            center = mp.Vector3(0.0,0.0,0.5*(h1+dist)),
+            size = mp.Vector3(1.0,1.0,h1),
+            material = Mater
+        ),
+
+        mp.Block(
+            center = mp.Vector3(0.0,0.0,-0.5*(h2+dist)),
+            size = mp.Vector3(1.0,1.0,h2),
+            material = Mater 
+        ),
+
+        mp.Prism(
+            vertices = vertices1,
+            height = h1,
+            axis = mp.Vector3(0.0,0.0,1.0),
+            center = (0.5*deltax,0.5*deltay,0.5*(dist+h1)),
+            material = Envir 
+        ),
+
+        mp.Prism(
+            vertices = vertices2,
+            height = h2,
+            axis = mp.Vector3(0.0,0.0,1.0),
+            center = (-0.5*deltax,-0.5*deltay,-0.5*(dist+h2)),
+            material = Envir 
+        )
+    ]
+
+    ### The mode solver 
+    ModeSolver = mpb.ModeSolver(
+        geometry = geometry,
+        geometry_lattice = geometry_lattice,
+        k_points = k_points,
+        resolution = resolution,
+        num_bands = num_bands
+    )
+
+    ### Return the mode solver 
+    return ModeSolver 
