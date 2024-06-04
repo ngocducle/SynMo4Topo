@@ -114,7 +114,7 @@ def main():
     v2 = 0.35 
 
     # Anisotropic coefficient along the diagonals 
-    alpha = 0.0 
+    alpha = -0.0005
 
     U = -0.016615673
     pU = 0.00
@@ -135,13 +135,13 @@ def main():
 
     ### The array of intrinsic momenta k
     Nk = 201
-    Kmax = 0.025
+    Kmax = 0.002
     k_array = np.linspace(-Kmax,Kmax,Nk)
     dk = (k_array.max() - k_array.min())/(Nk-1)
 
     ### The array of synthetic momenta delta 
     Nq = 201 
-    q_array = np.linspace(0.45,0.55,Nq)
+    q_array = np.linspace(0.50,0.54,Nq)
     dq = (q_array.max() - q_array.min())/(Nq-1)
 
     ### The derivative dH/dk 
@@ -343,7 +343,7 @@ def main():
     for i in range(0,2):
         fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
                           figsize=(12,10)) 
-        fcolors1 = scamap.to_rgba(F_array_3D[:,:,i].T) 
+        """fcolors1 = scamap.to_rgba(F_array_3D[:,:,i].T) 
         ax.plot_surface(X[:,xmin:xmax],
                         Y[:,xmin:xmax],
                         Energy_array[xmin:xmax,:,i].T,
@@ -362,9 +362,9 @@ def main():
                         rstride=1,
                         cstride=1,
                         facecolors=fcolors2,
-                        cmap=cmap)
-        #ax.plot_surface(X,Y,Energy_array[:,:,i].T,cmap='spring') 
-        #ax.plot_surface(X,Y,Energy_array[:,:,i+1].T,cmap='summer')
+                        cmap=cmap)"""
+        ax.plot_surface(X,Y,Energy_array[:,:,i].T,cmap='spring') 
+        ax.plot_surface(X,Y,Energy_array[:,:,i+1].T,cmap='summer')
         ax.set_xlabel('k',fontsize=14)
         ax.set_ylabel('q',fontsize=14)
         ax.set_zlabel('E',fontsize=14)
@@ -433,7 +433,7 @@ def main():
     ### Check for the dispersion of couple of bands select and select+1  
     ### (1 <= select <= 7)
     ### k-direction with varying value of q 
-    select = 3
+    select = 1
 
     fig,ax = plt.subplots(1,2,figsize=(10,8),sharey=True)
 
