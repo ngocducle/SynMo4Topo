@@ -22,7 +22,7 @@ def main():
 
     ### The light polarization 
     # Choose between: 'all', 'zeven', 'zodd'
-    polarization = 'zeven'
+    polarization = 'all' # For 2D multilayer cases, always choose 'all'
     print('# Polarization = '+polarization)
 
     ### Resolution 
@@ -36,28 +36,30 @@ def main():
     ### Geometrical parameters 
     # The upper layer 
     h1 = 0.36   # Thickness of the upper layer
-    b1 = 0.3    # The projection of half the mean diagonal on the x and y axes
+    b1 = 0.3    # The edge length of the undeformed square hole 
+    d1 = b1/np.sqrt(2) # The projection of half the mean diagonal on the x and y axes
     e1 = 0.05   # The anisotropy between the two diagonals of the upper layer
     
     print('\n# Upper slab:')
     print('# Thickness h1 = '+str(h1))
-    print('# The projection of mean half-axis of the rhombus on the edges b1 = '+str(b1))
+    print('# The edge length of the undeformed square hole b1 = '+str(b1))
     print('# The anisotropy between the two diagonals e1 = '+str(e1))
 
     # The lower layer 
     h2 = 0.35   # Thickness of the lower layer
-    b2 = 0.25    # The projection of the mean diagonal on the x and y axes
+    b2 = 0.40   # The edge length of the undeformed square hole    
+    d2 = b2/np.sqrt(2) # The projection of the mean diagonal on the x and y axes
     e2 = 0.05   # The anisotropy between the two diagonals of the lower layer
 
     print('\n# Lower slab:')
     print('# Thickness h2 = '+str(h2))
-    print('# The projection of mean half-axis of the rhombus on the edges b2 = '+str(b2))
+    print('# The edge length of the undeformed square hole b2 = '+str(b2))
     print('# The anisotropy between the two diagonals e2 = '+str(e2))
 
     # The interlayer parameters 
     dist = 0.05 # Distance between the two layers 
-    deltax = 0.48 # Relative displacement along the x-direction 
-    deltay = 0.05 # Relative displacement along the y-direction 
+    deltax = 0.0 # Relative displacement along the x-direction 
+    deltay = 0.0 # Relative displacement along the y-direction 
     Lz = 10.0     # The height of the unit cell along the z-direction 
 
     print('\n# The distance between the two layers d = '+str(dist))
@@ -65,19 +67,19 @@ def main():
     print('# Relative displacement along y-direction deltay = '+str(deltay))
     print('# The height of the simulation cell Lz = '+str(Lz))
 
-    ### The vertices of the rhombus hole
+    ### The vertices of the rhombus holes
     vertices1 = [
-        mp.Vector3( (1+e1)*b1+0.5*deltax,  (1+e1)*b1+deltay, 0.0 ),
-        mp.Vector3( (1-e1)*b1+0.5*deltax, -(1-e1)*b1+deltay, 0.0 ),
-        mp.Vector3(-(1+e1)*b1+0.5*deltax, -(1+e1)*b1+deltay, 0.0 ),
-        mp.Vector3(-(1+e1)*b1+0.5*deltax,  (1-e1)*b1+deltay, 0.0 ) 
+        mp.Vector3( (1+e1)*d1+0.5*deltax,  (1+e1)*d1+0.5*deltay, 0.0 ),
+        mp.Vector3( (1-e1)*d1+0.5*deltax, -(1-e1)*d1+0.5*deltay, 0.0 ),
+        mp.Vector3(-(1+e1)*d1+0.5*deltax, -(1+e1)*d1+0.5*deltay, 0.0 ),
+        mp.Vector3(-(1-e1)*d1+0.5*deltax,  (1-e1)*d1+0.5*deltay, 0.0 ) 
     ]
 
     vertices2 = [
-        mp.Vector3( (1+e2)*b2-0.5*deltax,  (1+e2)*b2-0.5*deltay, 0.0 ),
-        mp.Vector3( (1-e2)*b2-0.5*deltax, -(1-e2)*b2-0.5*deltay, 0.0 ),
-        mp.Vector3(-(1+e2)*b2-0.5*deltax, -(1+e2)*b2-0.5*deltay, 0.0 ),
-        mp.Vector3(-(1+e2)*b2-0.5*deltax,  (1-e2)*b2-0.5*deltay, 0.0 ) 
+        mp.Vector3( (1+e2)*d2-0.5*deltax,  (1+e2)*d2-0.5*deltay, 0.0 ),
+        mp.Vector3( (1-e2)*d2-0.5*deltax, -(1-e2)*d2-0.5*deltay, 0.0 ),
+        mp.Vector3(-(1+e2)*d2-0.5*deltax, -(1+e2)*d2-0.5*deltay, 0.0 ),
+        mp.Vector3(-(1-e2)*d2-0.5*deltax,  (1-e2)*d2-0.5*deltay, 0.0 ) 
     ]
 
     ### The k-point at which we plot the field profile
@@ -101,7 +103,7 @@ def main():
     print('# The part of the momentum space to simulate: '+kSpace) 
 
     ### Number of k-points to interpolate between the 2 high-symmetry points
-    Nk = 29 
+    Nk = 2
     print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     ### The set of k-points 
