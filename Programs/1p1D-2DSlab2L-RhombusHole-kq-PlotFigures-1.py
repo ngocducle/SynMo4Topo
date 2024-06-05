@@ -20,10 +20,10 @@ dist = 0.40   # Distance between the two layers
 Lz = 10.0     # The height of the unit cell along the z-direction 
 
 ### The number of k-points (genuine momenta) to interpolate 
-Nk = 29 
+Nk = 39 
 
 ### The number of q-points (synthetic momenta)
-Nq = 16
+Nq = 41
 
 ### The array of synthetic momenta 
 q_array = []

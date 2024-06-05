@@ -5,6 +5,8 @@ from meep import mpb
 import sys
 sys.path.insert(0,'../src/')
 from ModeSolvers import _2DSlab2LRhombusHole
+from DielectricProfile import * 
+from ExportData import *
 from Materials import *
 from LightCone import LightCone 
 
@@ -23,11 +25,11 @@ def main():
     #################################################################################
 
     ### Resolution 
-    resolution = mp.Vector3(16,16,16)      # pixels/a 
+    resolution = mp.Vector3(32,32,32)      # pixels/a 
     print('# Resolution = '+str(resolution))
 
     ### Number of bands 
-    num_bands = 10 
+    num_bands = 20 
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Geometrical parameters 
@@ -68,7 +70,7 @@ def main():
     Envir = PMMA
 
     ### The number of k-points (genuine momenta) to interpolate 
-    Nk = 29
+    Nk = 39
     print('# The number of k-points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     ### The set of k-points (MPB)
@@ -86,7 +88,7 @@ def main():
     k_array = mp.linspace(Kmin,Kmax,Nk) 
 
     ### The number of q-points (synthetic momenta)
-    Nq = 16
+    Nq = 41
 
     ### The array of q-points (synthetic momenta)
     q_array = np.linspace(0.0,0.5,Nq)
@@ -163,6 +165,30 @@ def main():
                 file.writelines('%.8f    ' % k_array[ik])
                 file.writelines('%.8f    ' % w for w in freqs[ik])
                 file.write('\n')
+
+        ### Output the dielectric profile with Ncellx x Ncelly unit cells
+        ### for zmin <= z <= zmax, with Nz values of z 
+        Ncellx = 5
+        Ncelly = 5
+        zmin = -0.5*dist-h1 
+        zmax = 0.5*dist+h2 
+        Nx = 300 
+        Ny = 300 
+        Nz = 13 
+
+        # Calculate the dielectric profile in planes parallel to Oxy 
+        x_plot,y_plot,z_array,epsilon_xy_array \
+            = DielectricProfileXY(ms,Ncellx,Ncelly,zmin,zmax,Nx,Ny,Nz)
+    
+        # Plot the dielectric profile, the name of the figure is:
+        #           namesave+'-z_'+str(k)+'.png'
+        # where k is the number of the value of z in the array z_array
+        PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave+str(iq),show_fig)
+    
+        # Print the dielectric profile to the file:
+        #           namesave+'-epsilon-xy.txt'
+        PrintDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave+str(iq))
+
 
     ##### Print the band structure 
     #with open(namesave+'-Band.txt','w') as file: 
