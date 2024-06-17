@@ -6,6 +6,7 @@ from meep import mpb
 import sys 
 sys.path.insert(0,'../src/')
 from ModeSolvers import _2DSlab1LSquareHole 
+from BandStructure import * 
 from ExportData import * 
 from Materials import * 
 
@@ -28,11 +29,11 @@ def main():
     print('# The resolution:'+str(resolution))
 
     ### The array of thickness
-    Nh = 10  
+    Nh = 5  
     h_array = np.linspace(0.05,0.50,Nh)
 
     ### The array of edge length of the square hole
-    Nb = 9
+    Nb = 5
     b_array = np.linspace(0.05,0.45,Nb)
 
     ### The height of the unit cell along the z-direction 
@@ -45,9 +46,10 @@ def main():
     ### The set of k-points 
     Nk = 9          # The number of k-points to simulate 
     k_points = [
-        mp.Vector3(0.0,0.0,0.0),
-        mp.Vector3(0.5,0.0,0.0),
-        mp.Vector3(0.5,0.5,0.0)
+        mp.Vector3(0.4,0.4,0.0),
+        mp.Vector3(0.5,0.4,0.0),
+        mp.Vector3(0.5,0.5,0.0),
+        mp.Vector3(0.4,0.4,0.0)
     ]
 
     k_points = mp.interpolate(Nk,k_points)
@@ -90,7 +92,23 @@ def main():
                 print('ERROR! The polarization does not belong to the allowed list')
                 exit()
 
-            
+            ### Extract the frequencies of the modes from the ModeSolver
+            freqs = ms.all_freqs 
+
+            ### The number of elements in k_points 
+            number = np.arange(len(ms.k_points))
+
+            ### The title and the name of the files 
+            #namesave = '2DSlab1L-SquareHole-h_'+str(h)+'-b_'+str(b) \
+            #    +'-'+polarization
+            namesave = '2DSlab1L-SquareHole-h_{0:.2f}-b_{0:.2f}'.format(h,b)
+            namesave = namesave+'-'+polarization 
+
+            ### Print the band structure to file 
+            PrintBandStructure(freqs,number,namesave)
+
+            ### Plot the band structure 
+            PlotBand_M(number,freqs,Nk,namesave,'No')
 
 ##### Run the MAIN program 
 if __name__ == "__main__":
