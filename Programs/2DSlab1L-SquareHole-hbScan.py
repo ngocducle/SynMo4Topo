@@ -50,6 +50,8 @@ def main():
         mp.Vector3(0.5,0.5,0.0)
     ]
 
+    k_points = mp.interpolate(Nk,k_points)
+
     ### Materials
     # The material forming the structure 
     Mater = Si 
@@ -76,6 +78,19 @@ def main():
 
             ### Define the mode solver 
             ms = _2DSlab1LSquareHole(h,Lz,b,num_bands,Nk,resolution,k_points,Mater,Envir)
+
+            ### Run the simulation 
+            if polarization == 'all':
+                ms.run()
+            elif polarization == 'zeven':
+                ms.run_zeven()
+            elif polarization == 'zodd':
+                ms.run_zodd()
+            else: 
+                print('ERROR! The polarization does not belong to the allowed list')
+                exit()
+
+            
 
 ##### Run the MAIN program 
 if __name__ == "__main__":
