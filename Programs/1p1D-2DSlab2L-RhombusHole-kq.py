@@ -25,7 +25,7 @@ def main():
     #################################################################################
 
     ### Resolution 
-    resolution = mp.Vector3(32,32,32)      # pixels/a 
+    resolution = mp.Vector3(16,16,16)      # pixels/a 
     print('# Resolution = '+str(resolution))
 
     ### Number of bands 
@@ -37,7 +37,7 @@ def main():
     h1 = 0.35 # Thickness of the upper layer 
     b1 = 0.4  # The edge length of the undeformed square hole 
     d1 = b1/np.sqrt(2) # The projection of mean diagonal on the x and y axes 
-    e1 = 0.05  # The anisotropy between the two diagonals of the upper layer 
+    e1 = -0.05  # The anisotropy between the two diagonals of the upper layer 
 
     print('\n# Upper slab:')
     print('# Thickness h1 = '+str(h1))
@@ -48,7 +48,7 @@ def main():
     h2 = 0.35 # Thickness of the lower layer 
     b2 = 0.4  # The edge length of the undeformed square hole 
     d2 = b2/np.sqrt(2) # The projection of mean diagonal on the x and y axes 
-    e2 = 0.05  # The anisotropy between the two diagonals of the lower layer 
+    e2 = -0.05  # The anisotropy between the two diagonals of the lower layer 
 
     print('\n# Lower slab:')
     print('# Thickness h2 = '+str(h2))
@@ -88,13 +88,13 @@ def main():
     k_array = mp.linspace(Kmin,Kmax,Nk) 
 
     ### The number of q-points (synthetic momenta)
-    Nq = 41
+    Nq = 26
 
     ### The array of q-points (synthetic momenta)
     q_array = np.linspace(0.0,0.5,Nq)
 
     ### Show the figure 
-    show_fig = 'Yes'
+    show_fig = 'No'
 
     ### The title and the name of the files 
     namesave = '1p1D-2DSlab2L-RHole-h1_'+str(h1)+'-b1_'+str(b1)+'-e1_'+str(e1) \

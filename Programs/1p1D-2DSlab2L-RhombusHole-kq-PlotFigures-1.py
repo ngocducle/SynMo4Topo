@@ -7,13 +7,13 @@ from matplotlib import cm,colors
 h1 = 0.35 # Thickness of the upper layer 
 b1 = 0.4  # The edge length of the undeformed square hole 
 d1 = b1/np.sqrt(2) # The projection of mean diagonal on the x and y axes 
-e1 = 0.05  # The anisotropy between the two diagonals of the upper layer 
+e1 = -0.05  # The anisotropy between the two diagonals of the upper layer 
 
 # The lower layer 
 h2 = 0.35 # Thickness of the lower layer 
 b2 = 0.4  # The edge length of the undeformed square hole 
 d2 = b2/np.sqrt(2) # The projection of mean diagonal on the x and y axes 
-e2 = 0.05  # The anisotropy between the two diagonals of the lower layer
+e2 = -0.05  # The anisotropy between the two diagonals of the lower layer
 
 # The interlayer parameters
 dist = 0.40   # Distance between the two layers 
@@ -23,7 +23,7 @@ Lz = 10.0     # The height of the unit cell along the z-direction
 Nk = 39 
 
 ### The number of q-points (synthetic momenta)
-Nq = 41
+Nq = 26
 
 ### The array of synthetic momenta 
 q_array = []
@@ -99,10 +99,10 @@ ax.plot_surface(q_array,k_array,Band1)
 ax.plot_surface(q_array,k_array,Band2)
 ax.plot_surface(q_array,k_array,Band3)
 ax.plot_surface(q_array,k_array,Band4)
-ax.plot_surface(q_array,k_array,Band5)
-ax.plot_surface(q_array,k_array,Band6)
-ax.plot_surface(q_array,k_array,Band7)
-ax.plot_surface(q_array,k_array,Band8)
+#ax.plot_surface(q_array,k_array,Band5)
+#ax.plot_surface(q_array,k_array,Band6)
+#ax.plot_surface(q_array,k_array,Band7)
+#ax.plot_surface(q_array,k_array,Band8)
 ax.set_xlabel('q',fontsize=14)
 ax.set_ylabel('k',fontsize=14)
 plt.show()
