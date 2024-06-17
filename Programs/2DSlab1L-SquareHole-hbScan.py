@@ -50,14 +50,32 @@ def main():
         mp.Vector3(0.5,0.5,0.0)
     ]
 
-    k_points = mp.interpolate(Nk,k_points)
-
     ### Materials
     # The material forming the structure 
     Mater = Si 
 
     # The environment
     Envir = PMMA 
+
+    #################################################################################
+    #                                                                               #
+    #                   Here the simulation starts                                  #
+    #                                                                               #
+    #################################################################################
+
+    ##### We scan over the thickness and the length of the edge of the square hole
+    for ih in range(Nh):
+        for ib in range(Nb):
+            h = h_array[ih]     # Thickness of the slab
+            b = b_array[ib]     # Edge of the square hole 
+
+            print('# *******************************************************')
+            print('# Thickness of the slab h = '+str(h))
+            print('# Edge of the square hole b = '+str(b))
+            print('# The height of the simulation cell Lz = '+str(Lz))
+
+            ### Define the mode solver 
+            ms = _2DSlab1LSquareHole(h,Lz,b,num_bands,Nk,resolution,k_points,Mater,Envir)
 
 ##### Run the MAIN program 
 if __name__ == "__main__":

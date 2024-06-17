@@ -214,8 +214,10 @@ def _2DSlab1LSquareHole(h,Lz,edge,num_bands,Nk,resolution,kSpace,Mater,Envir):
         ToInterpolate = 'No'
 
     else:
-        print('ERROR! The k-point has not been in the allowed list yet')
-        exit()
+        #print('ERROR! The k-point has not been in the allowed list yet')
+        #exit()
+        k_points = kSpace 
+        ToInterpolate = 'No'
 
     # Interpolate to get the points on the lines
     if ToInterpolate == 'Yes':
