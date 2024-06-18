@@ -101,8 +101,10 @@ def main():
             ### The title and the name of the files 
             #namesave = '2DSlab1L-SquareHole-h_'+str(h)+'-b_'+str(b) \
             #    +'-'+polarization
-            namesave = '2DSlab1L-SquareHole-h_{0:.2f}-b_{0:.2f}'.format(h,b)
+            namesave = "2DSlab1L-SquareHole-h_{0:.2f}".format(h)
+            namesave = namesave + "-b_{0:.2f}".format(b)
             namesave = namesave+'-'+polarization 
+            print(namesave)
 
             ### Print the band structure to file 
             PrintBandStructure(freqs,number,namesave)
