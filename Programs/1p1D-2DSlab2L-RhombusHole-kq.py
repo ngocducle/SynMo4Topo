@@ -36,7 +36,7 @@ def main():
     # The upper layer 
     h1 = 0.35 # Thickness of the upper layer 
     b1 = 0.4  # The edge length of the undeformed square hole 
-    d1 = b1/np.sqrt(2) # The projection of mean diagonal on the x and y axes 
+    #d1 = b1/np.sqrt(2) # The projection of mean diagonal on the x and y axes 
     e1 = -0.05  # The anisotropy between the two diagonals of the upper layer 
 
     print('\n# Upper slab:')
@@ -47,7 +47,7 @@ def main():
     # The lower layer 
     h2 = 0.35 # Thickness of the lower layer 
     b2 = 0.4  # The edge length of the undeformed square hole 
-    d2 = b2/np.sqrt(2) # The projection of mean diagonal on the x and y axes 
+    #d2 = b2/np.sqrt(2) # The projection of mean diagonal on the x and y axes 
     e2 = -0.05  # The anisotropy between the two diagonals of the lower layer 
 
     print('\n# Lower slab:')
@@ -128,17 +128,17 @@ def main():
 
         ### The vertices of the rhombus holes 
         vertices1 = [
-            mp.Vector3( (1+e1)*d1+0.5*deltax,  (1+e1)*d1+0.5*deltay, 0.0 ),
-            mp.Vector3( (1-e1)*d1+0.5*deltax, -(1-e1)*d1+0.5*deltay, 0.0 ),
-            mp.Vector3(-(1+e1)*d1+0.5*deltax, -(1+e1)*d1+0.5*deltay, 0.0 ),
-            mp.Vector3(-(1-e1)*d1+0.5*deltax,  (1-e1)*d1+0.5*deltay, 0.0 )
+            mp.Vector3( 0.5*(1+e1)*b1+0.5*deltax,  0.5*(1+e1)*b1+0.5*deltay, 0.0 ),
+            mp.Vector3( 0.5*(1-e1)*b1+0.5*deltax, -0.5*(1-e1)*b1+0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*(1+e1)*b1+0.5*deltax, -0.5*(1+e1)*b1+0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*(1-e1)*b1+0.5*deltax,  0.5*(1-e1)*b1+0.5*deltay, 0.0 )
         ]
 
         vertices2 = [
-            mp.Vector3( (1+e2)*d2-0.5*deltax,  (1+e2)*d2-0.5*deltay, 0.0 ),
-            mp.Vector3( (1-e2)*d2-0.5*deltax, -(1-e2)*d2-0.5*deltay, 0.0 ),
-            mp.Vector3(-(1+e2)*d2-0.5*deltax, -(1+e2)*d2-0.5*deltay, 0.0 ),
-            mp.Vector3(-(1-e2)*d2-0.5*deltax,  (1-e2)*d2-0.5*deltay, 0.0 ) 
+            mp.Vector3( 0.5*(1+e2)*b2-0.5*deltax,  0.5*(1+e2)*b2-0.5*deltay, 0.0 ),
+            mp.Vector3( 0.5*(1-e2)*b2-0.5*deltax, -0.5*(1-e2)*b2-0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*(1+e2)*b2-0.5*deltax, -0.5*(1+e2)*b2-0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*(1-e2)*b2-0.5*deltax,  0.5*(1-e2)*b2-0.5*deltay, 0.0 ) 
         ]
 
         ### Define the mode solver 

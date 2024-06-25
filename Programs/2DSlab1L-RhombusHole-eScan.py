@@ -97,6 +97,29 @@ def main():
             mp.Vector3( -0.5*(1-e)*b,  0.5*(1-e)*b, 0.0 )
         ]
 
+        ### Define the mode solver 
+        ms = _2DSlab1LRhombusHole(h,Lz,b,e,vertices,
+                                  num_bands,k_points,resolution,Mater,Envir)
+        
+        ### Run the simulation 
+        if polarization == 'all':
+            ms.run()
+        elif polarization == 'zeven':
+            ms.run_zeven()
+        elif polarization == 'zodd':
+            ms.run_zodd()
+        else: 
+            print('ERROR! The polarization does not belong to the allowed list')
+            exit()
+
+        ### Extract the frequencies of the modes from the ModeSolver
+        freqs = ms.all_freqs 
+
+        ### The number of elements in k_points 
+        number = np.arange(len(ms.k_points))
+
+        
+
 ##### Run the MAIN program 
 if __name__ == "__main__":
     main()
