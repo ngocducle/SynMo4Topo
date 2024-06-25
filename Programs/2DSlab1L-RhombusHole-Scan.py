@@ -13,7 +13,9 @@ from LightCone import LightCone
 
 import os 
 
-##### The main program goes here 
+
+
+##### The MAIN program goes here 
 def main():
     ##################################################################################
     #                                                                                # 
@@ -107,10 +109,10 @@ def main():
             # If e = 0 then the hole is a square 
             # If e < 0 then the diagonal x=y is shorter than the diagonal x=-y 
             vertices = [
-                mp.Vector3( (1+e)*b,  (1+e)*b, 0.0 ),
-                mp.Vector3( (1-e)*b, -(1-e)*b, 0.0 ),
-                mp.Vector3(-(1+e)*b, -(1+e)*b, 0.0 ),
-                mp.Vector3(-(1-e)*b,  (1-e)*b, 0.0 )
+                mp.Vector3( 0.5*(1+e)*b,  0.5*(1+e)*b, 0.0 ),
+                mp.Vector3( 0.5*(1-e)*b, -0.5*(1-e)*b, 0.0 ),
+                mp.Vector3(-0.5*(1+e)*b, -0.5*(1+e)*b, 0.0 ),
+                mp.Vector3(-0.5*(1-e)*b,  0.5*(1-e)*b, 0.0 )
             ]
 
             ### Define the mode solver 

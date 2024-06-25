@@ -29,8 +29,9 @@ def main():
     print('# The resolution:'+str(resolution))
 
     ### The array of thickness
-    Nh = 5  
-    h_array = np.linspace(0.05,0.50,Nh)
+    Nh = 1  
+    #h_array = np.linspace(0.05,0.50,Nh)
+    h_array = [0.35]
 
     ### The array of edge length of the square hole
     Nb = 5
