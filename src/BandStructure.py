@@ -24,6 +24,7 @@ def PlotBand_BrillouinZone(number,freqs,Nk,namesave,show_fig):
     plt.savefig(namesave+'.png')
     if show_fig == 'Yes':
         plt.show()
+    plt.close()
 
 ##### FUNCTION: plot the band structure in the vicinity of the M-point
 def PlotBand_M(number,freqs,Nk,namesave,show_fig):
@@ -42,6 +43,7 @@ def PlotBand_M(number,freqs,Nk,namesave,show_fig):
     plt.savefig(namesave+'.png')
     if show_fig == 'Yes':
         plt.show()
+    plt.close()
 
 
 ##### FUNCTION: plot the band structure along the Gamma-M point
@@ -57,6 +59,7 @@ def PlotBand_GammaM(number,freqs,Nk,namesave,show_fig):
     plt.savefig(namesave+'.png')
     if show_fig == 'Yes':
       plt.show()
+    plt.close()
 
 ##### FUNCTION: plot the band structure in the whole Brillouin zone 
 ###   for square cell with rhombus hole, 
@@ -66,14 +69,13 @@ def PlotBand_BrillouinZone_Scell_Rhole(number,freqs,Nk,lightcone,namesave,show_f
     ax.plot(number, freqs,linewidth=1,color='green')
     ax.plot(number, lightcone,linewidth=3,color='black')            # The light cone 
     plt.vlines(Nk+1,0.0,1.0,linestyle='dashed',color='black')       # X 
-    plt.vlines(2*(Nk+1),0.0,1.0,linestyle='dashed',color='black')   # M 
-    plt.vlines(3*(Nk+1),0.0,1.0,linestyle='dashed',color='black')   # Gamma 
-    plt.vlines(4*(Nk+1),0.0,1.0,linestyle='dashed',color='black')   # Y  
-    plt.xlim(0,5*(Nk+1))
+    plt.vlines(2*(Nk+1),0.0,1.0,linestyle='dashed',color='black')   # M+ 
+    plt.vlines(3*(Nk+1),0.0,1.0,linestyle='dashed',color='black')   # Gamma  
+    plt.xlim(0,4*(Nk+1))                                            
     plt.ylim(0,0.5)
     ax.fill_between(number,lightcone,0.5,facecolor='green')
-    tick_locs = [i*(Nk+1) for i in range(6)]
-    tick_labs = [r'$\Gamma$','X','M',r'$\Gamma$','Y','M']
+    tick_locs = [i*(Nk+1) for i in range(5)]
+    tick_labs = [r'$\Gamma$','X','M+',r'$\Gamma$','M-']
     ax.set_xticks(tick_locs)
     ax.set_xticklabels(tick_labs,size=16)
     ax.set_ylabel(r'$\omega a / (2 \pi c)$', fontsize = 14)
@@ -81,3 +83,4 @@ def PlotBand_BrillouinZone_Scell_Rhole(number,freqs,Nk,lightcone,namesave,show_f
     plt.savefig(namesave+'.png')
     if show_fig == 'Yes':
         plt.show()
+    plt.close()

@@ -13,7 +13,13 @@ from LightCone import LightCone
 
 import os 
 
-
+#################################################################################
+#                                                                               #
+#   This code calculate the band structure of a set of 2DSlab1L rhombus holes   #
+#   We fix the thickness h and scan the edge b of the parent square holes       #
+#   and the deformation parameter e of the rhombus                              #
+#                                                                               #
+#################################################################################
 
 ##### The MAIN program goes here 
 def main():
@@ -76,13 +82,16 @@ def main():
     print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     # The set of k-points 
+    # Due to the mirror symmetry with respect to the planes 
+    # x = y and x = -y, the lines Gamma-X and Gamma-Y have 
+    # the same dispersion, and the lines MX and MY have the same 
+    # dispersion
     k_points = [
         mp.Vector3(0.0,0.0,0.0),    # Gamma 
-        mp.Vector3(0.5,0.0,0.0),    # X
-        mp.Vector3(0.5,0.5,0.0),    # M
-        mp.Vector3(0.0,0.0,0.0),    # Gamma 
-        mp.Vector3(0.0,0.5,0.0),    # Y 
-        mp.Vector3(0.5,0.5,0.0),    # M  
+        mp.Vector3(0.5,0.0,0.0),    # X 
+        mp.Vector3(0.5,0.5,0.0),    # M+ 
+        mp.Vector3(0.0,0.0,0.0),    # Gamma  
+        mp.Vector3(-0.5,0.5,0.0)    # M- 
     ]
 
     k_points = mp.interpolate(Nk,k_points)

@@ -11,6 +11,16 @@ from ExportData import *
 from Materials import * 
 from LightCone import LightCone 
 
+#################################################################################
+#                                                                               #
+#   This code studies a 2DSlab2L rhombus holes with:                            #
+#   Slab thickness h, the parent square holes has edge length b                 #
+#   and the deformation parameter of the rhombus is e                           #
+#                                                                               #
+#   The two slabs are displaced by distances delta1 and delta2                  #
+#   along the x and y directions, respectively                                  #
+#                                                                               #
+#################################################################################
 
 ##### The main program goes here
 def main():
@@ -106,14 +116,17 @@ def main():
     Nk = 2
     print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
 
-    ### The set of k-points 
+    # The set of k-points 
+    # Due to the mirror symmetry with respect to the planes 
+    # x = y and x = -y, the lines Gamma-X and Gamma-Y have 
+    # the same dispersion, and the lines MX and MY have the same 
+    # dispersion
     k_points = [
         mp.Vector3(0.0,0.0,0.0),    # Gamma 
         mp.Vector3(0.5,0.0,0.0),    # X 
-        mp.Vector3(0.5,0.5,0.0),    # M 
-        mp.Vector3(0.0,0.0,0.0),    # Gamma 
-        mp.Vector3(0.0,0.5,0.0),    # Y 
-        mp.Vector3(0.5,0.5,0.0)     # M
+        mp.Vector3(0.5,0.5,0.0),    # M+ 
+        mp.Vector3(0.0,0.0,0.0),    # Gamma  
+        mp.Vector3(-0.5,0.5,0.0)    # M- 
     ]
 
     k_points = mp.interpolate(Nk,k_points)

@@ -10,6 +10,13 @@ from BandStructure import *
 from ExportData import * 
 from Materials import * 
 
+#################################################################################
+#                                                                               #
+#   This code calculate the band structure of a set of 2DSlab1L square holes    #
+#   We scan the thickness h and the edge b of the square holes                  #
+#                                                                               #
+#################################################################################
+
 ##### The MAIN program goes here 
 def main():
     #############################################################################
@@ -102,8 +109,8 @@ def main():
             ### The title and the name of the files 
             #namesave = '2DSlab1L-SquareHole-h_'+str(h)+'-b_'+str(b) \
             #    +'-'+polarization
-            namesave = "2DSlab1L-SquareHole-h_{0:.2f}".format(h)
-            namesave = namesave + "-b_{0:.2f}".format(b)
+            namesave = "2DSlab1L-SquareHole-h_{0:.4f}".format(h)
+            namesave = namesave + "-b_{0:.4f}".format(b)
             namesave = namesave+'-'+polarization 
             print(namesave)
 

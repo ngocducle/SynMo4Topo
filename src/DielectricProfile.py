@@ -36,6 +36,7 @@ def PlotDielectricProfileZ(x,y,z_array,epsilon_z_array,namesave,show_fig):
 
     if show_fig == 'Yes':
         plt.show() 
+    plt.close()
 
 ##### FUNCTION: Calculate the dielectric profile on the planes parallel to the Oxy plane
 ###   We extract the values of epsilon at the points (x,y,z) where:
@@ -94,6 +95,7 @@ def PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave,show
         
         if show_fig == 'Yes':
             plt.show()
+        plt.close()
 
 ##### FUNCTION: Get the dielectric profile of the plane z = zvalue
 ###   Return the results as a MPBArray 

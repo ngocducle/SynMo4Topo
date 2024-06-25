@@ -200,6 +200,7 @@ def Plot_ReEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
 
         if show_fig == 'Yes':
             plt.show()   
+        plt.close()
 
 ##### FUNCTION: Plot the imaginary part of the E-fields at z = zvalue
 def Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
@@ -253,6 +254,7 @@ def Plot_ImEfield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
 
         if show_fig == 'Yes':
             plt.show() 
+        plt.close() 
 
 ##### FUNCTION: Plot both the real and the imaginary parts of the E-fields
 def Plot_Efield_Profile(Efieldx,Efieldy,Efieldz,zvalue,

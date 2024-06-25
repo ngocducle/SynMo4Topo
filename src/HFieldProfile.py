@@ -200,6 +200,7 @@ def Plot_ReHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
 
         if show_fig == 'Yes':
             plt.show()   
+        plt.close() 
 
 ##### FUNCTION: Plot the imaginary part of the H-fields at z = zvalue
 def Plot_ImHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
@@ -253,6 +254,7 @@ def Plot_ImHfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
 
         if show_fig == 'Yes':
             plt.show() 
+        plt.close() 
 
 ##### FUNCTION: Plot both the real and the imaginary parts of the H-fields
 def Plot_Hfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
