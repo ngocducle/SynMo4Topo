@@ -27,7 +27,7 @@ def main():
     print('# Polarization = '+polarization)
 
     ### Resolution 
-    resolution = mp.Vector3(8,8,8)   # pixels/a 
+    resolution = mp.Vector3(32,32,32)   # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Number of bands 
@@ -44,8 +44,8 @@ def main():
     Lz = 5.0
 
     ### The array of the anisotropy between the two diagonals (-1 <= e <= 1)
-    Ne = 6
-    e_array = np.linspace(-0.5,0.5,Ne)
+    Ne = 5
+    e_array = np.linspace(-0.2,0.2,Ne)
 
     ### Show the figure (Yes/No)
     show_fig = 'No'
@@ -132,7 +132,7 @@ def main():
         ### The title and the name of the files 
         #namesave = '2DSlab1L-RhombusHole-h_'+str(h)+'-b_'+str(b) \
         #        +'-e_'+str(e)+'-'+polarization 
-        namesave = "2DSlab1L-SquareHole-h_{0:.4f}".format(h)
+        namesave = "2DSlab1L-RhombusHole-h_{0:.4f}".format(h)
         namesave = namesave + "-b_{0:.4f}".format(b)
         namesave = namesave + "-e_{0:.4f}".format(e)
         namesave = namesave+'-'+polarization 

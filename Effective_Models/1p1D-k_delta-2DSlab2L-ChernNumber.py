@@ -110,20 +110,20 @@ def dH_q(V,q):
 def main():
     omega1 = 0.300464408
     omega2 = 0.300464408 
-    v1 = 0.35
-    v2 = 0.35 
+    v1 = 0.156
+    v2 = 0.156 
 
     # Anisotropic coefficient along the diagonals 
-    alpha = -0.0005
+    alpha = -0.01
 
     U = -0.016615673
-    pU = 0.00
+    pU = 0.01
     DeltaU = pU*U
     U1 = U+DeltaU 
     U2 = U-DeltaU 
 
     W = 0.001744918
-    pW = 0.00
+    pW = -0.01
     DeltaW = pW*W 
     W1 = W+DeltaW 
     W2 = W-DeltaW 
@@ -135,13 +135,13 @@ def main():
 
     ### The array of intrinsic momenta k
     Nk = 201
-    Kmax = 0.002
+    Kmax = 0.025
     k_array = np.linspace(-Kmax,Kmax,Nk)
     dk = (k_array.max() - k_array.min())/(Nk-1)
 
     ### The array of synthetic momenta delta 
     Nq = 201 
-    q_array = np.linspace(0.50,0.54,Nq)
+    q_array = np.linspace(0.4,0.6,Nq)
     dq = (q_array.max() - q_array.min())/(Nq-1)
 
     ### The derivative dH/dk 
@@ -340,7 +340,7 @@ def main():
     ### -------------------------------------------------------------------------------
     ### Plot the dispersion surfaces of couples of bands 
     ### -------------------------------------------------------------------------------
-    for i in range(0,2):
+    for i in range(0,3):
         fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
                           figsize=(12,10)) 
         """fcolors1 = scamap.to_rgba(F_array_3D[:,:,i].T) 
@@ -437,7 +437,7 @@ def main():
 
     fig,ax = plt.subplots(1,2,figsize=(10,8),sharey=True)
 
-    cut = 100 
+    cut = 200 
     ax[0].plot(k_array,Energy_array[:,cut,select-1],color='red',label='q = '+str(round(q_array[cut],6))) 
     ax[0].plot(k_array,Energy_array[:,cut,select],color='red')
     #ax[0].plot(k_array,Energy_array[:,145,select-1],color='green',label='q = '+str(round(q_array[145],6))) 
@@ -449,7 +449,7 @@ def main():
     ax[0].legend(fontsize=14,loc='center',bbox_to_anchor=(0.275,-0.625,0.5,1))
     ax[0].set_title('Bands '+str(select)+'+'+str(select+1)+r', $\alpha = $'+str(alpha),fontsize=14)
 
-    cut = 100
+    cut = 0
     ax[1].plot(q_array,Energy_array[cut,:,select-1],color=[0.5,0,0],label='k = '+str(round(k_array[cut],6))) 
     ax[1].plot(q_array,Energy_array[cut,:,select],color=[0.5,0,0])
     #ax[1].plot(q_array,Energy_array[145,:,select-1],color=[0,0.5,0],label='k = '+str(round(k_array[145],6))) 
