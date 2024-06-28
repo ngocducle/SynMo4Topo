@@ -24,7 +24,7 @@ from LightCone import LightCone
 #       d1 =  d*(1+e)                                                           #
 #       d2 =  d*(1-e)                                                           #
 #                                                                               #
-#   The two slabs are displaced by distances delta1 and delta2                  #
+#   The two slabs are displaced by distances deltax and deltay                  #
 #   along the x and y directions, respectively                                  #
 #                                                                               #
 #################################################################################

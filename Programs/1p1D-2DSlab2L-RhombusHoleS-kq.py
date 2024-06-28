@@ -15,6 +15,19 @@ def main():
     #################################################################################
     #                                                                               #
     #       Band structure of 2D slab 2L- rhombus hole, case (1+1)D                 #
+    #       This code studies a 2DSlab2L rhombus holes with:                        #
+    #       Slab thickness h, the parent square holes has edge length b             #
+    #       and the deformation parameter of the rhombus is e                       #
+    #                                                                               #
+    #       The hole is deformed from the C4 square, breaking the C4 symmetry       #
+    #       The sum of the diagonal remains unchanged, so we add the suffix S (sum) #
+    #       That means let d be the diagonal of the square hole, the diagonals      #
+    #       of the rhombi are:                                                      #
+    #                          d1 =  d*(1+e)                                        #
+    #                          d2 =  d*(1-e)                                        #
+    #                                                                               #
+    #       The two slabs are displaced by distances delta1 and delta2              #
+    #       along the x and y directions, respectively                              #
     #       In the vicinity of the M point M(0.5,0.5)                               #
     #       From the M point:                                                       #
     #               Genuine momenta: kx = ky = k                                    #
@@ -97,7 +110,7 @@ def main():
     show_fig = 'No'
 
     ### The title and the name of the files 
-    namesave = '1p1D-2DSlab2L-RHole-h1_'+str(h1)+'-b1_'+str(b1)+'-e1_'+str(e1) \
+    namesave = '1p1D-2DSlab2L-RHoleS-h1_'+str(h1)+'-b1_'+str(b1)+'-e1_'+str(e1) \
         + '-h2_'+str(h2)+'-b2_'+str(b2)+'-e2_'+str(e2) \
         + '-d_'+str(dist)+'_kq'
     
