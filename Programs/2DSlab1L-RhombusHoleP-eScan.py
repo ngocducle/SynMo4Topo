@@ -17,16 +17,19 @@ import os
 #                                                                                    #
 #       Calculation of the band structure for 2DSlab1L with rhombus hole             #
 #       The hole is deformed from the C4 square, breaking the C4 symmetry            #
-#       The sum of the diagonal remains unchanged, so we add the suffix S (sum)      #
+#       The product of the diagonal remains unchanged, so we add the suffix          #
+#       P (product). It allows to keep the hole area, filling factor, and            #
+#       effective refractive index unchanged                                         # 
 #       That means let d be the diagonal of the square hole, the diagonals           #
 #       of the rhombi are:                                                           #
-#           d1 =  d*(1+e)                                                            #
-#           d2 =  d*(1-e)                                                            #
+#           d1 =  d*(1+e)/(1-e)                                                      #
+#           d2 =  d*(1-e)/(1+e)                                                      #
 #                                                                                    #
 #       We fix the slab thickness h and the edge length b of the undeformed square   #
 #       and scan the deformation parameter e                                         #
 #                                                                                    # 
 ######################################################################################
+
 
 ##### The MAIN program goes here 
 def main():
@@ -42,11 +45,11 @@ def main():
     print('# Polarization = '+polarization)
 
     ### Resolution 
-    resolution = mp.Vector3(32,32,32)   # pixels/a 
+    resolution = mp.Vector3(16,16,16)   # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Number of bands 
-    num_bands = 25 
+    num_bands = 10
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### The thickness of the slab
@@ -60,7 +63,7 @@ def main():
 
     ### The array of the anisotropy between the two diagonals (-1 <= e <= 1)
     Ne = 5
-    e_array = np.linspace(-0.2,0.2,Ne)
+    e_array = np.linspace(-0.1,0.1,Ne)
 
     ### Show the figure (Yes/No)
     show_fig = 'No'
@@ -117,10 +120,10 @@ def main():
         # If e=0 then the hole is a square 
         # If e<0 then the diagonal x=y is shorter than the diagonal x=-y 
         vertices = [
-            mp.Vector3(  0.5*(1+e)*b,  0.5*(1+e)*b, 0.0 ),
-            mp.Vector3(  0.5*(1-e)*b, -0.5*(1-e)*b, 0.0 ),
-            mp.Vector3( -0.5*(1+e)*b, -0.5*(1+e)*b, 0.0 ),
-            mp.Vector3( -0.5*(1-e)*b,  0.5*(1-e)*b, 0.0 )
+            mp.Vector3(  0.5*b*(1+e)/(1-e),  0.5*b*(1+e)/(1-e), 0.0 ),
+            mp.Vector3(  0.5*b*(1-e)/(1+e), -0.5*b*(1-e)/(1+e), 0.0 ),
+            mp.Vector3( -0.5*b*(1+e)/(1-e), -0.5*b*(1+e)/(1-e), 0.0 ),
+            mp.Vector3( -0.5*b*(1-e)/(1+e),  0.5*b*(1-e)/(1+e), 0.0 )
         ]
 
         ### Define the mode solver 
