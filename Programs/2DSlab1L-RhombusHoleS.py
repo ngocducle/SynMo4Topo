@@ -90,7 +90,8 @@ def main():
     Nk = 29 
     print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
 
-    # The set of k-points 
+    ### The set of k-points 
+    # kSpace = 'BZ'
     k_points = [
         mp.Vector3(0.0,0.0,0.0),    # Gamma 
         mp.Vector3(0.5,0.0,0.0),    # X 
@@ -98,6 +99,15 @@ def main():
         mp.Vector3(0.0,0.0,0.0),    # Gamma  
         mp.Vector3(-0.5,0.5,0.0)    # M- 
     ]
+
+    # kSpace = M-vinity 
+    #k_points = [
+    #    mp.Vector3(0.5,0.5,0.0),    # M 
+    #    mp.Vector3(0.45,0.45,0.0),  # Gamma'
+    #    mp.Vector3(0.5,0.45,0.0),   # X'
+    #    mp.Vector3(0.5,0.5,0.0),    # M 
+    #    mp.Vector3(0.55,0.5,0.0)    # Gamma'
+    #]
 
     k_points = mp.interpolate(Nk,k_points)
 
@@ -187,7 +197,7 @@ def main():
     if kSpace == 'BZ':
         PlotBand_BrillouinZone_Scell_Rhole(number,freqs,Nk,lightcone,namesave,show_fig)
     elif kSpace == 'M-vicinity':
-        PlotBand_M(number,freqs,Nk,namesave,show_fig)
+        PlotBand_M_Scell_Rhole(number,freqs,Nk,lightcone,namesave,show_fig)
     else:
         print('ERROR! The k-point has not been in the allowed list yet')
         exit()
