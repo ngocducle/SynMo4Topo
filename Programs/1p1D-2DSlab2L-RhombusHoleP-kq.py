@@ -20,11 +20,13 @@ def main():
     #       and the deformation parameter of the rhombus is e                       #
     #                                                                               #
     #       The hole is deformed from the C4 square, breaking the C4 symmetry       #
-    #       The sum of the diagonal remains unchanged, so we add the suffix S (sum) #
+    #       The product of the diagonal remains unchanged, so we add the suffix     #
+    #       P (product). It allows to keep the hole area, filling factor, and       #
+    #       effective refractive index unchanged                                    # 
     #       That means let d be the diagonal of the square hole, the diagonals      #
     #       of the rhombi are:                                                      #
-    #                          d1 =  d*(1+e)                                        #
-    #                          d2 =  d*(1-e)                                        #
+    #                   d1 =  d*(1+e)/(1-e)                                         #
+    #                   d2 =  d*(1-e)/(1+e)                                         #
     #                                                                               #
     #       The two slabs are displaced by distances delta1 and delta2              #
     #       along the x and y directions, respectively                              #
@@ -49,7 +51,7 @@ def main():
     # The upper layer 
     h1 = 0.35 # Thickness of the upper layer 
     b1 = 0.4  # The edge length of the undeformed square hole 
-    e1 = 0.05  # The anisotropy between the two diagonals of the upper layer 
+    e1 = 0.1  # The anisotropy between the two diagonals of the upper layer 
 
     print('\n# Upper slab:')
     print('# Thickness h1 = '+str(h1))
@@ -59,7 +61,7 @@ def main():
     # The lower layer 
     h2 = 0.35 # Thickness of the lower layer 
     b2 = 0.4  # The edge length of the undeformed square hole 
-    e2 = 0.05  # The anisotropy between the two diagonals of the lower layer 
+    e2 = 0.1  # The anisotropy between the two diagonals of the lower layer 
 
     print('\n# Lower slab:')
     print('# Thickness h2 = '+str(h2))
@@ -81,7 +83,7 @@ def main():
     Envir = PMMA
 
     ### The number of k-points (genuine momenta) to interpolate 
-    Nk = 39
+    Nk = 9
     print('# The number of k-points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     ### The set of k-points (MPB)
@@ -99,7 +101,7 @@ def main():
     k_array = mp.linspace(Kmin,Kmax,Nk) 
 
     ### The number of q-points (synthetic momenta)
-    Nq = 26
+    Nq = 6
 
     ### The array of q-points (synthetic momenta)
     q_array = np.linspace(0.0,0.5,Nq)
@@ -108,7 +110,7 @@ def main():
     show_fig = 'No'
 
     ### The title and the name of the files 
-    namesave = '1p1D-2DSlab2L-RHoleS-h1_'+str(h1)+'-b1_'+str(b1)+'-e1_'+str(e1) \
+    namesave = '1p1D-2DSlab2L-RHoleP-h1_'+str(h1)+'-b1_'+str(b1)+'-e1_'+str(e1) \
         + '-h2_'+str(h2)+'-b2_'+str(b2)+'-e2_'+str(e2) \
         + '-d_'+str(dist)+'_kq'
     
@@ -139,17 +141,25 @@ def main():
 
         ### The vertices of the rhombus holes 
         vertices1 = [
-            mp.Vector3( 0.5*(1+e1)*b1+0.5*deltax,  0.5*(1+e1)*b1+0.5*deltay, 0.0 ),
-            mp.Vector3( 0.5*(1-e1)*b1+0.5*deltax, -0.5*(1-e1)*b1+0.5*deltay, 0.0 ),
-            mp.Vector3(-0.5*(1+e1)*b1+0.5*deltax, -0.5*(1+e1)*b1+0.5*deltay, 0.0 ),
-            mp.Vector3(-0.5*(1-e1)*b1+0.5*deltax,  0.5*(1-e1)*b1+0.5*deltay, 0.0 )
+            mp.Vector3( 0.5*b1*(1+e1)/(1-e1)+0.5*deltax,  
+                        0.5*b1*(1+e1)/(1-e1)+0.5*deltay, 0.0 ),
+            mp.Vector3( 0.5*b1*(1-e1)/(1+e1)+0.5*deltax, 
+                       -0.5*b1*(1-e1)/(1+e1)+0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*b1*(1+e1)/(1-e1)+0.5*deltax, 
+                       -0.5*b1*(1+e1)/(1-e1)+0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*b1*(1-e1)/(1+e1)+0.5*deltax,  
+                        0.5*b1*(1-e1)/(1+e1)+0.5*deltay, 0.0 ) 
         ]
 
         vertices2 = [
-            mp.Vector3( 0.5*(1+e2)*b2-0.5*deltax,  0.5*(1+e2)*b2-0.5*deltay, 0.0 ),
-            mp.Vector3( 0.5*(1-e2)*b2-0.5*deltax, -0.5*(1-e2)*b2-0.5*deltay, 0.0 ),
-            mp.Vector3(-0.5*(1+e2)*b2-0.5*deltax, -0.5*(1+e2)*b2-0.5*deltay, 0.0 ),
-            mp.Vector3(-0.5*(1-e2)*b2-0.5*deltax,  0.5*(1-e2)*b2-0.5*deltay, 0.0 ) 
+            mp.Vector3( 0.5*b2*(1+e2)/(1-e2)-0.5*deltax,
+                        0.5*b2*(1+e2)/(1-e2)-0.5*deltay, 0.0 ),
+            mp.Vector3( 0.5*b2*(1-e2)/(1+e2)-0.5*deltax, 
+                       -0.5*b2*(1-e2)/(1+e2)-0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*b2*(1+e2)/(1-e2)-0.5*deltax, 
+                       -0.5*b2*(1+e2)/(1-e2)-0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*b2*(1-e2)/(1+e2)-0.5*deltax,  
+                        0.5*b2*(1-e2)/(1+e2)-0.5*deltay, 0.0 ) 
         ]
 
         ### Define the mode solver 
