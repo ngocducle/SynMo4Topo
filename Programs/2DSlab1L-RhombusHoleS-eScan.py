@@ -42,7 +42,7 @@ def main():
     print('# Polarization = '+polarization)
 
     ### Resolution 
-    resolution = mp.Vector3(32,32,32)   # pixels/a 
+    resolution = mp.Vector3(16,16,16)   # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Number of bands 
@@ -75,7 +75,7 @@ def main():
 
     # The part of the momentum space to plot the band structure 
     # Choose between: 'BZ', 'Gamma-M', 'M', 'M-vicinity'
-    kSpace = 'BZ'
+    kSpace = 'M-vicinity'
     print('# The part of the momentum space to simulate:'+kSpace) 
 
     ### Number of k-points to interpolate between 2 high-symmetry points 
@@ -87,12 +87,22 @@ def main():
     # x = y and x = -y, the lines Gamma-X and Gamma-Y have 
     # the same dispersion, and the lines MX and MY have the same 
     # dispersion
+    # kSpace = BZ 
+    #k_points = [
+    #    mp.Vector3(0.0,0.0,0.0),    # Gamma 
+    #    mp.Vector3(0.5,0.0,0.0),    # X 
+    #    mp.Vector3(0.5,0.5,0.0),    # M+ 
+    #    mp.Vector3(0.0,0.0,0.0),    # Gamma  
+    #    mp.Vector3(-0.5,0.5,0.0)    # M-  
+    #]
+
+    # kSpace = M-vinity 
     k_points = [
-        mp.Vector3(0.0,0.0,0.0),    # Gamma 
-        mp.Vector3(0.5,0.0,0.0),    # X 
-        mp.Vector3(0.5,0.5,0.0),    # M+ 
-        mp.Vector3(0.0,0.0,0.0),    # Gamma  
-        mp.Vector3(-0.5,0.5,0.0)    # M- 
+        mp.Vector3(0.5,0.5,0.0),    # M 
+        mp.Vector3(0.45,0.45,0.0),  # Gamma'
+        mp.Vector3(0.5,0.45,0.0),   # X'
+        mp.Vector3(0.5,0.5,0.0),    # M 
+        mp.Vector3(0.55,0.5,0.0)    # Gamma'
     ]
 
     k_points = mp.interpolate(Nk,k_points)
@@ -200,7 +210,7 @@ def main():
         if kSpace == 'BZ':
             PlotBand_BrillouinZone_Scell_Rhole(number,freqs,Nk,lightcone,namesave,show_fig)
         elif kSpace == 'M-vicinity':
-            PlotBand_M(number,freqs,Nk,namesave,show_fig)
+            PlotBand_M_Scell_Rhole(number,freqs,Nk,lightcone,namesave,show_fig)
         else:
             print('ERROR! The k-point has not been in the allowed list yet')
             exit()   
