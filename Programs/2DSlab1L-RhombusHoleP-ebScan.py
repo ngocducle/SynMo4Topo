@@ -20,8 +20,8 @@ import os
 #   The sum of the diagonal remains unchanged, so we add the suffix S (sum)     #
 #   That means let d be the diagonal of the square hole, the diagonals          #
 #   of the rhombi are:                                                          #
-#           d1 =  d*(1+e)                                                       #
-#           d2 =  d*(1-e)                                                       #
+#           d1 =  d*(1+e)/(1-e)                                                 #
+#           d2 =  d*(1-e)/(1+e)                                                 #
 #                                                                               #
 #   We fix the thickness h and scan the edge b of the parent square holes       #
 #   and the deformation parameter e of the rhombus                              #
@@ -42,11 +42,11 @@ def main():
     print('# Polarization = '+polarization)
 
     ### Resolution 
-    resolution = mp.Vector3(32,32,32)  # pixels/a 
+    resolution = mp.Vector3(16,16,16)  # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Number of bands 
-    num_bands = 40 
+    num_bands = 10 
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### The thickness of the slab 
@@ -57,11 +57,11 @@ def main():
 
     ### The array of the mean of the projections of the diagonals 
     ### onto the x and y directions
-    Nb = 36
+    Nb = 5
     b_array = np.linspace(0.1,0.45,Nb)
 
     ### The array of the anisotropy between the two diagonals (-1<=e<=1)
-    Ne = 21
+    Ne = 3
     e_array = np.linspace(-0.1,0.1,Ne)
 
     ### The k-point at which we plot the field profile 
@@ -85,7 +85,7 @@ def main():
     print('# The part of the momentum space to simulate:'+kSpace) 
 
     ### Number of k-points to interpolate between the 2 high-symmetry points 
-    Nk = 29 
+    Nk = 19 
     print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     # The set of k-points 
@@ -125,10 +125,10 @@ def main():
             # If e = 0 then the hole is a square 
             # If e < 0 then the diagonal x=y is shorter than the diagonal x=-y 
             vertices = [
-                mp.Vector3( 0.5*(1+e)*b,  0.5*(1+e)*b, 0.0 ),
-                mp.Vector3( 0.5*(1-e)*b, -0.5*(1-e)*b, 0.0 ),
-                mp.Vector3(-0.5*(1+e)*b, -0.5*(1+e)*b, 0.0 ),
-                mp.Vector3(-0.5*(1-e)*b,  0.5*(1-e)*b, 0.0 )
+                mp.Vector3(  0.5*b*(1+e)/(1-e),  0.5*b*(1+e)/(1-e), 0.0 ),
+                mp.Vector3(  0.5*b*(1-e)/(1+e), -0.5*b*(1-e)/(1+e), 0.0 ),
+                mp.Vector3( -0.5*b*(1+e)/(1-e), -0.5*b*(1+e)/(1-e), 0.0 ),
+                mp.Vector3( -0.5*b*(1-e)/(1+e),  0.5*b*(1-e)/(1+e), 0.0 )
             ]
 
             ### Define the mode solver 
