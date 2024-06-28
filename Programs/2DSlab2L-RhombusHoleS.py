@@ -17,6 +17,13 @@ from LightCone import LightCone
 #   Slab thickness h, the parent square holes has edge length b                 #
 #   and the deformation parameter of the rhombus is e                           #
 #                                                                               #
+#   The hole is deformed from the C4 square, breaking the C4 symmetry           #
+#   The sum of the diagonal remains unchanged, so we add the suffix S (sum)     #
+#   That means let d be the diagonal of the square hole, the diagonals          #
+#   of the rhombi are:                                                          #
+#       d1 =  d*(1+e)                                                           #
+#       d2 =  d*(1-e)                                                           #
+#                                                                               #
 #   The two slabs are displaced by distances delta1 and delta2                  #
 #   along the x and y directions, respectively                                  #
 #                                                                               #
@@ -36,18 +43,17 @@ def main():
     print('# Polarization = '+polarization)
 
     ### Resolution 
-    resolution = mp.Vector3(32,32,32)  # pixels/a 
+    resolution = mp.Vector3(16,16,16)  # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Number of bands
-    num_bands = 20 
+    num_bands = 12 
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Geometrical parameters 
     # The upper layer 
     h1 = 0.36   # Thickness of the upper layer
     b1 = 0.3    # The edge length of the undeformed square hole 
-    #d1 = b1/np.sqrt(2) # The projection of half the mean diagonal on the x and y axes
     e1 = 0.05   # The anisotropy between the two diagonals of the upper layer
     
     print('\n# Upper slab:')
@@ -58,7 +64,6 @@ def main():
     # The lower layer 
     h2 = 0.35   # Thickness of the lower layer
     b2 = 0.40   # The edge length of the undeformed square hole    
-    #d2 = b2/np.sqrt(2) # The projection of the mean diagonal on the x and y axes
     e2 = 0.05   # The anisotropy between the two diagonals of the lower layer
 
     print('\n# Lower slab:')
@@ -68,8 +73,8 @@ def main():
 
     # The interlayer parameters 
     dist = 0.05 # Distance between the two layers 
-    deltax = 0.0 # Relative displacement along the x-direction 
-    deltay = 0.0 # Relative displacement along the y-direction 
+    deltax = 0.2  # Relative displacement along the x-direction 
+    deltay = -0.3 # Relative displacement along the y-direction 
     Lz = 10.0     # The height of the unit cell along the z-direction 
 
     print('\n# The distance between the two layers d = '+str(dist))
@@ -125,8 +130,10 @@ def main():
         mp.Vector3(0.0,0.0,0.0),    # Gamma 
         mp.Vector3(0.5,0.0,0.0),    # X 
         mp.Vector3(0.5,0.5,0.0),    # M+ 
-        mp.Vector3(0.0,0.0,0.0),    # Gamma  
-        mp.Vector3(-0.5,0.5,0.0)    # M- 
+        mp.Vector3(0.0,0.0,0.0),    # Gamma
+        mp.Vector3(0.0,0.5,0.0),    # Y   
+        mp.Vector3(-0.5,0.5,0.0),   # M-
+        mp.Vector3(0.0,0.0,0.0)     # Gamma 
     ]
 
     k_points = mp.interpolate(Nk,k_points)
@@ -223,7 +230,7 @@ def main():
 
     ### Plot the band structure
     if kSpace == 'BZ':
-        PlotBand_BrillouinZone_Scell_Rhole(number,freqs,Nk,lightcone,namesave,show_fig)
+        PlotBand_BrillouinZone_Scell_Rhole_2L(number,freqs,Nk,lightcone,namesave,show_fig)
     elif kSpace == 'M-vicinity':
         PlotBand_M(number,freqs,Nk,namesave,show_fig)
     else:
