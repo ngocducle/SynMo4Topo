@@ -11,11 +11,13 @@ from Materials import *
 #                                                                                    #
 #       Calculation of the band structure for 2DSlab1L with rhombus hole             #
 #       The hole is deformed from the C4 square, breaking the C4 symmetry            #
-#       The sum of the diagonal remains unchanged, so we add the suffix S (sum)      #
+#       The product of the diagonal remains unchanged, so we add the suffix          #
+#       P (product). It allows to keep the hole area, filling factor, and            #
+#       effective refractive index unchanged                                         # 
 #       That means let d be the diagonal of the square hole, the diagonals           #
 #       of the rhombi are:                                                           #
-#           d1 =  d*(1+e)                                                            #
-#           d2 =  d*(1-e)                                                            #
+#           d1 =  d*(1+e)/(1-e)                                                      #
+#           d2 =  d*(1-e)/(1+e)                                                      #
 #                                                                                    #
 #       We fix the slab thickness h and the edge length b of the undeformed square   #
 #       and scan the deformation parameter e                                         #
@@ -87,10 +89,10 @@ def main():
         # If e = 0 then the hole is a square 
         # If e < 0 then the diagonal x=y is shorter than the diagonal x=-y 
         vertices = [
-            mp.Vector3( 0.5*(1+e)*b,  0.5*(1+e)*b, 0.0 ),
-            mp.Vector3( 0.5*(1-e)*b, -0.5*(1-e)*b, 0.0 ),
-            mp.Vector3(-0.5*(1+e)*b, -0.5*(1+e)*b, 0.0 ),
-            mp.Vector3(-0.5*(1-e)*b,  0.5*(1-e)*b, 0.0 )
+            mp.Vector3(  0.5*b*(1+e)/(1-e),  0.5*b*(1+e)/(1-e), 0.0 ),
+            mp.Vector3(  0.5*b*(1-e)/(1+e), -0.5*b*(1-e)/(1+e), 0.0 ),
+            mp.Vector3( -0.5*b*(1+e)/(1-e), -0.5*b*(1+e)/(1-e), 0.0 ),
+            mp.Vector3( -0.5*b*(1-e)/(1+e),  0.5*b*(1-e)/(1+e), 0.0 )
         ]
 
         ### Define the mode solver 
