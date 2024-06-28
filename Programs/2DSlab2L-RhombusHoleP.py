@@ -18,11 +18,13 @@ from LightCone import LightCone
 #   and the deformation parameter of the rhombus is e                           #
 #                                                                               #
 #   The hole is deformed from the C4 square, breaking the C4 symmetry           #
-#   The sum of the diagonal remains unchanged, so we add the suffix S (sum)     #
+#   The product of the diagonal remains unchanged, so we add the suffix         #
+#   P (product). It allows to keep the hole area, filling factor, and           #
+#   effective refractive index unchanged                                        # 
 #   That means let d be the diagonal of the square hole, the diagonals          #
 #   of the rhombi are:                                                          #
-#       d1 =  d*(1+e)                                                           #
-#       d2 =  d*(1-e)                                                           #
+#        d1 =  d*(1+e)/(1-e)                                                    #
+#        d2 =  d*(1-e)/(1+e)                                                    #
 #                                                                               #
 #   The two slabs are displaced by distances delta1 and delta2                  #
 #   along the x and y directions, respectively                                  #
@@ -84,17 +86,25 @@ def main():
 
     ### The vertices of the rhombus holes
     vertices1 = [
-        mp.Vector3( 0.5*(1+e1)*b1+0.5*deltax,  0.5*(1+e1)*b1+0.5*deltay, 0.0 ),
-        mp.Vector3( 0.5*(1-e1)*b1+0.5*deltax, -0.5*(1-e1)*b1+0.5*deltay, 0.0 ),
-        mp.Vector3(-0.5*(1+e1)*b1+0.5*deltax, -0.5*(1+e1)*b1+0.5*deltay, 0.0 ),
-        mp.Vector3(-0.5*(1-e1)*b1+0.5*deltax,  0.5*(1-e1)*b1+0.5*deltay, 0.0 ) 
+        mp.Vector3( 0.5*b1*(1+e1)/(1-e1)+0.5*deltax,  
+                    0.5*b1*(1+e1)/(1-e1)+0.5*deltay, 0.0 ),
+        mp.Vector3( 0.5*b1*(1-e1)/(1+e1)+0.5*deltax, 
+                   -0.5*b1*(1-e1)/(1+e1)+0.5*deltay, 0.0 ),
+        mp.Vector3(-0.5*b1*(1+e1)/(1-e1)+0.5*deltax, 
+                   -0.5*b1*(1+e1)/(1-e1)+0.5*deltay, 0.0 ),
+        mp.Vector3(-0.5*b1*(1-e1)/(1+e1)+0.5*deltax,  
+                    0.5*b1*(1-e1)/(1+e1)+0.5*deltay, 0.0 ) 
     ]
 
     vertices2 = [
-        mp.Vector3( 0.5*(1+e2)*b2-0.5*deltax,  0.5*(1+e2)*b2-0.5*deltay, 0.0 ),
-        mp.Vector3( 0.5*(1-e2)*b2-0.5*deltax, -0.5*(1-e2)*b2-0.5*deltay, 0.0 ),
-        mp.Vector3(-0.5*(1+e2)*b2-0.5*deltax, -0.5*(1+e2)*b2-0.5*deltay, 0.0 ),
-        mp.Vector3(-0.5*(1-e2)*b2-0.5*deltax,  0.5*(1-e2)*b2-0.5*deltay, 0.0 ) 
+        mp.Vector3( 0.5*b2*(1+e2)/(1-e2)-0.5*deltax,
+                    0.5*b2*(1+e2)/(1-e2)-0.5*deltay, 0.0 ),
+        mp.Vector3( 0.5*b2*(1-e2)/(1+e2)-0.5*deltax, 
+                   -0.5*b2*(1-e2)/(1+e2)-0.5*deltay, 0.0 ),
+        mp.Vector3(-0.5*b2*(1+e2)/(1-e2)-0.5*deltax, 
+                   -0.5*b2*(1+e2)/(1-e2)-0.5*deltay, 0.0 ),
+        mp.Vector3(-0.5*b2*(1-e2)/(1+e2)-0.5*deltax,  
+                    0.5*b2*(1-e2)/(1+e2)-0.5*deltay, 0.0 ) 
     ]
 
     ### The k-point at which we plot the field profile
@@ -118,7 +128,7 @@ def main():
     print('# The part of the momentum space to simulate: '+kSpace) 
 
     ### Number of k-points to interpolate between the 2 high-symmetry points
-    Nk = 2
+    Nk = 9
     print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     # The set of k-points 
@@ -142,7 +152,7 @@ def main():
     show_fig = 'Yes'
 
     ### The title and the name of the files
-    namesave = '2DSlab2L-RhombusHoleS-h1_'+str(h1)+'-b1_'+str(b1)+'-e1_'+str(e1) \
+    namesave = '2DSlab2L-RhombusHoleP-h1_'+str(h1)+'-b1_'+str(b1)+'-e1_'+str(e1) \
         + '-h2_'+str(h2)+'-b2_'+str(b2)+'-e2_'+str(e2) \
         + '-d_'+str(dist)+'-deltax_'+str(deltax)+'-deltay_'+str(deltay) \
         + '-'+polarization

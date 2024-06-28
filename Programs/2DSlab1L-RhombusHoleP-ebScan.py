@@ -153,7 +153,7 @@ def main():
             number = np.arange(len(ms.k_points))
 
             ### The title and the name of the files
-            namesave = '2DSlab1L-RhombusHole-h_'+str(h)+'-b_'+str(b) \
+            namesave = '2DSlab1L-RhombusHoleP-h_'+str(h)+'-b_'+str(b) \
                     +'-e_'+str(e)+'-'+polarization 
             
             os.mkdir('./'+str(namesave)) 

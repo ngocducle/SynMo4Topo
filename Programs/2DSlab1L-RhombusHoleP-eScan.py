@@ -150,7 +150,7 @@ def main():
         ### The title and the name of the files 
         #namesave = '2DSlab1L-RhombusHole-h_'+str(h)+'-b_'+str(b) \
         #        +'-e_'+str(e)+'-'+polarization 
-        namesave = "2DSlab1L-RhombusHole-h_{0:.4f}".format(h)
+        namesave = "2DSlab1L-RhombusHoleP-h_{0:.4f}".format(h)
         namesave = namesave + "-b_{0:.4f}".format(b)
         namesave = namesave + "-e_{0:.4f}".format(e)
         namesave = namesave+'-'+polarization 
