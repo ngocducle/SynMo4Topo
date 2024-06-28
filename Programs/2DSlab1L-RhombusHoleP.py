@@ -15,11 +15,13 @@ from LightCone import LightCone
 #                                                                                    #
 #       Calculation of the band structure for 2DSlab1L with rhombus hole             #
 #       The hole is deformed from the C4 square, breaking the C4 symmetry            #
-#       The sum of the diagonal remains unchanged, so we add the suffix S (sum)      #
+#       The product of the diagonal remains unchanged, so we add the suffix          #
+#       P (product). It allows to keep the hole area, filling factor, and            #
+#       effective refractive index unchanged                                         # 
 #       That means let d be the diagonal of the square hole, the diagonals           #
 #       of the rhombi are:                                                           #
-#           d1 =  d*(1+e)                                                            #
-#           d2 =  d*(1-e)                                                            #
+#           d1 =  d*(1+e)/(1-e)                                                      #
+#           d2 =  d*(1-e)/(1+e)                                                      #
 #                                                                                    #
 ######################################################################################
 
@@ -37,18 +39,18 @@ def main():
     print('# Polarization = '+polarization)
 
     ### Resolution 
-    resolution = mp.Vector3(8,8,8)  # pixels/a 
+    resolution = mp.Vector3(32,32,32)  # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Number of bands 
-    num_bands = 20 
+    num_bands = 10
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Geometrical parameters 
     h = 0.35       # Thickness of the slab 
     Lz = 5.0       # The height of the unit cell along the z-direction 
     b = 0.35       # The mean of the projections of the diagonals vertices (0<= b <0.5)
-    e = -0.05      # The anisotropy between the two diagonals (-1<= e <=1)
+    e = 0.05      # The anisotropy between the two diagonals (-1<= e <=1)
 
     print('# Thickness of the slab h = '+str(h))
     print('# The projection of mean half-axis of the rhombus on the edges b = '+str(b))
@@ -60,10 +62,10 @@ def main():
     # If e = 0 then the hole is a square 
     # If e < 0 then the diagonal x=y is shorter than the diagonal x=-y 
     vertices = [
-        mp.Vector3( 0.5*(1+e)*b,  0.5*(1+e)*b, 0.0 ),
-        mp.Vector3( 0.5*(1-e)*b, -0.5*(1-e)*b, 0.0 ),
-        mp.Vector3(-0.5*(1+e)*b, -0.5*(1+e)*b, 0.0 ),
-        mp.Vector3(-0.5*(1-e)*b,  0.5*(1-e)*b, 0.0 )
+        mp.Vector3( 0.5*b*(1+e)/(1-e),  0.5*b*(1+e)/(1-e), 0.0 ),
+        mp.Vector3( 0.5*b*(1-e)/(1+e), -0.5*b*(1-e)/(1+e), 0.0 ),
+        mp.Vector3(-0.5*b*(1+e)/(1-e), -0.5*b*(1+e)/(1-e), 0.0 ),
+        mp.Vector3(-0.5*b*(1-e)/(1+e),  0.5*b*(1-e)/(1+e), 0.0 )
     ]
 
     ### The k-point at which we plot the field profile 
@@ -87,7 +89,7 @@ def main():
     print('# The part of the momentum space to simulate:'+kSpace) 
 
     ### Number of k-points to interpolate between the 2 high-symmetry points 
-    Nk = 29 
+    Nk = 19 
     print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     # The set of k-points 
@@ -96,7 +98,7 @@ def main():
         mp.Vector3(0.5,0.0,0.0),    # X 
         mp.Vector3(0.5,0.5,0.0),    # M+ 
         mp.Vector3(0.0,0.0,0.0),    # Gamma  
-        mp.Vector3(-0.5,0.5,0.0)    # M- 
+        mp.Vector3(-0.5,0.5,0.0)    # M-  
     ]
 
     k_points = mp.interpolate(Nk,k_points)
