@@ -453,7 +453,7 @@ def _2DSlab2LRhombusHole(h1,b1,e1,vertices1,
             vertices = vertices1,
             height = h1,
             axis = mp.Vector3(0.0,0.0,1.0),
-            center = (0.5*deltax,0.5*deltay,0.5*(dist+h1)),
+            center = (deltax,deltay,0.5*(dist+h1)),
             material = Envir 
         ),
 
@@ -461,7 +461,7 @@ def _2DSlab2LRhombusHole(h1,b1,e1,vertices1,
             vertices = vertices2,
             height = h2,
             axis = mp.Vector3(0.0,0.0,1.0),
-            center = (-0.5*deltax,-0.5*deltay,-0.5*(dist+h2)),
+            center = (-deltax,-deltay,-0.5*(dist+h2)),
             material = Envir 
         )
     ]

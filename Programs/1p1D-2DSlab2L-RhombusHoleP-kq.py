@@ -101,10 +101,10 @@ def main():
     k_array = mp.linspace(Kmin,Kmax,Nk+2) 
 
     ### The number of q-points (synthetic momenta)
-    Nq = 26
+    Nq = 1
 
     ### The array of q-points (synthetic momenta)
-    q_array = np.linspace(0.0,0.5,Nq)
+    q_array = np.linspace(0.5,0.5,Nq)
 
     ### Show the figure 
     show_fig = 'No'
