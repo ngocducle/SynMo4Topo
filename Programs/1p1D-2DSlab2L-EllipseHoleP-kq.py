@@ -50,8 +50,8 @@ def main():
     ### Geometrical parameters 
     # The upper layer 
     h1 = 0.35 # Thickness of the upper layer 
-    b1 = 0.38  # The edge length of the undeformed square hole 
-    e1 = -0.1  # The anisotropy between the two diagonals of the upper layer 
+    b1 = 0.4  # The edge length of the undeformed square hole 
+    e1 = -0.05  # The anisotropy between the two diagonals of the upper layer 
 
     print('\n# Upper slab:')
     print('# Thickness h1 = '+str(h1))
@@ -60,8 +60,8 @@ def main():
 
     # The lower layer 
     h2 = 0.35 # Thickness of the lower layer 
-    b2 = 0.38  # The edge length of the undeformed square hole 
-    e2 = -0.1  # The anisotropy between the two diagonals of the lower layer 
+    b2 = 0.4  # The edge length of the undeformed square hole 
+    e2 = -0.05  # The anisotropy between the two diagonals of the lower layer 
 
     print('\n# Lower slab:')
     print('# Thickness h2 = '+str(h2))
@@ -69,7 +69,7 @@ def main():
     print('# The anisotropy between the two diagonals e2 = '+str(e2))
 
     # The interlayer parameters
-    dist = 0.10   # Distance between the two layers 
+    dist = 0.40   # Distance between the two layers 
     Lz = 10.0     # The height of the unit cell along the z-direction 
 
     print('\n# The distance between the two layers d = '+str(dist))
@@ -83,7 +83,7 @@ def main():
     Envir = PMMA
 
     ### The number of k-points (genuine momenta) to interpolate 
-    Nk = 39
+    Nk = 9
     print('# The number of k-points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     ### The set of k-points (MPB)
@@ -98,10 +98,10 @@ def main():
     k_points = mp.interpolate(Nk,k_points)
 
     ### The array of k-points (to print)
-    k_array = mp.linspace(Kmin,Kmax,Nk+2) 
+    k_array = mp.linspace(Kmin,Kmax,Nk) 
 
     ### The number of q-points (synthetic momenta)
-    Nq = 26
+    Nq = 6
 
     ### The array of q-points (synthetic momenta)
     q_array = np.linspace(0.0,0.5,Nq)
@@ -141,25 +141,25 @@ def main():
 
         ### The vertices of the rhombus holes 
         vertices1 = [
-            mp.Vector3( 0.5*b1*(1+e1)/(1-e1)+deltax,  
-                        0.5*b1*(1+e1)/(1-e1)+deltay, 0.0 ),
-            mp.Vector3( 0.5*b1*(1-e1)/(1+e1)+deltax, 
-                       -0.5*b1*(1-e1)/(1+e1)+deltay, 0.0 ),
-            mp.Vector3(-0.5*b1*(1+e1)/(1-e1)+deltax, 
-                       -0.5*b1*(1+e1)/(1-e1)+deltay, 0.0 ),
-            mp.Vector3(-0.5*b1*(1-e1)/(1+e1)+deltax,  
-                        0.5*b1*(1-e1)/(1+e1)+deltay, 0.0 ) 
+            mp.Vector3( 0.5*b1*(1+e1)/(1-e1)+0.5*deltax,  
+                        0.5*b1*(1+e1)/(1-e1)+0.5*deltay, 0.0 ),
+            mp.Vector3( 0.5*b1*(1-e1)/(1+e1)+0.5*deltax, 
+                       -0.5*b1*(1-e1)/(1+e1)+0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*b1*(1+e1)/(1-e1)+0.5*deltax, 
+                       -0.5*b1*(1+e1)/(1-e1)+0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*b1*(1-e1)/(1+e1)+0.5*deltax,  
+                        0.5*b1*(1-e1)/(1+e1)+0.5*deltay, 0.0 ) 
         ]
 
         vertices2 = [
-            mp.Vector3( 0.5*b2*(1+e2)/(1-e2)-deltax,
-                        0.5*b2*(1+e2)/(1-e2)-deltay, 0.0 ),
-            mp.Vector3( 0.5*b2*(1-e2)/(1+e2)-deltax, 
-                       -0.5*b2*(1-e2)/(1+e2)-deltay, 0.0 ),
-            mp.Vector3(-0.5*b2*(1+e2)/(1-e2)-deltax, 
-                       -0.5*b2*(1+e2)/(1-e2)-deltay, 0.0 ),
-            mp.Vector3(-0.5*b2*(1-e2)/(1+e2)-deltax,  
-                        0.5*b2*(1-e2)/(1+e2)-deltay, 0.0 ) 
+            mp.Vector3( 0.5*b2*(1+e2)/(1-e2)-0.5*deltax,
+                        0.5*b2*(1+e2)/(1-e2)-0.5*deltay, 0.0 ),
+            mp.Vector3( 0.5*b2*(1-e2)/(1+e2)-0.5*deltax, 
+                       -0.5*b2*(1-e2)/(1+e2)-0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*b2*(1+e2)/(1-e2)-0.5*deltax, 
+                       -0.5*b2*(1+e2)/(1-e2)-0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*b2*(1-e2)/(1+e2)-0.5*deltax,  
+                        0.5*b2*(1-e2)/(1+e2)-0.5*deltay, 0.0 ) 
         ]
 
         ### Define the mode solver 
@@ -185,7 +185,7 @@ def main():
         namesavetxt = namesavetxt + '.txt'
 
         with open(namesavetxt,'w') as file:  
-            for ik in range(Nk+2):
+            for ik in range(Nk):
                 file.write('%.8f    ' % q)
                 file.writelines('%.8f    ' % k_array[ik])
                 file.writelines('%.8f    ' % w for w in freqs[ik])
@@ -212,7 +212,7 @@ def main():
     
         # Print the dielectric profile to the file:
         #           namesave+'-epsilon-xy.txt'
-        #PrintDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave+str(iq))
+        PrintDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave+str(iq))
 
 
     ##### Print the band structure 
