@@ -83,7 +83,7 @@ def main():
     Envir = PMMA
 
     ### The number of k-points (genuine momenta) to interpolate 
-    Nk = 39
+    Nk = 19
     print('# The number of k-points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     ### The set of k-points (MPB)
@@ -101,10 +101,10 @@ def main():
     k_array = mp.linspace(Kmin,Kmax,Nk+2) 
 
     ### The number of q-points (synthetic momenta)
-    Nq = 1
+    Nq = 51
 
     ### The array of q-points (synthetic momenta)
-    q_array = np.linspace(0.5,0.5,Nq)
+    q_array = np.linspace(0.0,0.5,Nq)
 
     ### Show the figure 
     show_fig = 'No'
@@ -141,25 +141,25 @@ def main():
 
         ### The vertices of the rhombus holes 
         vertices1 = [
-            mp.Vector3( 0.5*b1*(1+e1)/(1-e1)+deltax,  
-                        0.5*b1*(1+e1)/(1-e1)+deltay, 0.0 ),
-            mp.Vector3( 0.5*b1*(1-e1)/(1+e1)+deltax, 
-                       -0.5*b1*(1-e1)/(1+e1)+deltay, 0.0 ),
-            mp.Vector3(-0.5*b1*(1+e1)/(1-e1)+deltax, 
-                       -0.5*b1*(1+e1)/(1-e1)+deltay, 0.0 ),
-            mp.Vector3(-0.5*b1*(1-e1)/(1+e1)+deltax,  
-                        0.5*b1*(1-e1)/(1+e1)+deltay, 0.0 ) 
+            mp.Vector3( 0.5*b1*(1+e1)/(1-e1)+0.5*deltax,  
+                        0.5*b1*(1+e1)/(1-e1)+0.5*deltay, 0.0 ),
+            mp.Vector3( 0.5*b1*(1-e1)/(1+e1)+0.5*deltax, 
+                       -0.5*b1*(1-e1)/(1+e1)+0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*b1*(1+e1)/(1-e1)+0.5*deltax, 
+                       -0.5*b1*(1+e1)/(1-e1)+0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*b1*(1-e1)/(1+e1)+0.5*deltax,  
+                        0.5*b1*(1-e1)/(1+e1)+0.5*deltay, 0.0 ) 
         ]
 
         vertices2 = [
-            mp.Vector3( 0.5*b2*(1+e2)/(1-e2)-deltax,
-                        0.5*b2*(1+e2)/(1-e2)-deltay, 0.0 ),
-            mp.Vector3( 0.5*b2*(1-e2)/(1+e2)-deltax, 
-                       -0.5*b2*(1-e2)/(1+e2)-deltay, 0.0 ),
-            mp.Vector3(-0.5*b2*(1+e2)/(1-e2)-deltax, 
-                       -0.5*b2*(1+e2)/(1-e2)-deltay, 0.0 ),
-            mp.Vector3(-0.5*b2*(1-e2)/(1+e2)-deltax,  
-                        0.5*b2*(1-e2)/(1+e2)-deltay, 0.0 ) 
+            mp.Vector3( 0.5*b2*(1+e2)/(1-e2)-0.5*deltax,
+                        0.5*b2*(1+e2)/(1-e2)-0.5*deltay, 0.0 ),
+            mp.Vector3( 0.5*b2*(1-e2)/(1+e2)-0.5*deltax, 
+                       -0.5*b2*(1-e2)/(1+e2)-0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*b2*(1+e2)/(1-e2)-0.5*deltax, 
+                       -0.5*b2*(1+e2)/(1-e2)-0.5*deltay, 0.0 ),
+            mp.Vector3(-0.5*b2*(1-e2)/(1+e2)-0.5*deltax,  
+                        0.5*b2*(1-e2)/(1+e2)-0.5*deltay, 0.0 ) 
         ]
 
         ### Define the mode solver 

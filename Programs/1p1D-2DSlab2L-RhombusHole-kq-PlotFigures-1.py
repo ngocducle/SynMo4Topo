@@ -18,10 +18,10 @@ dist = 0.10   # Distance between the two layers
 Lz = 10.0     # The height of the unit cell along the z-direction 
 
 ### The number of k-points (genuine momenta) to interpolate 
-Nk = 9 
+Nk = 19 
 
 ### The number of q-points (synthetic momenta)
-Nq = 6
+Nq = 51
 
 ### The array of synthetic momenta 
 q_array = []
@@ -39,7 +39,7 @@ Band6 = []
 Band7 = []
 Band8 = []
 
-q_array_1D = np.linspace(0.0,0.5,Nq)
+q_array_1D = np.linspace(0.0,0.50,Nq)
 
 ##### We scan over the range of q points
 for iq in range(Nq):
@@ -73,7 +73,7 @@ for iq in range(Nq):
     Band7.append(data[:,8])
     Band8.append(data[:,9])
 
-q_array = np.array(q_array)
+q_array = 2*np.array(q_array)
 k_array = np.array(k_array)-0.5
 Band1 = np.array(Band1)
 Band2 = np.array(Band2)
@@ -112,7 +112,7 @@ ax.plot_surface(q_array,k_array,Band4,antialiased=True)
 #ax.plot_surface(q_array,k_array,Band7)
 #ax.plot_surface(q_array,k_array,Band8)
 ax.set_xlabel('q',fontsize=14)
-ax.set_ylabel('k',fontsize=14)
+ax.set_ylabel(r'$k_x=k_y$',fontsize=14)
 ax.set_title('e = '+str(e1),fontsize=14)
 ax.view_init(elev=10,azim=60,roll=0)
 plt.savefig(namesave+'-Band.png')
