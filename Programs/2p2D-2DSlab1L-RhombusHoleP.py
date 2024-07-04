@@ -61,6 +61,27 @@ def main():
 
     ### The set of k-points 
     # kSpace = BZ
+    Gx,Gy = 0.0,0.0
+    Xx,Xy = 0.5,0.0 
+    Mx,My = 0.5,0.5
+    Gx,Gy = 0.0,0.0 
+    M1x,M1y = -0.5,0.5 
+
+    GX_x = np.linspace(Gx,Xx,Nk+2)
+    GX_y = np.linspace(Gy,Xy,Nk+2) 
+
+    XM_x = np.linspace(Xx,Mx,Nk+2)
+    XM_y = np.linspace(Xy,My,Nk+2) 
+
+    MG_x = np.linspace(Mx,Gx,Nk+2)
+    MG_y = np.linspace(My,Gy,Nk+2)
+
+    GM_x = np.linspace(Gx,M1x,Nk+2)
+    GM_y = np.linspace(Gy,M1y,Nk+2)
+
+    kx_array = np.concatenate((GX_x,XM_x[1:Nk+2],MG_x[1:Nk+2],GM_x[1:Nk+2]))
+    ky_array = np.concatenate((GX_y,XM_y[1:Nk+2],MG_y[1:Nk+2],GM_y[1:Nk+2]))
+
     k_points = [
         mp.Vector3(0.0,0.0,0.0),    # Gamma 
         mp.Vector3(0.5,0.0,0.0),    # X 
@@ -189,7 +210,7 @@ def main():
 
 
             ### Print the band structure to file 
-            PrintBandStructure(freqs,number,namesave) 
+            PrintBandStructure_kxky(freqs,number,kx_array,ky_array,k1,k2,namesave) 
 
             ### Plot the band structure 
             if kSpace == 'BZ':

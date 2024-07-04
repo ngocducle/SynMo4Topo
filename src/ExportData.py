@@ -14,6 +14,18 @@ def PrintBandStructure(freqs,number,namesave):
             file.writelines('%.8f   ' % w for w in freqs[n])
             file.write('\n')
 
+##### FUNCTION: Print band structure with kx_array,ky_array,k1,k2
+def PrintBandStructure_kxky(freqs,number,kx_array,ky_array,k1,k2,namesave):
+    with open(namesave+'-Band.txt','w') as file:
+        for n in number:
+            file.write('%.8f    ' % n)
+            file.writelines('%.8f    ' % kx_array[n])
+            file.writelines('%.8f    ' % ky_array[n])
+            file.writelines('%.8f    ' % k1)
+            file.writelines('%.8f    ' % k2) 
+            file.writelines('%.8f   ' % w for w in freqs[n])
+            file.write('\n')
+
 ##### FUNCTION: Print the dielectric profile along the line (x,y,z)
 ###   where zmin <= z <= zmax, with Nz values of z 
 ###   The name of the data file is: namesave+'-epsilon-z.txt'
