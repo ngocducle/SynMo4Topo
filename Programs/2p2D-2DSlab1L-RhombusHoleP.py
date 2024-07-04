@@ -110,7 +110,13 @@ def main():
             ### The deformation of the square into the rhombus 
             e = 0.5*np.sin(2*np.pi*k1)*np.cos(2*np.pi*k2) 
 
-            
+            ### Define the vertices of the rhombus hole 
+            vertices = [
+                mp.Vector3( 0.5*b*(1+e)/(1-e),  0.5*b*(1+e)/(1-e), 0.0),
+                mp.Vector3( 0.5*b*(1-e)/(1+e), -0.5*b*(1-e)/(1+e), 0.0),
+                mp.Vector3(-0.5*b*(1+e)/(1-e), -0.5*b*(1+e)/(1-e), 0.0),
+                mp.Vector3(-0.5*b*(1-e)/(1+e),  0.5*b*(1-e)/(1+e), 0.0)
+            ] 
  
 ##### Run the MAIN program 
 if __name__ == '__main__':
