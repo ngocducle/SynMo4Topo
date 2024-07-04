@@ -36,8 +36,42 @@ def main():
     print('# The edge of the undeformed square hole b = '+str(b))
     print('# The height of the simulation cell Lz = '+str(Lz))
 
-    
+    ### Number of k-points to interpolate between the 2 high-symmetry points 
+    Nk = 19 
+    print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
 
+    ### The array of synthetic momenta
+    N1 = 5  
+    k1_array = np.linspace(0.0,0.5,N1)
+
+    N2 = 5 
+    k2_array = np.linspace(0.0,0.5,N2)
+
+    ### The set of k-points 
+    # kSpace = BZ
+    k_points = [
+        mp.Vector3(0.0,0.0,0.0),    # Gamma 
+        mp.Vector3(0.5,0.0,0.0),    # X 
+        mp.Vector3(0.5,0.5,0.0),    # M+
+        mp.Vector3(0.0,0.0,0.0),    # Gamma 
+        mp.Vector3(-0.5,0.5,0.0)    # M- 
+    ]
+
+    # kSpace = M-vicinity 
+    #k_points = [
+    #    mp.Vector3(0.5,0.5,0.0),    # M 
+    #    mp.Vector3(0.45,0.45,0.0),  # Gamma'
+    #    mp.Vector3(0.5,0.45,0.0),   # X'
+    #    mp.Vector3(0.5,0.5,0.0),    # M 
+    #    mp.Vector3(0.55,0.5,0.0)    # Gamma' 
+    #] 
+
+    k_points = mp.interpolate(Nk,k_points)
+
+    ### Show the figures (Yes/No)
+    show_fig = 'No'
+    print('# Show the figures: '+str(show_fig)) 
+ 
 ##### Run the MAIN program 
 if __name__ == '__main__':
     main()
