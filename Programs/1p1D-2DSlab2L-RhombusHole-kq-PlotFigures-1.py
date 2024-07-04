@@ -88,8 +88,11 @@ Band8 = np.array(Band8)
 q_array = q_array.reshape((Nq,Nk+2),order='C')
 k_array = k_array.reshape((Nq,Nk+2),order='C')
 
-#print(q_array)
-#print(k_array)
+print('q_array = ')
+print(q_array)
+
+print('k_array = ')
+print(k_array)
 
 Band1 = Band1.reshape((Nq,Nk+2),order='C') 
 Band2 = Band2.reshape((Nq,Nk+2),order='C')
@@ -99,6 +102,10 @@ Band5 = Band5.reshape((Nq,Nk+2),order='C')
 Band6 = Band6.reshape((Nq,Nk+2),order='C') 
 Band7 = Band7.reshape((Nq,Nk+2),order='C')
 Band8 = Band8.reshape((Nq,Nk+2),order='C')
+
+print('Band 1 at k = 0: ')
+print(Band1[:,Nk+1]) 
+
 
 ##### Plot the band structure 
 fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
@@ -116,4 +123,16 @@ ax.set_ylabel(r'$k_x=k_y$',fontsize=14)
 ax.set_title('e = '+str(e1),fontsize=14)
 ax.view_init(elev=10,azim=60,roll=0)
 plt.savefig(namesave+'-Band.png')
+plt.show()
+
+##### Plot the band structure along the line k = 0
+fig,ax = plt.subplots()
+plt.plot(2*q_array_1D,Band1[:,Nk+1],'o')
+plt.plot(2*q_array_1D,Band2[:,Nk+1],'o')
+plt.plot(2*q_array_1D,Band3[:,Nk+1],'o')
+plt.plot(2*q_array_1D,Band4[:,Nk+1],'o')
+plt.xlabel('q')
+plt.ylabel('E')
+plt.title('kx = ky = '+str(k_array[0,Nk+1]))
+plt.savefig(namesave+'-Slice-k_0.png')
 plt.show()
