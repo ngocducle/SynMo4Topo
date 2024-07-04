@@ -92,6 +92,25 @@ def main():
 
     ### Calculate the dispersion for the light cone with Envir and k_points 
     lightcone = LightCone(Envir,k_points,resolution)
+
+    #################################################################################
+    #                                                                               #
+    #                       Here the simulation starts                              #
+    #                                                                               #
+    #################################################################################
+
+    ##### We scan over the synthetic momenta. For each synthetic momentum, 
+    ###   we do a simulation. And then we write the results to files
+    for i1 in range(N1):
+        for i2 in range(N2):
+            ### The values of the synthetic momenta 
+            k1 = k1_array[i1]
+            k2 = k2_array[i2]
+
+            ### The deformation of the square into the rhombus 
+            e = 0.5*np.sin(2*np.pi*k1)*np.cos(2*np.pi*k2) 
+
+            
  
 ##### Run the MAIN program 
 if __name__ == '__main__':
