@@ -4,6 +4,12 @@ from meep import mpb
 
 import sys 
 sys.path.insert(0,'../src/')
+from ModeSolvers import _2DSlab1LRhombusHole 
+from DielectricProfile import * 
+from BandStructure import * 
+from ExportData import * 
+from Materials import * 
+from LightCone import LightCone 
 
 
 ##### The MAIN program goes here 
@@ -47,6 +53,11 @@ def main():
     N2 = 5 
     k2_array = np.linspace(0.0,0.5,N2)
 
+    # The part of the momentum space to plot the band structure 
+    # Choose between: 'BZ', 'Gamma-M', 'M', 'M-vicinity'
+    kSpace = 'BZ'
+    print('# The part of the momentum space to simulate:'+kSpace)
+
     ### The set of k-points 
     # kSpace = BZ
     k_points = [
@@ -71,6 +82,16 @@ def main():
     ### Show the figures (Yes/No)
     show_fig = 'No'
     print('# Show the figures: '+str(show_fig)) 
+
+    ### Materials 
+    # The material forming the structure 
+    Mater = Si 
+
+    # The environment
+    Envir = PMMA 
+
+    ### Calculate the dispersion for the light cone with Envir and k_points 
+    lightcone = LightCone(Envir,k_points,resolution)
  
 ##### Run the MAIN program 
 if __name__ == '__main__':
