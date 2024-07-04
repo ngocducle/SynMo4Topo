@@ -43,14 +43,14 @@ def main():
     print('# The height of the simulation cell Lz = '+str(Lz))
 
     ### Number of k-points to interpolate between the 2 high-symmetry points 
-    Nk = 19 
+    Nk = 9 
     print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     ### The array of synthetic momenta
-    N1 = 5  
+    N1 = 3  
     k1_array = np.linspace(0.0,0.5,N1)
 
-    N2 = 5 
+    N2 = 3 
     k2_array = np.linspace(0.0,0.5,N2)
 
     # The part of the momentum space to plot the band structure 
@@ -117,6 +117,23 @@ def main():
                 mp.Vector3(-0.5*b*(1+e)/(1-e), -0.5*b*(1+e)/(1-e), 0.0),
                 mp.Vector3(-0.5*b*(1-e)/(1+e),  0.5*b*(1-e)/(1+e), 0.0)
             ] 
+
+            ### Define the mode solver 
+            ms = _2DSlab1LRhombusHole(h,Lz,b,e,vertices,
+                                      num_bands,k_points,resolution,Mater,Envir)
+            
+            ### Run the simulation
+            if polarization == 'all':
+                ms.run()
+            elif polarization == 'zeven':
+                ms.run_zeven()
+            elif polarization == 'zodd':
+                ms.run_zodd()
+            else:
+                print('ERROR! The polarization does not belong to the allowed list')
+                exit()
+
+            
  
 ##### Run the MAIN program 
 if __name__ == '__main__':
