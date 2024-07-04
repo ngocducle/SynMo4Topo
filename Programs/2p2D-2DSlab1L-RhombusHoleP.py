@@ -133,6 +133,16 @@ def main():
                 print('ERROR! The polarization does not belong to the allowed list')
                 exit()
 
+            ### Extract the frequencies of the modes from the ModeSolver
+            freqs = ms.all_freqs 
+            
+            ### The title and the name of the files 
+            namesave = '2p2D-2DSlab1L-RhombusHoleP-h_'+str(h)+'-b_'+str(b) \
+                + "-k1_{0:.4f}".format(k1)+"-k2_{0:.4f}".format(k2) \
+                + "-e_{0:.4f}".format(e)+'-'+polarization 
+            
+            print(namesave) 
+
             
  
 ##### Run the MAIN program 
