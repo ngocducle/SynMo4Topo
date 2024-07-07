@@ -41,7 +41,7 @@ d0e = 0.35
 print('d0e = '+str(d0e))
 
 # The interlayer distance
-dist = 2.0
+dist = 0.1
 print('Interlayer distance dist = '+str(dist))
 
 Ve = V0e*np.exp(-dist/d0e) 
@@ -157,14 +157,14 @@ print(np.shape(Y))
 print(Y)
 
 ax = plt.figure(figsize=(12,10)).add_subplot(projection='3d')
-#surfe1 = ax.plot_surface(X,Y,Eeven1,cmap='winter')
-#surfe2 = ax.plot_surface(X,Y,Eeven2,cmap='spring')
-#surfe3 = ax.plot_surface(X,Y,Eeven3,cmap='autumn')
-#surfe4 = ax.plot_surface(X,Y,Eeven4,cmap='summer')
+surfe1 = ax.plot_surface(X,Y,Eeven1,cmap='winter')
+surfe2 = ax.plot_surface(X,Y,Eeven2,cmap='spring')
+surfe3 = ax.plot_surface(X,Y,Eeven3,cmap='autumn')
+surfe4 = ax.plot_surface(X,Y,Eeven4,cmap='summer')
 #surfe5 = ax.plot_surface(X,Y,Eeven5,cmap='summer')
 #surfe6 = ax.plot_surface(X,Y,Eeven6,cmap='autumn')
-surfe7 = ax.plot_surface(X,Y,Eeven7,cmap='spring')
-surfe8 = ax.plot_surface(X,Y,Eeven8,cmap='winter')
+#surfe7 = ax.plot_surface(X,Y,Eeven7,cmap='spring')
+#surfe8 = ax.plot_surface(X,Y,Eeven8,cmap='winter')
 
 #surfo1 = ax.plot_surface(X,Y,Eodd1,cmap='Blues')
 #surfo2 = ax.plot_surface(X,Y,Eodd2,cmap='Blues')
