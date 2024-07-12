@@ -87,7 +87,7 @@ def main():
     print('# The number of k-points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     ### The set of k-points (MPB)
-    Kmin = 0.40
+    Kmin = 0.00
     Kmax = 0.50 
 
     k_points = [
@@ -202,13 +202,13 @@ def main():
         Nz = 13 
 
         # Calculate the dielectric profile in planes parallel to Oxy 
-        x_plot,y_plot,z_array,epsilon_xy_array \
-            = DielectricProfileXY(ms,Ncellx,Ncelly,zmin,zmax,Nx,Ny,Nz)
+        #x_plot,y_plot,z_array,epsilon_xy_array \
+        #    = DielectricProfileXY(ms,Ncellx,Ncelly,zmin,zmax,Nx,Ny,Nz)
     
         # Plot the dielectric profile, the name of the figure is:
         #           namesave+'-z_'+str(k)+'.png'
         # where k is the number of the value of z in the array z_array
-        PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave+str(iq),show_fig)
+        #PlotDielectricProfileXY(x_plot,y_plot,z_array,epsilon_xy_array,namesave+str(iq),show_fig)
     
         # Print the dielectric profile to the file:
         #           namesave+'-epsilon-xy.txt'

@@ -48,12 +48,12 @@ Ve = V0e*np.exp(-dist/d0e)
 
 # The array of intrinsic momenta
 Nk = 201 
-k_array = np.linspace(-0.1,0.1,Nk)
+k_array = np.linspace(0.0,0.1,Nk)
 #k_array = [0.0,0.001]
 
 # The array of synthetic momenta 
 Ndelta = 201
-delta_array = np.linspace(-0.5,0.5,Ndelta)
+delta_array = np.linspace(0.0,0.5,Ndelta)
 #delta_array = [0.0,0.01]
 
 # Initiate the arrays for frequencies
@@ -159,8 +159,8 @@ print(Y)
 ax = plt.figure(figsize=(12,10)).add_subplot(projection='3d')
 surfe1 = ax.plot_surface(X,Y,Eeven1,cmap='winter')
 surfe2 = ax.plot_surface(X,Y,Eeven2,cmap='spring')
-surfe3 = ax.plot_surface(X,Y,Eeven3,cmap='autumn')
-surfe4 = ax.plot_surface(X,Y,Eeven4,cmap='summer')
+#surfe3 = ax.plot_surface(X,Y,Eeven3,cmap='autumn')
+#surfe4 = ax.plot_surface(X,Y,Eeven4,cmap='summer')
 #surfe5 = ax.plot_surface(X,Y,Eeven5,cmap='summer')
 #surfe6 = ax.plot_surface(X,Y,Eeven6,cmap='autumn')
 #surfe7 = ax.plot_surface(X,Y,Eeven7,cmap='spring')
@@ -172,8 +172,8 @@ surfe4 = ax.plot_surface(X,Y,Eeven4,cmap='summer')
 #surfo4 = ax.plot_surface(X,Y,Eodd4,cmap='Blues')
 
 #ax.set_zlim(0.345,0.36)
-ax.set_xticks([0.4,0.45,0.5,0.55,0.6])
-ax.set_yticks([-0.50,-0.25,0,0.25,0.50])
+#ax.set_xticks([0.4,0.45,0.5,0.55,0.6])
+#ax.set_yticks([-0.50,-0.25,0,0.25,0.50])
 ax.set_xlabel(r'$k a / (2 \pi)$',fontsize=14)
 ax.set_ylabel(r'$\delta$',fontsize=14)
 ax.set_title('dist = '+str(dist),fontsize=14)

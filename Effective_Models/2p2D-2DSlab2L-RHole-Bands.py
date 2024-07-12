@@ -12,17 +12,18 @@ from EffectiveModels import EffHam_2DSlab2L_RHole_M
 ##### The MAIN program
 def main():
     ### The arrays of genuine momenta 
-    Nk = 201 
+    Nk = 201
     kx_array = np.linspace(0.0,0.1,Nk)
     ky_array = np.linspace(0.0,0.1,Nk)
-    kd_array = np.linspace(0.0,0.1,Nk) # kx = ky = kd
+    kd_array = np.linspace(-0.01,0.01,Nk) # kx = ky = kd
+    #kd_array = [0.0195]
     ka_array = np.linspace(0.0,0.1,Nk) # kx = -ky = ka 
 
     ### The arrays of synthetic momenta 
-    Nq = 201 
+    Nq = 201
     qx_array = np.linspace(0.0,0.5,Nq)
     qy_array = np.linspace(0.0,0.5,Nq)
-    qd_array = np.linspace(0.0,0.5,Nq) # qx = qy = qd 
+    qd_array = np.linspace(0.36822,0.36826,Nq) # qx = qy = qd 
     qa_array = np.linspace(0.0,0.5,Nq) # qx = -qy = qa 
 
     ### The parameters 
@@ -105,6 +106,28 @@ def main():
                  ', a = '+str(a)+', b = '+str(b),fontsize=14)
     ax.view_init(elev=5,azim=135,roll=0)
     plt.savefig(namesave+'.png')
+    #plt.show()
+    #plt.close()
+
+    ### Fix qd, scan kd 
+    iq = 200
+    fig,ax = plt.subplots()
+    ax.plot(kd_array,Band1[:,iq])
+    ax.plot(kd_array,Band2[:,iq])
+    ax.set_xlabel(r'$k_d$',fontsize=14)
+    ax.set_ylabel(r'$E$',fontsize=14)
+    ax.set_title(r'$q_d = $'+str(qd_array[iq]),fontsize=14)
+
+    ### Fix kd, scan qd 
+    ik = 100
+    fig,ax = plt.subplots()
+    ax.plot(qd_array,Band1[ik,:])
+    ax.plot(qd_array,Band2[ik,:])
+    ax.set_xlabel(r'$q_d$',fontsize=14)
+    ax.set_ylabel(r'$E$',fontsize=14)
+    ax.set_title(r'$k_d = $'+str(kd_array[ik]),fontsize=14)
+
+
     plt.show()
     plt.close()
 
@@ -153,7 +176,7 @@ def main():
                  ', a = '+str(a)+', b = '+str(b),fontsize=14)
     ax.view_init(elev=5,azim=135,roll=0)
     plt.savefig(namesave+'.png')
-    plt.show()
+    #plt.show()
     plt.close()
 
     ##### ===============================================================================
@@ -249,6 +272,8 @@ def main():
     plt.savefig(namesave+'.png')
     #plt.show()
     plt.close()
+
+
 
 ##### Run the MAIN program
 if __name__ == '__main__':

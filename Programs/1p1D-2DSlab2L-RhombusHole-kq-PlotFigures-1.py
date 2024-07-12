@@ -73,7 +73,7 @@ for iq in range(Nq):
     Band7.append(data[:,8])
     Band8.append(data[:,9])
 
-q_array = 2*np.array(q_array)
+q_array = np.array(q_array)
 k_array = np.array(k_array)-0.5
 Band1 = np.array(Band1)
 Band2 = np.array(Band2)

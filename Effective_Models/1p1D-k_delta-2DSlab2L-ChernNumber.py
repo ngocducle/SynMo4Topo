@@ -18,7 +18,7 @@ def Hamiltonian(k,q,omega1,U1,W1,v1,omega2,U2,W2,v2,V,alpha):
     U2D = U2*(1+alpha)
     U2A = U2*(1-alpha)
 
-    eps = 0.1
+    eps = 0.0
 
     ### Block (1,1)
     Hamiltonian[0,0] = omega1 + np.sqrt(2.0)*v1*k
@@ -116,7 +116,7 @@ def main():
     v2 = 0.30 
 
     # Anisotropic coefficient along the diagonals 
-    alpha = 0.01
+    alpha = -0.01
 
     U = -0.016615673
     pU = 0.01
@@ -137,13 +137,13 @@ def main():
 
     ### The array of intrinsic momenta k
     Nk = 201
-    Kmax = 0.1 
-    k_array = np.linspace(0.0,Kmax,Nk)
+    Kmax = 0.02 
+    k_array = np.linspace(-Kmax,Kmax,Nk)
     dk = (k_array.max() - k_array.min())/(Nk-1)
 
     ### The array of synthetic momenta delta 
     Nq = 201 
-    q_array = np.linspace(0.5,0.6,Nq)
+    q_array = np.linspace(0.45,0.55,Nq)
     dq = (q_array.max() - q_array.min())/(Nq-1)
 
     ### The derivative dH/dk 
