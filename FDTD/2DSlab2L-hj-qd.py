@@ -40,7 +40,7 @@ htotal = h1 + dist + h2
 # The height of the unit cell along the z-direction 
 Lz = 3.0 
 
-# The shifts along the x and y direction
+# The shifts along the x and y directions
 deltax = 0.1
 deltay = 0.1 
 
@@ -62,13 +62,13 @@ vertices1 = [
 
 vertices2 = [
     mp.Vector3( 0.5*b2*(1+e2)/(1-e2)-0.5*deltax,
-        0.5*b2*(1+e2)/(1-e2)-0.5*deltay, 0.0 ),
+                0.5*b2*(1+e2)/(1-e2)-0.5*deltay, 0.0 ),
     mp.Vector3( 0.5*b2*(1-e2)/(1+e2)-0.5*deltax, 
-        -0.5*b2*(1-e2)/(1+e2)-0.5*deltay, 0.0 ),
+               -0.5*b2*(1-e2)/(1+e2)-0.5*deltay, 0.0 ),
     mp.Vector3(-0.5*b2*(1+e2)/(1-e2)-0.5*deltax, 
-        -0.5*b2*(1+e2)/(1-e2)-0.5*deltay, 0.0 ),
+               -0.5*b2*(1+e2)/(1-e2)-0.5*deltay, 0.0 ),
     mp.Vector3(-0.5*b2*(1-e2)/(1+e2)-0.5*deltax,  
-        0.5*b2*(1-e2)/(1+e2)-0.5*deltay, 0.0 ) 
+                0.5*b2*(1-e2)/(1+e2)-0.5*deltay, 0.0 ) 
 ]
 
 ### Size of the simulation cell 
