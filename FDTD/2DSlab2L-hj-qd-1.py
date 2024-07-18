@@ -7,8 +7,10 @@ import sys
 sys.path.insert(0,'../src')
 from Materials import * 
 
+import os 
+
 ### Resolution 
-resolution = 16
+resolution = 12
 
 ### PML layer 
 dpml = 1.0  # PML thickness
@@ -39,7 +41,7 @@ b2 = 0.38   # The edge length of the undeformed square hole
 e2 = 0.1    # The anisotropy between the two diagonals of the layer 2 
 
 # The distant between the 2 layers 
-dist = 0.1
+dist = 0.1 
 
 # The total size of the bilayer along the x-axis 
 structurex = (2*Ncellx - 0.5)*d 
@@ -296,7 +298,7 @@ sim = mp.Simulation(
 pt = mp.Vector3(0.5*sx - dpml - 0.5*pad,0,0) 
 
 ##### Transmitted flux
-pos = 1.8 
+pos = 0.5*pad 
 tran_fr = mp.FluxRegion(
     center = mp.Vector3(0.5*sx - dpml - pos,0,0),
     size = mp.Vector3(0,sx,sz)
@@ -331,7 +333,10 @@ Nx = shape[0]
 Ny = shape[1]
 Nz = shape[2]
 
-"""
+os.system('mkdir with_structure')
+#os.system('cd with_structure')
+
+
 for i in range(Nx):
     plt.figure()
     plt.imshow(eps_data[i,:,:].transpose(),interpolation='spline36',cmap='PuOr')
@@ -347,7 +352,7 @@ for j in range(Ny):
     plt.ylabel('z')
     plt.savefig('y-'+str(j)+'.png')
     plt.close()
-"""
+
 
 for k in range(Nz):
     plt.figure()
@@ -357,11 +362,139 @@ for k in range(Nz):
     plt.savefig('z-'+str(k)+'.png')
     plt.close()
 
+#os.system('cd ..')
+os.system('mv *.png with_structure')
+
 ####### ===============================================================================
 ####### Normalized flux 
 sim.reset_meep()
 
 ##### Redefine the geometry 
-#geometry = [
-#    mp.Block()
-#]
+### There remain the padding blocks 
+geometry = [
+    mp.Block(
+        center = mp.Vector3(0,0,0),
+        size = mp.Vector3(mp.inf,mp.inf,mp.inf),
+        material = Envir 
+    ),
+
+    mp.Block(
+        center = mp.Vector3(-0.25*sx,0,0.5*(htotal-h1)),
+        size = mp.Vector3(0.5*sx,sy,h1),
+        material = Mater1 
+    ),
+
+    mp.Block(
+        center = mp.Vector3(-0.25*sx,0,0.5*(-htotal+h2)),
+        size = mp.Vector3(0.5*sx,sy,h2),
+        material = Mater2 
+    ),
+
+    mp.Block(
+        center = mp.Vector3(0.25*sx,0,0.5*(htotal-h2)),
+        size = mp.Vector3(0.5*sx,sy,h2),
+        material = Mater2  
+    ),
+
+    mp.Block(
+        center = mp.Vector3(0.25*sx,0,0.5*(-htotal+h1)),
+        size = mp.Vector3(0.5*sx,sy,h1),
+        material = Mater1 
+    ),
+
+    mp.Block(
+        center = mp.Vector3(0,0,0),
+        size = mp.Vector3(structurex,structurey,2*htotal),
+        material = Envir 
+    )
+]
+
+sim = mp.Simulation(cell_size = cell,
+                    geometry = geometry,
+                    sources = sources,
+                    boundary_layers = pml_layers,
+                    resolution = resolution)
+
+##### The position of the monitor 
+pt = mp.Vector3(0.5*sx - dpml - 0.5*pad,0,0) 
+
+##### Transmitted flux
+pos = 0.5*pad 
+tran_fr = mp.FluxRegion(
+    center = mp.Vector3(0.5*sx - dpml - pos,0,0),
+    size = mp.Vector3(0,sx,sz)
+)
+
+tran = sim.add_flux(fcen,df,nfreq,tran_fr)
+
+##### Run the simulation 
+sim.run(
+    until_after_sources = mp.stop_when_fields_decayed(50,
+                                                      mp.Ez,
+                                                      pt,
+                                                      1e-3))
+
+### Get the transmitted flux 
+Tran_norm_flux = np.array(mp.get_fluxes(tran))
+print('Size = Tran_flux: '+str(np.shape(Tran_norm_flux)))
+
+### Get the dielectric function into an array 
+eps_data = sim.get_array(center = mp.Vector3(0,0,0),
+                         size = cell,
+                         component = mp.Dielectric)
+
+print('sx = '+str(sx))
+print('sy = '+str(sy))
+print('sz = '+str(sz))
+print('Shape of eps_data: '+str(np.shape(eps_data)))
+
+##### Plot the dielectric function
+shape = np.shape(eps_data)
+Nx = shape[0]
+Ny = shape[1]
+Nz = shape[2]
+
+os.system('mkdir no_structure')
+#os.system('cd no_structure')
+
+
+for i in range(Nx):
+    plt.figure()
+    plt.imshow(eps_data[i,:,:].transpose(),interpolation='spline36',cmap='PuOr')
+    plt.xlabel('y')
+    plt.ylabel('z')
+    plt.savefig('x-'+str(i)+'.png')
+    plt.close()
+
+for j in range(Ny):
+    plt.figure()
+    plt.imshow(eps_data[:,j,:].transpose(),interpolation='spline36',cmap='PuOr')
+    plt.xlabel('x')
+    plt.ylabel('z')
+    plt.savefig('y-'+str(j)+'.png')
+    plt.close()
+
+
+for k in range(Nz):
+    plt.figure()
+    plt.imshow(eps_data[:,:,k].transpose(),interpolation='spline36',cmap='PuOr')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.savefig('z-'+str(k)+'.png')
+    plt.close()
+
+#os.system('cd ..')
+os.system('mv *.png no_structure')
+
+####### Calculate the transmission 
+transmission = np.divide(Tran_flux,Tran_norm_flux)
+
+####### The array of data 
+q_array = delta*np.ones(nfreq)
+freq_array = np.linspace(fcen-df,fcen+df,nfreq)
+
+dataexport = np.column_stack((q_array,freq_array,transmission))
+
+####### Write the transmission flux to file 
+with open("transmission-q_{0:.4f}".format(delta)+".txt",'w') as file:
+    np.savetxt(file,dataexport,fmt='%.8f')
