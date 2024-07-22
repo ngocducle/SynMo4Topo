@@ -17,29 +17,29 @@ from EffectiveModels import EffModel_2DSlab2L_M
 ### Fit the modes arising from monolayer EVEN bands
 
 # The shift along the x-direction 
-deltax = 0.0
+deltax = 0.5
 
 # The shift along the y-direction
-deltay = 0.0
+deltay = 0.5
 
 # Frequency at the M point 
-omegaMe = 0.3004644075
+omegaMe = 0.29780940
 print('omegaMe = '+str(omegaMe))
 
 # Group velocity  
-ve = 0.35
+ve = 0.31699999
 print('Group velocity = '+str(ve))
 
 # Counter-propagating coupling strength 
-Ue = -0.0166156725
+Ue = -0.01536996
 print('Ue = '+str(Ue))
 
 # Orthogonally-propagating coupling stength 
-We = 0.0017449175
+We = 0.00146638
 print('We = '+str(We))
 
 # Interlayer coupling strength at zero interlayer distance 
-V0e = 0.044
+V0e = 0.040
 print('V0e = '+str(V0e))
 
 # Characteristic length for interlayer coupling 
@@ -87,7 +87,7 @@ for i in range(Ndist):
 
 #DistArrayMPB = DataEven[:,0]
 
-Data = np.loadtxt('2DSlab2L-SHole-h_0.35-r_0.4-DistScanM-all.txt')
+Data = np.loadtxt('2DSlab2L-h_0.35-b_0.38-q_0.5_M-dvar.txt')
 DistArrayMPB = Data[:,0]
 
 ### ==================================================================================

@@ -80,7 +80,7 @@ omega = 0.29780940
 v = 0.317
 U = -0.01536996
 W = 0.00146639
-alpha = -0.01 
+alpha = 0.075
 
 pomega = 0.0 
 omega1 = omega*(1 + pomega)
@@ -102,7 +102,7 @@ alpha2 = alpha
 
 d0 = 0.35 
 dist = 0.1
-V0 = 0.044 
+V0 = 0.040
 V = V0*np.exp(-dist/d0)
 
 
@@ -193,7 +193,7 @@ plt.close()
 ##### =============================================================================
 ##### The band structure along q for fixed k 
 ### The value of k 
-k = 0.010
+k = 0.00
 
 ### The array of q 
 Nq = 201 
