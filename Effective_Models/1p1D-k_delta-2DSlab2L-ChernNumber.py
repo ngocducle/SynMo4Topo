@@ -110,40 +110,40 @@ def dH_q(V,q):
 #####                                                                               #
 ##### ============================================================================= # 
 def main():
-    omega1 = 0.300464408
-    omega2 = 0.300464408 
-    v1 = 0.30
-    v2 = 0.30 
+    omega1 = 0.29780940
+    omega2 = 0.29780940 
+    v1 = 0.317
+    v2 = 0.317
 
     # Anisotropic coefficient along the diagonals 
-    alpha = -0.01
+    alpha = 0.285
 
-    U = -0.016615673
+    U = -0.015
     pU = 0.01
     DeltaU = pU*U
     U1 = U+DeltaU 
     U2 = U-DeltaU 
 
-    W = 0.001744918
-    pW = -0.01
+    W = 0.0015
+    pW = 0.01
     DeltaW = pW*W 
     W1 = W+DeltaW 
     W2 = W-DeltaW 
 
     d0 = 0.35 
-    dist = 0.4
-    V0 = 0.044
+    dist = 0.10
+    V0 = 0.038
     V = V0*np.exp(-dist/d0)
 
     ### The array of intrinsic momenta k
     Nk = 201
-    Kmax = 0.02 
+    Kmax = 0.10
     k_array = np.linspace(-Kmax,Kmax,Nk)
     dk = (k_array.max() - k_array.min())/(Nk-1)
 
     ### The array of synthetic momenta delta 
     Nq = 201 
-    q_array = np.linspace(0.45,0.55,Nq)
+    q_array = np.linspace(0.0,1.0,Nq)
     dq = (q_array.max() - q_array.min())/(Nq-1)
 
     ### The derivative dH/dk 
