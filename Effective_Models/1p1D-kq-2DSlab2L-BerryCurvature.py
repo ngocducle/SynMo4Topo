@@ -121,7 +121,7 @@ pU = 0.0
 U1 = U*(1+pU)
 U2 = U*(1-pU)
 
-pW = 0.0
+pW = 0.0 
 W1 = W*(1+pW)
 W2 = W*(1-pW)
 
@@ -143,7 +143,7 @@ dk = (k_array.max()-k_array.min())/(Nk-1)
 
 ### The array of intrinsic momenta q 
 Nq = 201
-q_array = np.linspace(0.4,0.6,Nq)
+q_array = np.linspace(0.45,0.55,Nq)
 dq = (q_array.max()-q_array.min())/(Nq-1)
 
 ### The derivative dH/dk 
@@ -220,13 +220,13 @@ norm = colors.Normalize(vmin=vmin,vmax=vmax)
 ax[0].pcolormesh(X,Y,F_array[:,:,0].T,shading='gouraud',cmap=cmap)
 ax[0].set_title('Band 1',fontsize=14)
 ax[0].set_xticks([-0.02,-0.01,0,0.01,0.02])
-ax[0].set_yticks([-0.1,-0.05,0.0,0.05,0.1])
+ax[0].set_yticks([-0.04,-0.02,0.0,0.02,0.04])
 ax[0].set_xlabel('k',fontsize=16)
 #ax[0].set_ylabel('q',fontsize=14)
 
 ax[1].pcolormesh(X,Y,F_array[:,:,1].T,shading='gouraud',cmap=cmap)
 ax[1].set_xticks([-0.02,-0.01,0,0.01,0.02])
-ax[1].set_yticks([-0.1,-0.05,0.0,0.05,0.1])
+ax[1].set_yticks([-0.04,-0.02,0.0,0.02,0.04])
 ax[1].set_title('Band 2',fontsize=14)
 ax[1].set_xlabel('k',fontsize=16)
 #ax[1].set_ylabel('q',fontsize=14)
@@ -267,7 +267,7 @@ fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
 fcolors = scamap.to_rgba(F_array_3D[:,:,0].T)
 ax.plot_surface(X,Y,Energy_array[:,:,0].T,
                 linewidth=linewidth,
-                antialiased='True',
+                antialiased='False',
                 rstride=1,
                 cstride=1,
                 facecolors=fcolors,
@@ -276,23 +276,23 @@ ax.plot_surface(X,Y,Energy_array[:,:,0].T,
 fcolors = scamap.to_rgba(F_array_3D[:,:,1].T)
 ax.plot_surface(X,Y,Energy_array[:,:,1].T,
                 linewidth=linewidth,
-                antialiased='True',
+                antialiased='False',
                 rstride=1,
                 cstride=1,
                 facecolors=fcolors,
                 cmap=cmap)
 
 ax.set_xticks([-0.02,-0.01,0.0,0.01,0.02])
-ax.set_yticks([-0.1,0.05,0.0,0.05,0.1])
+ax.set_yticks([-0.04,-0.02,0.0,0.02,0.04])
 ax.set_xlabel('k',fontsize=14)
 ax.set_ylabel('q',fontsize=14)
 ax.set_zlabel(r'$\omega a / (2 \pi c)$',fontsize=14)
 fig.colorbar(scamap,
              orientation='vertical',
              shrink=0.4,
+             location = 'right',
              ax=ax)
-
-ax.view_init(elev=15,azim=135,roll=0)
+ax.view_init(elev=10,azim=135,roll=0)
 plt.savefig('Dis-BCur-'+namesave)
 plt.show()
 plt.close()

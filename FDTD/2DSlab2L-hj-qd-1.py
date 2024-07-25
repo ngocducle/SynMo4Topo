@@ -301,7 +301,7 @@ pt = mp.Vector3(0.5*sx - dpml - 0.5*pad,0,0)
 pos = 0.5*pad 
 tran_fr = mp.FluxRegion(
     center = mp.Vector3(0.5*sx - dpml - pos,0,0),
-    size = mp.Vector3(0,sx,sz)
+    size = mp.Vector3(0,sy,sz)
 )
 
 tran = sim.add_flux(fcen,df,nfreq,tran_fr)

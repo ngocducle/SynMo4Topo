@@ -5,10 +5,10 @@ import meep as mp
 ##### The function to calculate the transmitted flux 
 def trans_func(shift,fcen,df,nfreq):
     ### The geometrical configuration 
-    N = 3   # Number of gratings per side
+    N = 10   # Number of gratings per side
     sy = 10 # Size of computing cell along y 
 
-    shift = 0.3
+    #shift = 0.3
     d = shift/2 # Layer 2 (upper) is shifted by d and layer 1 (lower) by -d 
     comp = mp.Ez 
 
@@ -187,7 +187,7 @@ def main():
     nfreq = 500 
 
 
-    shift_array = np.linspace(0.4,0.6,3)
+    shift_array = np.linspace(0.0,0.5,51)
 
     t2, w2 = norm_func(fcen,df,nfreq)
 
