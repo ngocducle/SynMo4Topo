@@ -10,7 +10,7 @@ from Materials import *
 import os 
 
 ### Resolution 
-resolution = 12
+resolution = 10 
 
 ### PML layer 
 dpml = 2.0  # PML thickness
@@ -25,6 +25,9 @@ Ncelly = 5
 
 ### Padding block 
 pad = 2.0 
+
+### Positon of the source and the monitor from the PML layer 
+pos = 0.9*pad 
 
 ### Geometrical parameters 
 # The diagonal of one square unit cell 
@@ -92,24 +95,25 @@ sz = Lz + 2*dpml
 cell = mp.Vector3(sx,sy,sz)
 
 ### The array of synthetic momenta 
-Nq = 26
+Nq = 6
 q_array = np.linspace(0,0.5,Nq)
 
 ##### Source 
 fcen = 0.30     # pulse center frequency 
 df = 0.15       # pulse width 
 nfreq = 101     # number of frequencies
+comp = mp.Ez    # the component 
 
 sources = [
     mp.Source(
         mp.GaussianSource(fcen,fwidth=df),
-        component = mp.Ez,
-        center = mp.Vector3(-0.5*sx+dpml+0.5*pad,0,0),
-        size = mp.Vector3(0,sy,sz)
+        component = comp,
+        center = mp.Vector3(-0.5*sx+dpml+pos,0,0),
+        size = mp.Vector3(0,sy,htotal)
     )
 ]
 
-##### The position of the monitor 
+##### The position of the point at which we measure the decay field 
 pt = mp.Vector3(0.5*sx - dpml - 0.5*pad,0,0) 
 
 ####### =================================================================================
@@ -307,18 +311,17 @@ for iq in range(Nq):
     )
 
     ##### Transmitted flux
-    pos = 0.5*pad 
     tran_fr = mp.FluxRegion(
         center = mp.Vector3(0.5*sx - dpml - pos,0,0),
-        size = mp.Vector3(0,sy,sz)
+        size = mp.Vector3(0,structurey,htotal)
     )
 
     tran = sim.add_flux(fcen,df,nfreq,tran_fr)
 
     ##### Run the simulation 
     sim.run(
-        until_after_sources = mp.stop_when_fields_decayed(1000,
-                                                          mp.Ez,
+        until_after_sources = mp.stop_when_fields_decayed(200,
+                                                          comp,
                                                           pt,
                                                           1e-4))
 
@@ -375,6 +378,12 @@ for iq in range(Nq):
     sim.reset_meep()
 
     ##### Redefine the geometry 
+    ### Reset the length of the unit cell 
+    sx = 2*(dpml+pad) 
+
+    ### Reset the unit cell 
+    cell = mp.Vector3(sx,sy,sz)
+
     ### There remain the padding blocks 
     geometry = [
         mp.Block(
@@ -405,12 +414,6 @@ for iq in range(Nq):
             center = mp.Vector3(0.25*sx,0,0.5*(-htotal+h1)),
             size = mp.Vector3(0.5*sx,sy,h1),
             material = Mater1 
-        ),
-
-        mp.Block(
-            center = mp.Vector3(0,0,0),
-            size = mp.Vector3(structurex,structurey,2*htotal),
-            material = Envir 
         )
     ]
 
@@ -424,18 +427,17 @@ for iq in range(Nq):
     pt = mp.Vector3(0.5*sx - dpml - 0.5*pad,0,0) 
 
     ##### Transmitted flux
-    pos = 0.5*pad 
     tran_fr = mp.FluxRegion(
         center = mp.Vector3(0.5*sx - dpml - pos,0,0),
-        size = mp.Vector3(0,sx,sz)
+        size = mp.Vector3(0,structurey,htotal)
     )
 
     tran = sim.add_flux(fcen,df,nfreq,tran_fr)
 
     ##### Run the simulation 
     sim.run(
-        until_after_sources = mp.stop_when_fields_decayed(1000,
-                                                      mp.Ez,
+        until_after_sources = mp.stop_when_fields_decayed(200,
+                                                      comp,
                                                       pt,
                                                       1e-4))
 
@@ -494,7 +496,11 @@ for iq in range(Nq):
     q_array_print = delta*np.ones(nfreq)
     freq_array = np.linspace(fcen-df,fcen+df,nfreq)
 
-    dataexport = np.column_stack((q_array_print,freq_array,transmission))
+    dataexport = np.column_stack((q_array_print,
+                                  freq_array,
+                                  Tran_flux,
+                                  Tran_norm_flux,
+                                  transmission))
 
     ####### Write the transmission flux to file 
     with open("transmission-q_{0:.4f}".format(delta)+".txt",'w') as file:
