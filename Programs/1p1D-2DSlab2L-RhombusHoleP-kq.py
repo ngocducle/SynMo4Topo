@@ -40,18 +40,18 @@ def main():
     #################################################################################
 
     ### Resolution 
-    resolution = mp.Vector3(16,16,16)      # pixels/a 
+    resolution = mp.Vector3(32,32,32)      # pixels/a 
     print('# Resolution = '+str(resolution))
 
     ### Number of bands 
-    num_bands = 20 
+    num_bands = 25
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Geometrical parameters 
     # The upper layer 
     h1 = 0.35 # Thickness of the upper layer 
     b1 = 0.38  # The edge length of the undeformed square hole 
-    e1 = -0.1  # The anisotropy between the two diagonals of the upper layer 
+    e1 = 0.0  # The anisotropy between the two diagonals of the upper layer 
 
     print('\n# Upper slab:')
     print('# Thickness h1 = '+str(h1))
@@ -61,7 +61,7 @@ def main():
     # The lower layer 
     h2 = 0.35 # Thickness of the lower layer 
     b2 = 0.38  # The edge length of the undeformed square hole 
-    e2 = -0.1  # The anisotropy between the two diagonals of the lower layer 
+    e2 = 0.0  # The anisotropy between the two diagonals of the lower layer 
 
     print('\n# Lower slab:')
     print('# Thickness h2 = '+str(h2))
@@ -83,19 +83,20 @@ def main():
     Envir = PMMA
 
     ### The number of k-points (genuine momenta) to interpolate 
-    Nk = 19
+    Nk = -1
     print('# The number of k-points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     ### The set of k-points (MPB)
     Kmin = 0.00
-    Kmax = 0.50 
+    Kmax = 0.00 
 
-    k_points = [
+    """k_points = [
         mp.Vector3(Kmin,Kmin,0.0),    
         mp.Vector3(Kmax,Kmax,0.0)     # M 
     ]
 
-    k_points = mp.interpolate(Nk,k_points)
+    k_points = mp.interpolate(Nk,k_points)"""
+    k_points = [mp.Vector3(0.0,0.0,0.0)]
 
     ### The array of k-points (to print)
     k_array = mp.linspace(Kmin,Kmax,Nk+2) 

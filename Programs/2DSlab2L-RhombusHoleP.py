@@ -45,18 +45,18 @@ def main():
     print('# Polarization = '+polarization)
 
     ### Resolution 
-    resolution = mp.Vector3(16,16,16)  # pixels/a 
+    resolution = mp.Vector3(32,32,32)  # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Number of bands
-    num_bands = 12 
+    num_bands = 25
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Geometrical parameters 
     # The upper layer 
-    h1 = 0.36   # Thickness of the upper layer
-    b1 = 0.3    # The edge length of the undeformed square hole 
-    e1 = 0.05   # The anisotropy between the two diagonals of the upper layer
+    h1 = 0.35   # Thickness of the upper layer
+    b1 = 0.38   # The edge length of the undeformed square hole 
+    e1 = 0.0   # The anisotropy between the two diagonals of the upper layer
     
     print('\n# Upper slab:')
     print('# Thickness h1 = '+str(h1))
@@ -65,8 +65,8 @@ def main():
 
     # The lower layer 
     h2 = 0.35   # Thickness of the lower layer
-    b2 = 0.40   # The edge length of the undeformed square hole    
-    e2 = 0.05   # The anisotropy between the two diagonals of the lower layer
+    b2 = 0.38   # The edge length of the undeformed square hole    
+    e2 = 0.0   # The anisotropy between the two diagonals of the lower layer
 
     print('\n# Lower slab:')
     print('# Thickness h2 = '+str(h2))
@@ -74,9 +74,9 @@ def main():
     print('# The anisotropy between the two diagonals e2 = '+str(e2))
 
     # The interlayer parameters 
-    dist = 0.05 # Distance between the two layers 
-    deltax = 0.2  # Relative displacement along the x-direction 
-    deltay = -0.3 # Relative displacement along the y-direction 
+    dist = 0.1 # Distance between the two layers 
+    deltax = 0.5  # Relative displacement along the x-direction 
+    deltay = 0.5 # Relative displacement along the y-direction 
     Lz = 10.0     # The height of the unit cell along the z-direction 
 
     print('\n# The distance between the two layers d = '+str(dist))
@@ -128,7 +128,7 @@ def main():
     print('# The part of the momentum space to simulate: '+kSpace) 
 
     ### Number of k-points to interpolate between the 2 high-symmetry points
-    Nk = 9
+    Nk = 19
     print('# The number of points to interpolate the high-symmetry line Nk = '+str(Nk))
 
     # The set of k-points 

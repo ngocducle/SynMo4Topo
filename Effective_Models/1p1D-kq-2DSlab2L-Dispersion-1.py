@@ -8,6 +8,8 @@ from matplotlib import cm,colors
 ##### ===========================================================================
 ##### FUNCTION: Hamiltonian of 2D photonic crystal slab bilayer with 
 ##### kx = ky = k, qx = qy = q 
+##### The synthetic momentum: q = delta/(sqrt(2)*a) - 0.5
+##### that means q = 0 at shift = sqrt(2)*a/2
 def Hamiltonian(k,q,omega1,v1,U1,W1,alpha1,omega2,v2,U2,W2,alpha2,V):
     Hamiltonian = np.zeros((8,8),dtype=complex)
 
@@ -40,36 +42,36 @@ def Hamiltonian(k,q,omega1,v1,U1,W1,alpha1,omega2,v2,U2,W2,alpha2,V):
     Hamiltonian[3,3] = omega1 - v1*k 
 
     ### Block (1,2)
-    Hamiltonian[0,4] = V*cmath.exp(-1j*q*K)
+    Hamiltonian[0,4] = V
     Hamiltonian[1,5] = V
     Hamiltonian[2,6] = V 
-    Hamiltonian[3,7] = V*cmath.exp(1j*q*K) 
+    Hamiltonian[3,7] = V  
 
     ### Block (2,1)
-    Hamiltonian[4,0] = V*cmath.exp(1j*q*K)
+    Hamiltonian[4,0] = V 
     Hamiltonian[5,1] = V 
     Hamiltonian[6,2] = V
-    Hamiltonian[7,3] = V*cmath.exp(-1j*q*K)
+    Hamiltonian[7,3] = V
 
     ### Block (2,2)
     Hamiltonian[4,4] = omega2 + v2*k 
-    Hamiltonian[4,5] = W2 
-    Hamiltonian[4,6] = W2 
-    Hamiltonian[4,7] = U2p 
+    Hamiltonian[4,5] = -W2*cmath.exp(-1j*K*q) 
+    Hamiltonian[4,6] = -W2*cmath.exp(-1j*K*q) 
+    Hamiltonian[4,7] = U2p*cmath.exp(-1j*2*K*q) 
 
-    Hamiltonian[5,4] = W2
+    Hamiltonian[5,4] = -W2*cmath.exp(1j*K*q)
     Hamiltonian[5,5] = omega2 
     Hamiltonian[5,6] = U2m 
-    Hamiltonian[5,7] = W2 
+    Hamiltonian[5,7] = -W2*cmath.exp(-1j*K*q) 
 
-    Hamiltonian[6,4] = W2 
+    Hamiltonian[6,4] = -W2*cmath.exp(1j*K*q) 
     Hamiltonian[6,5] = U2m 
     Hamiltonian[6,6] = omega2 
-    Hamiltonian[6,7] = W2 
+    Hamiltonian[6,7] = -W2*cmath.exp(-1j*K*q) 
 
-    Hamiltonian[7,4] = U2p 
-    Hamiltonian[7,5] = W2 
-    Hamiltonian[7,6] = W2 
+    Hamiltonian[7,4] = U2p*cmath.exp(1j*2*K*q) 
+    Hamiltonian[7,5] = -W2*cmath.exp(1j*K*q) 
+    Hamiltonian[7,6] = -W2*cmath.exp(1j*K*q) 
     Hamiltonian[7,7] = omega2 - v2*k 
 
     return Hamiltonian 
@@ -80,7 +82,7 @@ omega = 0.29780940
 v = 0.317
 U = -0.01536996
 W = 0.00146639
-alpha = 0.05
+alpha = 0.075
 
 pomega = 0.0 
 omega1 = omega*(1 + pomega)
@@ -102,7 +104,7 @@ alpha2 = alpha
 
 d0 = 0.35 
 dist = 0.10
-V0 = 0.040
+V0 = -0.040
 V = V0*np.exp(-dist/d0)
 
 
@@ -116,7 +118,7 @@ dk = (k_array.max() - k_array.min())/(Nk-1)
 
 ### The array of synthetic momenta q 
 Nq = 201
-q_array = np.linspace(0.0,1.0,Nq)
+q_array = np.linspace(-0.5,0.5,Nq)
 dq = (q_array.max() - q_array.min())/(Nq-1)
 
 ### The array of energy 
@@ -158,7 +160,7 @@ ax.set_ylabel('q',fontsize=14)
 ##### ==============================================================================
 ##### The band structure along k for q = 0.5
 ### The value of q 
-q = 0.5 
+q = 0.0
 
 ### The array of k 
 Nk = 201 
@@ -201,7 +203,7 @@ k = 0.00
 
 ### The array of q 
 Nq = 201 
-q_array = np.linspace(0.0,1.0,Nq)
+q_array = np.linspace(-0.5,0.5,Nq)
 
 ### The array of energy 
 Energy_array = np.zeros((Nq,8))

@@ -39,18 +39,18 @@ def main():
     print('# Polarization = '+polarization)
 
     ### Resolution 
-    resolution = mp.Vector3(8,8,8)  # pixels/a 
+    resolution = mp.Vector3(32,32,32)  # pixels/a 
     print('# The resolution:'+str(resolution))
 
     ### Number of bands 
-    num_bands = 10
+    num_bands = 12
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Geometrical parameters 
     h = 0.35       # Thickness of the slab 
     Lz = 5.0       # The height of the unit cell along the z-direction 
-    b = 0.35       # The mean of the projections of the diagonals vertices (0<= b <0.5)
-    e = 0.1        # The anisotropy between the two diagonals (-1<= e <=1)
+    b = 0.38       # The mean of the projections of the diagonals vertices (0<= b <0.5)
+    e = -0.1        # The anisotropy between the two diagonals (-1<= e <=1)
 
     print('# Thickness of the slab h = '+str(h))
     print('# The projection of mean half-axis of the rhombus on the edges b = '+str(b))
@@ -114,7 +114,7 @@ def main():
     k_points = mp.interpolate(Nk,k_points)
 
     # Show the figure
-    show_fig = 'Yes'
+    show_fig = 'No'
 
     ### Calculate the dispersion for the light cone with Envir and k_points
     lightcone = LightCone(Envir,k_points,resolution)
