@@ -106,7 +106,7 @@ def main():
         mp.Vector3(0.45,0.45,0.0),  # Gamma'
         mp.Vector3(0.5,0.45,0.0),   # X'
         mp.Vector3(0.5,0.5,0.0),    # M 
-        mp.Vector3(0.55,0.5,0.0)    # Gamma'
+        mp.Vector3(0.55,0.45,0.0)    # Gamma'
     ]
 
     k_points = mp.interpolate(Nk,k_points)
