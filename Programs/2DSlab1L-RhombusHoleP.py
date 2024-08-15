@@ -45,22 +45,14 @@ def main():
     print('# The resolution:'+str(resolution))
 
     ### Number of bands 
-<<<<<<< HEAD
-    num_bands = 12
-=======
     num_bands = 15
->>>>>>> 534b5d6 (2DSlab1L-RhombusHole*: plot E and H fields)
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Geometrical parameters 
     h = 0.35       # Thickness of the slab 
     Lz = 5.0       # The height of the unit cell along the z-direction 
-    b = 0.38       # The mean of the projections of the diagonals vertices (0<= b <0.5)
-<<<<<<< HEAD
+    b = 0.38       # The mean of the projections of the diagonals vertices (0<= b <0.5
     e = -0.1        # The anisotropy between the two diagonals (-1<= e <=1)
-=======
-    e = 0.0       # The anisotropy between the two diagonals (-1<= e <=1)
->>>>>>> 534b5d6 (2DSlab1L-RhombusHole*: plot E and H fields)
 
     print('# Thickness of the slab h = '+str(h))
     print('# The projection of mean half-axis of the rhombus on the edges b = '+str(b))
