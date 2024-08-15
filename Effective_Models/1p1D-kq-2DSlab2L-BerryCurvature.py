@@ -4,6 +4,7 @@ import scipy.linalg as sla
 import cmath 
 import matplotlib.pyplot as plt 
 from matplotlib import cm,colors 
+from matplotlib.colors import LightSource 
 
 ##### ===========================================================================
 ##### FUNCTION: Hamiltonian of 2D photonic crystal slab bilayer with 
@@ -104,11 +105,11 @@ def dH_q(V,q):
 
 ##### ============================================================================
 ##### The parameters of the calculations 
-omega = 0.29780940 
+omega = 0.29780893 
 v = 0.317
-U = -0.01536996
-W = 0.00146639
-alpha = -0.01
+U = -0.01558616
+W = 0.00146524
+alpha = 0.01
 
 pomega = 0.0 
 omega1 = omega*(1 + pomega)
@@ -117,11 +118,11 @@ omega2 = omega*(1 - pomega)
 v1 = v 
 v2 = v 
 
-pU = 0.0 
+pU = 0.045
 U1 = U*(1+pU)
 U2 = U*(1-pU)
 
-pW = 0.0 
+pW = -0.030  
 W1 = W*(1+pW)
 W2 = W*(1-pW)
 
@@ -137,7 +138,7 @@ V = V0*np.exp(-dist/d0)
 ##### The arrays of k and q 
 ### The array of intrinsic momenta k
 Nk = 201 
-Kmax = 0.02
+Kmax = 0.020 #0.010 
 k_array = np.linspace(-Kmax,Kmax,Nk)
 dk = (k_array.max()-k_array.min())/(Nk-1)
 
@@ -208,8 +209,9 @@ for ik in range(Nk):
  
 ### The arrays of domains and colormaps 
 X,Y = np.meshgrid(k_array,q_array-0.5)
-cmap = 'coolwarm'
+cmap = 'seismic'
 maxabs = abs(F_array[:,:,0]).max()
+print(maxabs)
 
 namesave = "Berry_curvature_alpha_{:.4f}.png".format(alpha)
 
@@ -217,16 +219,27 @@ fig,ax = plt.subplots(2,1,sharex=True,figsize=(5,12))
 vmin,vmax = -maxabs,maxabs 
 norm = colors.Normalize(vmin=vmin,vmax=vmax)
 
-ax[0].pcolormesh(X,Y,F_array[:,:,0].T,shading='gouraud',cmap=cmap)
+#rcmap = plt.cm.get_cmap('Reds')
+#bcmap = plt.cm.get_cmap('Blues')
+rcmap = plt.colormaps.get_cmap('Reds')
+bcmap = plt.colormaps.get_cmap('Blues')
+bcmap = bcmap.reversed()
+
+ax[0].pcolormesh(X,Y,F_array[:,:,0].T,shading='gouraud',cmap=bcmap)
 ax[0].set_title('Band 1',fontsize=14)
 ax[0].set_xticks([-0.02,-0.01,0,0.01,0.02])
-ax[0].set_yticks([-0.04,-0.02,0.0,0.02,0.04])
+ax[0].set_yticks([-0.10,-0.05,0.0,0.05,0.10])
 ax[0].set_xlabel('k',fontsize=16)
 #ax[0].set_ylabel('q',fontsize=14)
 
-ax[1].pcolormesh(X,Y,F_array[:,:,1].T,shading='gouraud',cmap=cmap)
+fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),
+             orientation='vertical',
+             shrink=1.0,
+             ax=ax[0])
+
+ax[1].pcolormesh(X,Y,F_array[:,:,1].T,shading='gouraud',cmap=rcmap)
 ax[1].set_xticks([-0.02,-0.01,0,0.01,0.02])
-ax[1].set_yticks([-0.04,-0.02,0.0,0.02,0.04])
+ax[1].set_yticks([-0.10,-0.05,0.0,0.05,0.10])
 ax[1].set_title('Band 2',fontsize=14)
 ax[1].set_xlabel('k',fontsize=16)
 #ax[1].set_ylabel('q',fontsize=14)
@@ -238,16 +251,100 @@ ax[1].tick_params(axis='x',labelsize=14)
 fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),
              orientation='vertical',
              shrink=1.0,
-             ax=ax[0])
-
-fig.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),
-             orientation='vertical',
-             shrink=1.0,
              ax=ax[1])
 
 plt.savefig(namesave)
 #plt.show()
 plt.close()
+
+##### ========================================================================
+##### Replot
+"""X,Y = np.meshgrid(k_array,q_array-0.5)
+cmap = 'bwr'
+#maxF = F_array[:,:,0].max()
+#minF = F_array[:,:,0].min()
+maxF = abs(F_array[:,:,0]).max()
+minF = -maxF 
+norm = colors.Normalize(vmin=minF,vmax=maxF)
+
+fig,ax = plt.subplots(2,1)
+ax[0].pcolormesh(X,Y,F_array[:,:,0].T,shading='gouraud',cmap=cmap)
+ax[1].pcolormesh(X,Y,F_array[:,:,1].T,shading='gouraud',cmap=cmap)
+
+plt.colorbar(cm.ScalarMappable(norm=norm,cmap=cmap),
+             orientation='vertical',
+             shrink=1.0,
+             cax=ax[0])"""
+
+fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
+                      figsize=(12,10))
+
+#ls = LightSource(270,45)
+#rgb = ls.shade_rgb(cmap)
+linewidth = 0 
+
+#fcolors = scamap.to_rgba(F_array_3D[:,:,0].T)
+ax.plot_surface(X,Y,F_array[:,:,0].T,
+                linewidth=linewidth,
+                antialiased='False',
+                rstride=10,
+                cstride=10,
+                #facecolors=fcolors,
+                cmap=cmap)
+
+ax.set_xticks([-0.02,-0.01,0.0,0.01,0.02])
+ax.set_yticks([-0.04,-0.02,0.0,0.02,0.04])
+ax.set_xlabel('k',fontsize=14)
+ax.set_ylabel('q',fontsize=14)
+ax.set_zlabel(r'$\omega a / (2 \pi c)$',fontsize=14)
+ax.set_title('Band 1')
+#fig.colorbar(scamap,
+#             orientation='vertical',
+#             shrink=0.4,
+#             location = 'right',
+#             ax=ax)
+ax.view_init(elev=10,azim=135,roll=0)
+#plt.LightSource(azdeg=315,altdeg=45)
+
+plt.savefig('Band1-BCur-'+namesave)
+#plt.show()
+plt.close()
+
+fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
+                      figsize=(12,10))
+
+#ls = LightSource(270,45)
+#rgb = ls.shade_rgb(cmap)
+linewidth = 0 
+
+#fcolors = scamap.to_rgba(F_array_3D[:,:,1].T)
+ax.plot_surface(X,Y,F_array[:,:,1].T,
+                linewidth=linewidth,
+                antialiased='False',
+                rstride=10,
+                cstride=10,
+                #facecolors=fcolors,
+                cmap=cmap)
+
+ax.set_xticks([-0.02,-0.01,0.0,0.01,0.02])
+ax.set_yticks([-0.04,-0.02,0.0,0.02,0.04])
+ax.set_xlabel('k',fontsize=14)
+ax.set_ylabel('q',fontsize=14)
+ax.set_zlabel(r'$\omega a / (2 \pi c)$',fontsize=14)
+ax.set_title('Band 2')
+#fig.colorbar(scamap,
+#             orientation='vertical',
+#             shrink=0.4,
+#             location = 'right',
+#             ax=ax)
+ax.view_init(elev=10,azim=135,roll=0)
+#plt.LightSource(azdeg=315,altdeg=45)
+
+plt.savefig('Band2-BCur-'+namesave)
+#plt.show()
+plt.close()
+
+
 
 ##### ========================================================================
 ###         Plot the dispersion surfaces with Berry curvature 
@@ -256,7 +353,7 @@ plt.close()
 F_array_3D = F_array 
 maxabs = abs(F_array_3D[:,:,0]).max()
 vmin, vmax = -maxabs,maxabs
-cmap = 'coolwarm'
+cmap = 'seismic'
 norm = colors.Normalize(vmin=vmin,vmax=vmax)
 scamap = plt.cm.ScalarMappable(norm=norm,cmap=cmap)
 linewidth = 0 
@@ -264,12 +361,15 @@ linewidth = 0
 fig,ax = plt.subplots(subplot_kw = {'projection':'3d'},
                       figsize=(12,10))
 
+#ls = LightSource(270,45)
+#rgb = ls.shade_rgb(cmap)
+
 fcolors = scamap.to_rgba(F_array_3D[:,:,0].T)
 ax.plot_surface(X,Y,Energy_array[:,:,0].T,
                 linewidth=linewidth,
                 antialiased='False',
-                rstride=1,
-                cstride=1,
+                rstride=10,
+                cstride=10,
                 facecolors=fcolors,
                 cmap=cmap)
 
@@ -277,8 +377,8 @@ fcolors = scamap.to_rgba(F_array_3D[:,:,1].T)
 ax.plot_surface(X,Y,Energy_array[:,:,1].T,
                 linewidth=linewidth,
                 antialiased='False',
-                rstride=1,
-                cstride=1,
+                rstride=10,
+                cstride=10,
                 facecolors=fcolors,
                 cmap=cmap)
 
@@ -293,6 +393,64 @@ fig.colorbar(scamap,
              location = 'right',
              ax=ax)
 ax.view_init(elev=10,azim=135,roll=0)
+#plt.LightSource(azdeg=315,altdeg=45)
+
 plt.savefig('Dis-BCur-'+namesave)
+#plt.show()
+plt.close()
+
+##### =========================================================================== ##### 
+###     Plot the dispersion surface with Berry curvature illuminated surface        ###
+##### =========================================================================== #####
+##### For band 1 and band 2 only 
+F_array_3D = F_array
+maxabs = abs(F_array_3D[:,:,0]).max()
+vmin,vmax = -maxabs,maxabs 
+cmap = 'bwr'
+norm = colors.Normalize(vmin=vmin,vmax=vmax)
+scamap = plt.cm.ScalarMappable(norm=norm,cmap=cmap)
+print(np.shape(scamap))
+print(np.shape(fcolors))
+linewidth=0
+
+fig,ax = plt.subplots(subplot_kw={'projection':'3d'},
+                      figsize=(12,10))
+
+ls = LightSource(azdeg=120,altdeg=75)
+#ls = LightSource(azdeg=225,altdeg=45)
+
+fcolors1 = scamap.to_rgba(F_array_3D[:,:,0].T,alpha=0.5)
+illuminated_surface1 = ls.shade_rgb(fcolors1,Energy_array[:,:,0].T)
+fcolors2 = scamap.to_rgba(F_array_3D[:,:,1].T,alpha=0.5)
+illuminated_surface2 = ls.shade_rgb(fcolors2,Energy_array[:,:,1].T)
+
+ax.plot_surface(X,Y,Energy_array[:,:,0].T,
+                linewidth=linewidth,
+                antialiased='False',
+                rstride=1,
+                cstride=1,
+                facecolors=illuminated_surface1,
+                cmap=cmap)
+ax.plot_surface(X,Y,Energy_array[:,:,1].T,
+                linewidth=linewidth,
+                antialiased='False',
+                rstride=1,
+                cstride=1,
+                facecolors=illuminated_surface2,
+                cmap=cmap)
+
+ax.set_xticks([-0.02,-0.01,0.0,0.01,0.02])
+ax.set_yticks([-0.10,-0.05,0.0,0.05,0.10])
+ax.set_xlabel('k',fontsize=14)
+ax.set_ylabel('q',fontsize=14)
+ax.set_zlabel(r'$\omega a / (2 \pi c)$',fontsize=14)
+fig.colorbar(scamap,
+             orientation='vertical',
+             shrink=0.4,
+             location = 'right',
+             ax=ax)
+ax.view_init(elev=5,azim=135,roll=0)
+
+plt.savefig('Dis-BCur-Illum'+namesave)
 plt.show()
 plt.close()

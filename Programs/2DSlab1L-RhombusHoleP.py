@@ -8,6 +8,8 @@ from ModeSolvers import _2DSlab1LRhombusHole
 from DielectricProfile import *
 from BandStructure import *  
 from ExportData import * 
+from EFieldProfile import *
+from HFieldProfile import *
 from Materials import * 
 from LightCone import LightCone 
 
@@ -43,14 +45,22 @@ def main():
     print('# The resolution:'+str(resolution))
 
     ### Number of bands 
+<<<<<<< HEAD
     num_bands = 12
+=======
+    num_bands = 15
+>>>>>>> 534b5d6 (2DSlab1L-RhombusHole*: plot E and H fields)
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Geometrical parameters 
     h = 0.35       # Thickness of the slab 
     Lz = 5.0       # The height of the unit cell along the z-direction 
     b = 0.38       # The mean of the projections of the diagonals vertices (0<= b <0.5)
+<<<<<<< HEAD
     e = -0.1        # The anisotropy between the two diagonals (-1<= e <=1)
+=======
+    e = 0.0       # The anisotropy between the two diagonals (-1<= e <=1)
+>>>>>>> 534b5d6 (2DSlab1L-RhombusHole*: plot E and H fields)
 
     print('# Thickness of the slab h = '+str(h))
     print('# The projection of mean half-axis of the rhombus on the edges b = '+str(b))
@@ -118,6 +128,20 @@ def main():
 
     ### Calculate the dispersion for the light cone with Envir and k_points
     lightcone = LightCone(Envir,k_points,resolution)
+
+    ### The k-point at which we plot the field profile
+    k_field = mp.Vector3(0.5,0.5,0.0)   # M-point
+    print('# The k-point at which we plot the field profile:'+str(k_field))
+
+    ### The parameters to calculate the E- and H-field profiles
+    ### in the planes parallel to Oxy
+    Bloch_Phase = 'True'   # Enable the Bloch phase: True/False
+    resolution_eps = 81    # Number of pixels per a 
+    resolution_field = 81  # Number of pixels per a 
+    num_periods = 3        # Number of periods along each direction  
+
+    # The value of z where we take a slice to plot the field
+    zvalue = 0.25*h
 
     ############################################################################
     #                                                                          #
@@ -203,6 +227,28 @@ def main():
     else:
         print('ERROR! The k-point has not been in the allowed list yet')
         exit()
+
+    # Define the mode solver to calculate the E-field
+    Efieldx,Efieldy,Efieldz,X,Y,Xfield,Yfield,eps_Oxy = EFields_2DSlab1LRhombusHoleP(h,Lz,b,e,vertices,
+                                num_bands,resolution,Mater,Envir,
+                                k_field,zvalue,
+                                polarization,resolution_eps,resolution_field,
+                                num_periods,Bloch_Phase)
+    
+    # Plot the E-field
+    Plot_Efield_Profile(Efieldx,Efieldy,Efieldz,zvalue,
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
+    
+    # Define the mode solver to calculate the H-field
+    Hfieldx,Hfieldy,Hfieldz,X,Y,Xfield,Yfield,eps_Oxy = HFields_2DSlab1LRhombusHoleP(h,Lz,b,e,vertices,
+                                num_bands,resolution,Mater,Envir,
+                                k_field,zvalue,
+                                polarization,resolution_eps,resolution_field,
+                                num_periods,Bloch_Phase)
+
+    # Plot the H-field
+    Plot_Hfield_Profile(Hfieldx,Hfieldy,Hfieldz,zvalue,
+                       X,Y,eps_Oxy,Xfield,Yfield,num_periods,show_fig)
 
 ##### Run the MAIN program 
 if __name__ == "__main__":

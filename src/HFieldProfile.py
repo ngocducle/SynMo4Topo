@@ -399,3 +399,65 @@ def HFields_2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,num_bands,resolu
     
     ### Return the results
     return Hfieldx,Hfieldy,Hfieldz,X,Y,Xfield,Yfield,eps_Oxy
+
+##### FUNCTION: Mode solver to calculate the E-fields for 2DSlab1L-RhombusHole
+def HFields_2DSlab1LRhombusHoleP(h,Lz,b,e,vertices,
+                                num_bands,resolution,Mater,Envir,
+                                k_field,zvalue,
+                                polarization,resolution_eps,resolution_field,
+                                num_periods,Bloch_Phase):
+
+    ### Define the k-points
+    k_points = [k_field]
+
+    ### Define the lattice
+    geometry_lattice = mp.Lattice(
+        size = mp.Vector3(1.0,1.0,Lz),
+        basis1 = mp.Vector3(1.0,0.0),
+        basis2 = mp.Vector3(0.0,1.0)
+    )
+
+    ### Define the geometry 
+    geometry = [
+        mp.Block(
+            center = mp.Vector3(0.0,0.0,0.0),
+            size = mp.Vector3(1.0,1.0,mp.inf),
+            material = Envir
+        ),
+
+        mp.Block(
+            center = mp.Vector3(0.0,0.0,0.0),
+            size = mp.Vector3(1.0,1.0,h),
+            material = Mater 
+        ),
+
+        mp.Prism(
+            vertices = vertices,
+            height = h, 
+            axis = mp.Vector3(0.0,0.0,1.0),
+            center = mp.Vector3(0.0,0.0,0.0),
+            material = Envir 
+        )
+    ]
+
+
+    ### The mode solver 
+    ms = mpb.ModeSolver(
+        geometry = geometry,
+        geometry_lattice = geometry_lattice,
+        k_points = k_points,
+        resolution = resolution,
+        num_bands = num_bands 
+    )
+
+    ### Calculate the electric field as a MPBArray
+    hfields,HField,X,Y,eps_Oxy = HField_Profile(ms,k_field,Lz,zvalue,polarization,
+                                    resolution_eps,resolution_field,
+                                    num_periods,Bloch_Phase)
+    
+    ### Extract the fields Hx,Hy,Hz in the plane z = zvalue
+    Hfieldx,Hfieldy,Hfieldz,Xfield,Yfield = ExtractHField_Profile(hfields,HField,
+                      Lz,zvalue,resolution,resolution_eps,resolution_field,num_periods)
+    
+    ### Return the results
+    return Hfieldx,Hfieldy,Hfieldz,X,Y,Xfield,Yfield,eps_Oxy
