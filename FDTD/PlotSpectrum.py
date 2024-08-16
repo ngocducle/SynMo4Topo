@@ -19,4 +19,6 @@ trans = np.divide(trans_flux,norm_flux)
 ##### Plot the transmitted flux
 fig,ax = plt.subplots()
 ax.plot(freq_array,trans)
+ax.set_xlabel(r'$\omega a/(2 \pi c)$',fontsize=14)
+ax.set_ylabel('Transmission (a.u.)',fontsize=14)
 plt.show()

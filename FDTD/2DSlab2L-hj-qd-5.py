@@ -1,10 +1,11 @@
-import numpy as np 
+import numpy as np
 import scipy 
 import meep as mp 
 import matplotlib.pyplot as plt
 
-import sys 
+import sys
 sys.path.insert(0,'../src')
+from Heterojunctions import *
 from Materials import * 
 
 import os 
@@ -17,23 +18,26 @@ dpml = 1.0  # PML thickness
 pml_layers = [mp.PML(dpml)]
 
 ### The number of unit cells along each direction 
-# The number of unit cells along the horizontal direction for each half
-Ncellx = 0
+# The number of unit cells along the horizontal direction for each half 
+Ncellx = 3 
 
 # The number of unit cells along the vertical direction 
-Ncelly = 5
+Ncelly = 5 
+
+# Padding block 
+pad = 1.0 
 
 ### Geometrical parameters 
-# The diagonal of one square unit cell 
-d = np.sqrt(2.0) 
+# The diagonal of one square unit cell
+d = np.sqrt(2.0)
 
 # The layer 1 
-h1 = 0.35   # Thickness of the upper layer
+h1 = 0.35   # Thickness of the upper layer 
 b1 = 0.32   # The edge length of the undeformed square hole
 e1 = -0.1   # The deformation parameter 
 
 # The layer 2 
-h2 = 0.35   # Thickness of the lower layer
+h2 = 0.35   # Thickness of the lower layer 
 b2 = 0.44   # The edge length of the undeformed square hole
 e2 = -0.1   # The deformation parameter 
 
@@ -50,30 +54,52 @@ structurey = Ncelly*d
 htotal = h1 + dist + h2 
 
 # The height of the unit cell along the z-direction 
-Lz = 1.5*htotal
+Lz = 1.5*htotal 
 
-# Padding block 
-pad = 1.0 
+### The materials 
+Mater = Si 
+Envir = PMMA 
+Mater1 = Mater 
+Mater2 = Mater 
+
+### The vertices of the unit cells and rhombus holes
+vertice_cell = [
+    mp.Vector3(0.5*d,0,0),
+    mp.Vector3(0,0.5*d,0),
+    mp.Vector3(-0.5*d,0,0),
+    mp.Vector3(0,-0.5*d,0)
+]
+
+vertice1 = [
+    mp.Vector3(b1*(1+e1)/(1-e1)/np.sqrt(2),0,0),
+    mp.Vector3(0,b1*(1-e1)/(1+e1)/np.sqrt(2),0),
+    mp.Vector3(-b1*(1+e1)/(1-e1)/np.sqrt(2),0,0),
+    mp.Vector3(0,-b1*(1-e1)/(1+e1)/np.sqrt(2),0),
+]
+
+vertice2 = [
+    mp.Vector3(b2*(1+e2)/(1-e2)/np.sqrt(2),0,0),
+    mp.Vector3(0,b2*(1-e2)/(1+e2)/np.sqrt(2),0),
+    mp.Vector3(-b2*(1+e2)/(1-e2)/np.sqrt(2),0,0),
+    mp.Vector3(0,-b2*(1-e2)/(1+e2)/np.sqrt(2),0),
+]
 
 ### Size of the simulation cell 
-sx = 2*(dpml+pad)
+sx = (2*Ncellx - 0.5)*d + 2*(dpml+pad)
 sy = Ncelly*d + 2*(dpml+pad)
 sz = Lz + 2*dpml 
 
 ### Define the simulation cell 
 cell = mp.Vector3(sx,sy,sz)
 
-### The materials
-Mater = Si 
-Envir = PMMA 
-Mater1 = Mater 
-Mater2 = Mater 
+### The shift along the main diagonal 
+delta = 0.0 
 
-##### ====================================================================
+##### ==============================================================================
 ### The source 
 fcen = 0.30         # pulse center frequency 
 df   = 0.15         # pulse width 
-nfreq = 101         # number of frequencies
+nfreq = 101          # number of frequencies
 
 sources = [
     mp.Source(
@@ -101,48 +127,13 @@ vol = mp.Volume(center = mp.Vector3(0,0,0),
 pt = mp.Vector3(0.5*sx-dpml-0.5*pad,0,0)
 
 ##### ==============================================================================
-##### GEOMETRY
-### Initialize the geometry with environment
-geometry = []
-
-geometry.append(mp.Block(
-    center = mp.Vector3(0,0,0),
-    size = mp.Vector3(mp.inf,mp.inf,mp.inf),
-    material = Envir
-))
-
-### Add the structure (already includes the padding blocks)
-geometry.append(
-    mp.Block(
-        center = mp.Vector3(-0.25*sx,0,0.5*(htotal-h1)),
-        size = mp.Vector3(0.5*sx,sy,h1),
-        material = Mater1 
-    )
-)
-
-geometry.append(
-    mp.Block(
-        center = mp.Vector3(-0.25*sx,0,0.5*(-htotal+h2)),
-        size = mp.Vector3(0.5*sx,sy,h2),
-        material = Mater2 
-    )
-)
-
-geometry.append(
-    mp.Block(
-        center = mp.Vector3(0.25*sx,0,0.5*(htotal-h2)),
-        size = mp.Vector3(0.5*sx,sy,h2),
-        material = Mater2 
-    )
-)
-
-geometry.append(
-    mp.Block(
-        center = mp.Vector3(0.25*sx,0,0.5*(-htotal+h1)),
-        size = mp.Vector3(0.5*sx,sy,h1),
-        material = Mater1 
-    )
-)
+##### GEOMETRY 
+### Initialize the geometry with environment 
+geometry = geo_2DSlab2L_RHole_hj(d,h1,b1,e1,h2,b2,e2,dist,
+                          vertice_cell,vertice1,vertice2,
+                          Mater1,Mater2,Envir,
+                          Ncellx,Ncelly,sx,sy,
+                          structurex,structurey,htotal,delta)
 
 ##### ===============================================================================
 ##### Define the simulation 
@@ -159,10 +150,10 @@ trans = sim.add_flux(fcen,df,nfreq,freg)
 
 ##### ===============================================================================
 ##### Run the simulation 
-sim.run(until_after_sources = mp.stop_when_fields_decayed(500,
+sim.run(until_after_sources = mp.stop_when_fields_decayed(50,
                                                           mp.Ez,
                                                           pt,
-                                                          1e-4))
+                                                          1e-2))
 
 ##### ====================================================================
 ### Get the dielectric function into an array 
@@ -181,7 +172,7 @@ Nx = shape[0]
 Ny = shape[1]
 Nz = shape[2]
 
-os.system('mkdir no_structure')
+os.system('mkdir structure')
 
 for i in range(Nx):
     plt.figure()
@@ -207,7 +198,7 @@ for k in range(Nz):
     plt.savefig('z-'+str(k)+'.png')
     plt.close()
 
-os.system('mv *.png no_structure')
+os.system('mv *.png structure')
 
 ##### ===============================================================================
 ##### Get the flux
@@ -218,5 +209,5 @@ datasave = np.column_stack((freq_array,trans_flux))
 print(np.shape(trans_flux))
 
 ##### Save the transmitted flux to file
-with open('./no_structure/normalized_flux.txt','w') as file:
+with open('./structure/transmission_flux.txt','w') as file:
     np.savetxt(file,datasave,'%.8f') 
