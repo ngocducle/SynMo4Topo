@@ -3,7 +3,7 @@ import scipy
 import matplotlib.pyplot as plt
 
 ##### Load the data 
-data = np.loadtxt('transmission_flux.txt')
+data = np.loadtxt('q_0.5000.txt')
 
 freq_array = data[:,0]
 trans_flux = data[:,1]

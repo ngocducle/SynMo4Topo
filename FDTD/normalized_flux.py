@@ -73,7 +73,7 @@ Mater2 = Mater
 ### The source 
 fcen = 0.30         # pulse center frequency 
 df   = 0.15         # pulse width 
-nfreq = 101         # number of frequencies
+nfreq = 51         # number of frequencies
 
 sources = [
     mp.Source(
