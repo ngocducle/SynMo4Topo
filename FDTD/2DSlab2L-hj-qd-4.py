@@ -1,7 +1,7 @@
-import numpy as np 
+import numpy as np
 import scipy 
 import meep as mp 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt 
 
 import sys 
 sys.path.insert(0,'../src')
@@ -10,7 +10,7 @@ from Materials import *
 import os 
 
 ### Resolution 
-resolution = 16 
+resolution = 16
 
 ### PML layer 
 dpml = 1.0  # PML thickness 
@@ -18,10 +18,13 @@ pml_layers = [mp.PML(dpml)]
 
 ### The number of unit cells along each direction 
 # The number of unit cells along the horizontal direction for each half
-Ncellx = 0
+Ncellx = 3
 
 # The number of unit cells along the vertical direction 
-Ncelly = 0 
+Ncelly = 5 
+
+# Padding block 
+pad = 1.0 
 
 ### Geometrical parameters 
 # The diagonal of one square unit cell 
@@ -52,41 +55,46 @@ htotal = h1 + dist + h2
 # The height of the unit cell along the z-direction 
 Lz = 1.5*htotal
 
-# Padding block 
-pad = 1.0 
-
-### Size of the simulation cell 
-sx = 2*(dpml+pad)
-sy = Ncelly*d + 2*(dpml+pad)
-sz = Lz + 2*dpml 
-
-### Define the simulation cell 
-cell = mp.Vector3(sx,sy,sz)
-
 ### The materials
 Mater = Si 
 Envir = PMMA 
 Mater1 = Mater 
 Mater2 = Mater 
 
-### The source 
-fcen = 0.30         # pulse center frequency 
-df   = 0.15         # pulse width 
-nfreq = 101         # number of frequencies
-
-sources = [
-    mp.Source(
-        mp.GaussianSource(fcen,fwidth=df),
-        component = mp.Ez,
-        center = mp.Vector3(-0.5*sx+dpml+0.5*pad,0,0),
-        size = mp.Vector3(0,structurey,Lz)
-    )
+### The vertices of the unit cells and rhombus holes
+vertice_cell = [
+    mp.Vector3(0.5*d,0,0),
+    mp.Vector3(0,0.5*d,0),
+    mp.Vector3(-0.5*d,0,0),
+    mp.Vector3(0,-0.5*d,0)
 ]
 
-# The array of frequencies 
-freq_array = np.linspace(fcen-df,fcen+df,nfreq)
+vertice1 = [
+    mp.Vector3(b1*(1+e1)/(1-e1)/np.sqrt(2),0,0),
+    mp.Vector3(0,b1*(1-e1)/(1+e1)/np.sqrt(2),0),
+    mp.Vector3(-b1*(1+e1)/(1-e1)/np.sqrt(2),0,0),
+    mp.Vector3(0,-b1*(1-e1)/(1+e1)/np.sqrt(2),0),
+]
 
-##### ====================================================================
+vertice2 = [
+    mp.Vector3(b2*(1+e2)/(1-e2)/np.sqrt(2),0,0),
+    mp.Vector3(0,b2*(1-e2)/(1+e2)/np.sqrt(2),0),
+    mp.Vector3(-b2*(1+e2)/(1-e2)/np.sqrt(2),0,0),
+    mp.Vector3(0,-b2*(1-e2)/(1+e2)/np.sqrt(2),0),
+]
+
+### Size of the simulation cell 
+sx = (2*Ncellx - 0.5)*d + 2*(dpml+pad)
+sy = Ncelly*d + 2*(dpml+pad)
+sz = Lz + 2*dpml 
+
+### Define the simulation cell 
+cell = mp.Vector3(sx,sy,sz)
+
+### The shift along the main diagonal 
+delta = 0.0 
+
+##### ==============================================================================
 ### The source 
 fcen = 0.30         # pulse center frequency 
 df   = 0.15         # pulse width 
@@ -161,6 +169,137 @@ geometry.append(
     )
 )
 
+##### Add the unit cells at the heterojunction boundary 
+for j in range(Ncelly):
+    geometry.append(
+        mp.Prism(
+            vertices = vertice_cell,
+            height = h1,
+            axis = mp.Vector3(0,0,1),
+            center = mp.Vector3(-0.25*d,0.5*structurey-0.5*d-j*d,0.5*(htotal-h1)),
+            material = Mater1 
+        )
+    )
+
+    geometry.append(
+        mp.Prism(
+            vertices = vertice_cell,
+            height = h2,
+            axis = mp.Vector3(0,0,1),
+            center = mp.Vector3(-0.25*d,0.5*structurey-0.5*d-j*d,0.5*(-htotal+h2)),
+            material = Mater2 
+        )
+    )
+
+for j in range(Ncelly+1):
+    geometry.append(
+        mp.Prism(
+            vertices = vertice_cell,
+            height = h2,
+            axis = mp.Vector3(0,0,1),
+            center = mp.Vector3(0.25*d,0.5*structurey-j*d,0.5*(htotal-h2)),
+            material = Mater2
+        )
+    )
+
+    geometry.append(
+        mp.Prism(
+            vertices = vertice_cell,
+            height = h1,
+            axis = mp.Vector3(0,0,1),
+            center = mp.Vector3(0.25*d,0.5*structurey-j*d,0.5*(-htotal+h1)),
+            material = Mater1
+        )
+    )
+
+##### Add the holes 
+for j in range(Ncelly):
+    for i in range(Ncellx):
+        geometry.append(mp.Prism(
+            vertices = vertice1,
+            height=h1,
+            axis = mp.Vector3(0,0,1),
+            center = mp.Vector3(-0.5*structurex+0.5*d+i*d+0.5*delta,
+                      0.5*structurey-0.5*d-j*d,
+                      0.5*(htotal-h1)),
+            material = Envir 
+        ))
+
+        geometry.append(mp.Prism(
+            vertices = vertice2,
+            height=h2,
+            axis = mp.Vector3(0,0,1),
+            center = mp.Vector3(-0.5*structurex+0.5*d+i*d-0.5*delta,
+                      0.5*structurey-0.5*d-j*d,
+                      0.5*(-htotal+h2)),
+            material = Envir 
+        ))
+
+        
+    for i in range(Ncellx):
+        geometry.append(mp.Prism(
+            vertices = vertice2,
+            height=h2,
+            axis = mp.Vector3(0,0,1),
+            center = mp.Vector3(0.75*d+i*d+0.5*delta,
+                      0.5*structurey-0.5*d-j*d,
+                      0.5*(htotal-h2)),
+            material = Envir 
+        ))
+
+        geometry.append(mp.Prism(
+            vertices = vertice1,
+            height=h1,
+            axis = mp.Vector3(0,0,1),
+            center = mp.Vector3(0.75*d+i*d-0.5*delta,
+                      0.5*structurey-0.5*d-j*d,
+                      0.5*(-htotal+h1)),
+            material = Envir 
+        ))
+
+for j in range(Ncelly+1):
+    for i in range(Ncellx):
+        geometry.append(mp.Prism(
+            vertices = vertice1,
+            height=h1,
+            axis = mp.Vector3(0,0,1),
+            center = mp.Vector3(-0.5*structurex+i*d+0.5*delta,
+                      0.5*structurey-j*d,
+                      0.5*(htotal-h1)),
+            material = Envir 
+        ))
+
+        geometry.append(mp.Prism(
+            vertices = vertice2,
+            height=h2,
+            axis = mp.Vector3(0,0,1),
+            center = mp.Vector3(-0.5*structurex+i*d-0.5*delta,
+                      0.5*structurey-j*d,
+                      0.5*(-htotal+h2)),
+            material = Envir 
+        ))
+
+    for i in range(Ncellx+1):
+        geometry.append(mp.Prism(
+            vertices = vertice2,
+            height=h2,
+            axis = mp.Vector3(0,0,1),
+            center = mp.Vector3(0.25*d+i*d+0.5*delta,
+                      0.5*structurey-j*d,
+                      0.5*(htotal-h2)),
+            material = Envir 
+        ))
+
+        geometry.append(mp.Prism(
+            vertices = vertice1,
+            height=h1,
+            axis = mp.Vector3(0,0,1),
+            center = mp.Vector3(0.25*d+i*d-0.5*delta,
+                      0.5*structurey-j*d,
+                      0.5*(-htotal+h1)),
+            material = Envir 
+        ))
+
 ##### ===============================================================================
 ##### Define the simulation 
 sim = mp.Simulation(
@@ -198,7 +337,7 @@ Nx = shape[0]
 Ny = shape[1]
 Nz = shape[2]
 
-os.system('mkdir no_structure')
+os.system('mkdir structure')
 
 for i in range(Nx):
     plt.figure()
@@ -224,7 +363,7 @@ for k in range(Nz):
     plt.savefig('z-'+str(k)+'.png')
     plt.close()
 
-os.system('mv *.png no_structure')
+os.system('mv *.png structure')
 
 ##### ===============================================================================
 ##### Get the flux
@@ -235,5 +374,6 @@ datasave = np.column_stack((freq_array,trans_flux))
 print(np.shape(trans_flux))
 
 ##### Save the transmitted flux to file
-with open('./no_structure/normalized_flux.txt','w') as file:
+with open('transmission_flux.txt','w') as file:
     np.savetxt(file,datasave,'%.8f') 
+
