@@ -400,7 +400,7 @@ def EFields_2DSlab2LCircularHole(h,Lz,radius,dist,delta1,delta2,num_bands,resolu
     ### Return the results
     return Efieldx,Efieldy,Efieldz,X,Y,Xfield,Yfield,eps_Oxy
 
-##### FUNCTION: Mode solver to calculate the E-fields for 2DSlab1L-RhombusHoleP
+##### FUNCTION: Mode solver to calculate the E-fields for 2DSlab1L-RhombusHole
 def EFields_2DSlab1LRhombusHoleP(h,Lz,b,e,vertices,
                                 num_bands,resolution,Mater,Envir,
                                 k_field,zvalue,
