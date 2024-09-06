@@ -37,7 +37,7 @@ def main():
 
     ### The light polarization 
     # Choose between: 'all', 'zeven', 'zodd'
-    polarization = 'zeven'
+    polarization = 'all'
     print('# Polarization = '+polarization)
 
     ### Resolution 
