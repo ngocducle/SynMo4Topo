@@ -99,7 +99,7 @@ def main():
     k_points = [mp.Vector3(0.0,0.0,0.0)]
 
     ### The array of k-points (to print)
-    k_array = mp.linspace(Kmin,Kmax,Nk+2) 
+    k_array = np.linspace(Kmin,Kmax,Nk+2) 
 
     ### The number of q-points (synthetic momenta)
     Nq = 51
