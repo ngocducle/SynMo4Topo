@@ -96,7 +96,7 @@ def main():
     k_points = mp.interpolate(Nk,k_points)
 
     ### The array of k-points (to print)
-    k_array = mp.linspace(Kmin,Kmax,Nk) 
+    k_array = np.linspace(Kmin,Kmax,Nk) 
 
     ### The number of q-points (synthetic momenta)
     Nq = 26
