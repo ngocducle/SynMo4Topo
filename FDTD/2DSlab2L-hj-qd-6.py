@@ -44,6 +44,9 @@ e2 = -0.1   # The deformation parameter
 # The distant between the 2 layers 
 dist = 0.1
 
+# The component of the excitation 
+component = mp.Ey 
+
 # The total size of the bilayer along the x-axis
 structurex = (2*Ncellx-0.5)*d 
 
@@ -93,22 +96,22 @@ sz = Lz + 2*dpml
 cell = mp.Vector3(sx,sy,sz)
 
 ##### The array of synthetic momentum 
-Nq = 3
-q_array = np.linspace(0.0,0.5,Nq)
+Nq = 1
+q_array = np.linspace(0.305,0.305,Nq)
 
 ### The shift along the main diagonal 
 delta = 0.0 
 
 ##### ==============================================================================
 ### The source 
-fcen = 0.30         # pulse center frequency 
-df   = 0.15         # pulse width 
-nfreq = 51          # number of frequencies
+fcen = 0.258         # pulse center frequency 
+df   = 0.001         # pulse width 
+nfreq = 501          # number of frequencies
 
 sources = [
     mp.Source(
         mp.GaussianSource(fcen,fwidth=df),
-        component = mp.Ez,
+        component = component,
         center = mp.Vector3(-0.5*sx+dpml+0.5*pad,0,0),
         size = mp.Vector3(0,structurey,Lz)
     )
@@ -161,10 +164,10 @@ for iq in range(Nq):
 
     ##### ===============================================================================
     ##### Run the simulation 
-    sim.run(until_after_sources = mp.stop_when_fields_decayed(50,
-                                                          mp.Ez,
+    sim.run(until_after_sources = mp.stop_when_fields_decayed(500,
+                                                          component,
                                                           pt,
-                                                          1e-2))
+                                                          1e-3))
 
     ##### ====================================================================
     ### Get the dielectric function into an array 
