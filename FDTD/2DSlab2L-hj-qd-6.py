@@ -41,7 +41,7 @@ h2 = 0.35   # Thickness of the lower layer
 b2 = 0.44   # The edge length of the undeformed square hole
 e2 = -0.1   # The deformation parameter 
 
-# The distant between the 2 layers 
+# The distance between the 2 layers 
 dist = 0.1
 
 # The component of the excitation 
@@ -126,7 +126,7 @@ freg = mp.FluxRegion(center = mp.Vector3(0.5*sx-dpml-0.5*pad),
                      size = mp.Vector3(0,2*structurey,Lz),
                      direction = mp.X)
 
-### Simulation volum 
+### Simulation volume
 vol = mp.Volume(center = mp.Vector3(0,0,0),
                 size = mp.Vector3(sx,sy,Lz))
 
