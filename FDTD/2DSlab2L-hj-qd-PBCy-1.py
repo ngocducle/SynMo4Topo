@@ -11,10 +11,10 @@ from Materials import *
 import os 
 
 ### Resolution 
-resolution = 20 
+resolution = 20
 
 ### PML layer 
-dpml = 1.0 # PML thickness 
+dpml = 2.0 # PML thickness 
 pml_layers = [mp.PML(direction = mp.X,
                      thickness = dpml),
               mp.PML(direction = mp.Z,
@@ -34,12 +34,12 @@ pad = 2.0
 d = np.sqrt(2.0)
 
 # The layer 1 
-h1 = 0.35   # Thickness of the upper layer 
+h1 = 0.80   # Thickness of the upper layer 
 b1 = 0.32   # The edge length of the undeformed square hole 
 e1 = -0.1   # The deformation parameter 
 
 # The layer 2 
-h2 = 0.35   # Thickness of the lower layer
+h2 = 0.40   # Thickness of the lower layer
 b2 = 0.44   # The edge length of the undeformed square hole 
 e2 = -0.1   # The deformation parameter 
 

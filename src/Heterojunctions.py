@@ -256,6 +256,7 @@ def geo_2DSlab2L_RHole_hj_PBCy(d,h1,b1,e1,h2,b2,e2,dist,
 
     ### -----------------------------------------------------------------------
     ### Add the structure (already includes the padding blocks)
+    # Upper-left-Mater1 
     geometry.append(
         mp.Block(
             center = mp.Vector3(-0.25*sx,0,0.5*(hbilayer-h1)),
@@ -264,6 +265,7 @@ def geo_2DSlab2L_RHole_hj_PBCy(d,h1,b1,e1,h2,b2,e2,dist,
         )
     )
 
+    # Lower-left-Mater2 
     geometry.append(
         mp.Block(
             center = mp.Vector3(-0.25*sx,0,0.5*(-hbilayer+h2)),
@@ -272,6 +274,7 @@ def geo_2DSlab2L_RHole_hj_PBCy(d,h1,b1,e1,h2,b2,e2,dist,
         )
     )
 
+    # Upper-right-Mater2 
     geometry.append(
         mp.Block(
             center = mp.Vector3(0.25*sx,0,0.5*(hbilayer-h2)),
@@ -280,6 +283,7 @@ def geo_2DSlab2L_RHole_hj_PBCy(d,h1,b1,e1,h2,b2,e2,dist,
         )
     )
 
+    # Lower-right-Mater1
     geometry.append(
         mp.Block(
             center = mp.Vector3(0.25*sx,0,0.5*(-hbilayer+h1)),
@@ -290,87 +294,183 @@ def geo_2DSlab2L_RHole_hj_PBCy(d,h1,b1,e1,h2,b2,e2,dist,
 
     ##### --------------------------------------------------------------------------
     ##### Add the unit cells at the heterojunction boundary 
+    # Extrude the square at (0,0)
     geometry.append(
         mp.Prism(
             vertices = vertice_cell,
-            height = h1,
+            height = hbilayer,
             axis = mp.Vector3(0,0,1),
-            center = mp.Vector3(-0.25*d,0,0.5*(hbilayer-h1)),
-            material = Mater1 
+            center = mp.Vector3(0,0,0),
+            material = Envir 
         )
     )
-
+    
+    # Upper right-Mater2 
     geometry.append(
         mp.Prism(
             vertices = vertice_cell,
             height = h2,
             axis = mp.Vector3(0,0,1),
-            center = mp.Vector3(-0.25*d,0,0.5*(-hbilayer+h2)),
-            material = Mater2
-        )
-    )
-
-    geometry.append(
-        mp.Prism(
-            vertices = vertice_cell,
-            height = h2,
-            axis = mp.Vector3(0,0,1),
-            center = mp.Vector3(0.25*d,0,0.5*(hbilayer-h2)),
+            center = mp.Vector3(0,0,0.5*(hbilayer-h2)),
             material = Mater2 
         )
     )
 
+    # Lower left-Mater1 
     geometry.append(
         mp.Prism(
             vertices = vertice_cell,
             height = h1,
             axis = mp.Vector3(0,0,1),
-            center = mp.Vector3(0.25*d,0,0.5*(-hbilayer+h1)),
-            material = Mater1
+            center = mp.Vector3(0,0,0.5*(-hbilayer+h1)),
+            material = Mater1 
         )
     )
 
     ##### -------------------------------------------------------------------------------
     ##### Add the holes 
-    for i in range(Ncell):
-        geometry.append(mp.Prism(
-            vertices = vertice1,
-            height = h1,
-            axis = mp.Vector3(0,0,1),
-            center = mp.Vector3(-0.5*structurex+0.5*d+i*d+0.5*delta,
-                                0,0.5*(hbilayer-h1)),
-            material = Envir
-        ))
+    # Upper-left-vertice1-y=0
+    for j in range(Ncell):
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h1,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-d-j*d,0,0.5*(hbilayer-h1)),
+                material = Envir  
+            )
+        )
 
+    # Lower-left-vertice2-y=0
+    for j in range(Ncell):
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h2,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-d-j*d,0,0.5*(-hbilayer+h2)),
+                material = Envir 
+            )
+        ) 
 
-    for i in range(Ncell):
-        geometry.append(mp.Prism(
-            vertices = vertice2,
-            height = h2,
-            axis = mp.Vector3(0,0,1),
-            center = mp.Vector3(-0.5*structurex+0.5*d+i*d-0.5*delta,
-                                0,0.5*(-hbilayer+h2)),
-            material = Envir
-        )) 
+    # Upper-right-vertice1-y=0
+    for j in range(Ncell):
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h2,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(j*d,0,0.5*(hbilayer-h2)),
+                material = Envir  
+            )
+        )
 
-    for i in range(Ncell):
-        geometry.append(mp.Prism(
-            vertices = vertice2,
-            height = h2,
-            axis = mp.Vector3(0,0,1),
-            center = mp.Vector3(0.25*d+i*d+0.5*delta,
-                                0,0.5*(hbilayer-h2)),
-            material = Envir 
-        ))
+    # Lower-right-vertice2-y=0
+    for j in range(Ncell):
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h1,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(j*d,0,0.5*(-hbilayer+h1)),
+                material = Envir 
+            )
+        ) 
 
-    for i in range(Ncell):
-        geometry.append(mp.Prism(
-            vertices = vertice1,
-            height = h1,
-            axis = mp.Vector3(0,0,1),
-            center = mp.Vector3(0.25*d+i*d-0.5*delta,
-                                0,0.5*(-hbilayer+h1)),
-            material = Envir 
-        ))
+    # Upper-left-vertice1-y=0.5*d 
+    for j in range(Ncell):
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h1,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-0.5*d-j*d,0.5*d,0.5*(hbilayer-h1)),
+                material = Envir  
+            )
+        )
+
+    # Lower-left-vertice2-y=0.5*d 
+    for j in range(Ncell):
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h2,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-0.5*d-j*d,0.5*d,0.5*(-hbilayer+h2)),
+                material = Envir 
+            )
+        )
+
+     # Upper-right-vertice2-y=0.5*d 
+    for j in range(Ncell):
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h2,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(0.5*d+j*d,0.5*d,0.5*(hbilayer-h2)),
+                material = Envir  
+            )
+        )
+
+    # Lower-right-vertice1-y=0.5*d 
+    for j in range(Ncell):
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h1,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(0.5*d+j*d,0.5*d,0.5*(-hbilayer+h1)),
+                material = Envir 
+            )
+        )
+
+    # Upper-left-vertice1-y=-0.5*d 
+    for j in range(Ncell):
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h1,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-0.5*d-j*d,-0.5*d,0.5*(hbilayer-h1)),
+                material = Envir  
+            )
+        )
+
+    # Lower-left-vertice2-y=-0.5*d 
+    for j in range(Ncell):
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h2,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-0.5*d-j*d,-0.5*d,0.5*(-hbilayer+h2)),
+                material = Envir 
+            )
+        )
+
+     # Upper-right-vertice2-y=-0.5*d 
+    for j in range(Ncell):
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h2,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(0.5*d+j*d,-0.5*d,0.5*(hbilayer-h2)),
+                material = Envir  
+            )
+        )
+
+    # Lower-right-vertice1-y=-0.5*d 
+    for j in range(Ncell):
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h1,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(0.5*d+j*d,-0.5*d,0.5*(-hbilayer+h1)),
+                material = Envir 
+            )
+        )
 
     return geometry 
