@@ -34,17 +34,17 @@ pad = 2.0
 d = np.sqrt(2.0)
 
 # The layer 1 
-h1 = 0.80   # Thickness of the upper layer 
-b1 = 0.32   # The edge length of the undeformed square hole 
+h1 = 0.35   # Thickness of the upper layer 
+b1 = 0.37   # The edge length of the undeformed square hole 
 e1 = -0.1   # The deformation parameter 
 
 # The layer 2 
-h2 = 0.40   # Thickness of the lower layer
-b2 = 0.44   # The edge length of the undeformed square hole 
+h2 = 0.35   # Thickness of the lower layer
+b2 = 0.39   # The edge length of the undeformed square hole 
 e2 = -0.1   # The deformation parameter 
 
 # The interlayer distance 
-dist = 1 
+dist = 0.1 
 
 # The total size of the bilayer along the x-axis
 structurex = (2*Ncell-0.5)*d 
@@ -69,8 +69,8 @@ cell = mp.Vector3(sx,sy,sz)
 ### The materials 
 Mater = Si 
 Envir = PMMA 
-Mater1 = mp.Medium(epsilon=3.0) #Mater 
-Mater2 = mp.Medium(epsilon=4.0) #Dielectric 
+Mater1 = Mater 
+Mater2 = Mater 
 
 ### The vertices of the unit cells and rhombus holes
 vertice_cell = [
@@ -97,12 +97,12 @@ vertice2 = [
 ##### The array of shift 
 ### ATTENTION! Here is the fraction of the shift / d
 Nq0 = 1
-q0_array = np.linspace(0.0,0.0,Nq0)
+q0_array = np.linspace(0.2,0.2,Nq0)
 
 ### The source 
-fcen = 0.258    # pulse center frequency  
-df = 0.001      # pulse width 
-nfreq = 501     # number of frequencies 
+fcen = 0.24    # pulse center frequency  
+df = 0.02      # pulse width 
+nfreq = 501    # number of frequencies 
 component = mp.Ey # the component 
 sources = [
     mp.Source(
@@ -115,6 +115,12 @@ sources = [
 
 # The array of frequencies
 freq_array = np.linspace(fcen-df,fcen+df,nfreq)
+
+##### ==================================================================================
+##### Compute the flux spectrum
+freg = mp.FluxRegion(center = mp.Vector3(0.5*sx-dpml-0.5*pad),
+                     size = mp.Vector3(0,structurey,Lz),
+                     direction = mp.X)
 
 ##### ==================================================================================
 ### The position of the monitor 
@@ -152,9 +158,13 @@ for idelta in range(Nq0):
     )
 
     ##### ==================================================================================
+    ##### Transmitted flux 
+    trans = sim.add_flux(fcen,df,nfreq,freg)
+
+    ##### ==================================================================================
     ##### Run the simulation 
-    #sim.run(until_after_sources = mp.stop_when_fields_decayed(500,component,pt,1e-3))
-    sim.run(until=50)
+    sim.run(until_after_sources = mp.stop_when_fields_decayed(500,component,pt,1e-3))
+    #sim.run(until=50)
 
     ##### ==================================================================================
     ### Get the dielectric function into the array 
@@ -174,7 +184,7 @@ for idelta in range(Nq0):
     Nz = shape[2]
 
     ##### The name of the files
-    namesave = 'delta_{0:.4f}'.format(delta)
+    namesave = 'q0_{0:.4f}'.format(q0_array[idelta])
 
     os.system('mkdir '+namesave)
 
@@ -203,3 +213,17 @@ for idelta in range(Nq0):
         plt.close()
 
     os.system('mv *.png '+namesave)
+
+    ##### ===============================================================================
+    ##### Get the flux
+    trans_flux = np.array(mp.get_fluxes(trans))
+
+    datasave = np.column_stack((freq_array,trans_flux))
+
+    print(np.shape(trans_flux))
+
+    ##### ===============================================================================
+    ##### Save the transmitted flux to file
+    filename = namesave + '.txt'
+    with open(filename,'w') as file:
+        np.savetxt(file,datasave,'%.8f')
