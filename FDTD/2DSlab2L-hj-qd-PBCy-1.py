@@ -24,7 +24,7 @@ pml_layers = [mp.PML(direction = mp.X,
 #                     thickness = dpml)]
 
 ### The number of unit cells along the x-direction of each side 
-Ncell = 3
+Ncell = 0
 
 ### Padding block 
 pad = 2.0 
@@ -97,11 +97,11 @@ vertice2 = [
 ##### The array of shift 
 ### ATTENTION! Here is the fraction of the shift / d
 Nq0 = 1
-q0_array = np.linspace(0.2,0.2,Nq0)
+q0_array = np.linspace(0.0,0.0,Nq0)
 
 ### The source 
-fcen = 0.24    # pulse center frequency  
-df = 0.02      # pulse width 
+fcen = 0.25    # pulse center frequency  
+df = 0.05      # pulse width 
 nfreq = 501    # number of frequencies 
 component = mp.Ey # the component 
 sources = [
