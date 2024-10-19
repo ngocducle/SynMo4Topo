@@ -101,7 +101,7 @@ q0_array = np.linspace(0.0,0.0,Nq0)
 
 ### The source 
 fcen = 0.25    # pulse center frequency  
-df = 0.05      # pulse width 
+df = 0.01      # pulse width 
 nfreq = 501    # number of frequencies 
 component = mp.Ey # the component 
 sources = [
