@@ -123,11 +123,11 @@ def dH_q(k,q,dist,V,d0,beta):
 ##### ============================================================================
 ##### The parameters of the calculations 
 omega = 0.29780940 
-eta = 0.003
+eta = -0.003
 v = 0.317
 U = -0.01536996
 W = 0.00146639
-alpha = -0.05
+alpha = 0.05
 
 pomega = 0.0 
 omega1 = omega*(1 + pomega)
@@ -136,11 +136,11 @@ omega2 = omega*(1 - pomega)
 v1 = v 
 v2 = v 
 
-pU = 0.1
+pU = 0.05
 U1 = U*(1+pU)
 U2 = U*(1-pU)
 
-pW = -0.1 
+pW = -0.05 
 W1 = W*(1+pW)
 W2 = W*(1-pW)
 
@@ -164,7 +164,8 @@ dk = (k_array.max()-k_array.min())/(Nk-1)
 
 ### The array of intrinsic momenta q 
 Nq = 201
-q_array = np.linspace(-0.25,0.25,Nq)
+Qmax = 0.2
+q_array = np.linspace(-Qmax,Qmax,Nq)
 dq = (q_array.max()-q_array.min())/(Nq-1)
 
 ### The array of energy 
@@ -278,6 +279,47 @@ fig.colorbar(cm.ScalarMappable(norm=norm1,cmap='Reds'),
 plt.savefig(namesave)
 plt.show()
 plt.close()
+
+##### =================================================================================
+#####       Plot the 2D maps of the Berry curvature of bands 1 and 2 
+##### =================================================================================
+
+### The arrays of domains and colormaps 
+fig,axs = plt.subplots(2,1,sharex=True,figsize=(5,12))
+
+norm = colors.Normalize(vmin = np.min(F_array[:,:,0:2]),
+                        vmax = np.max(F_array[:,:,0:2]))
+
+images = []
+
+images.append(axs[0].imshow(np.flipud(F_array[:,:,0].T),
+                            cmap='coolwarm',
+                            norm=norm,
+                            aspect=1.25))
+images.append(axs[1].imshow(np.flipud(F_array[:,:,1].T),
+                            cmap='coolwarm',
+                            norm=norm,
+                            aspect=1.25))
+
+axs[1].set_xticks([0,50,100,150,200])
+axs[1].set_xticklabels([-Kmax,-0.5*Kmax,0,0.5*Kmax,Kmax],fontsize=15)
+axs[0].set_yticks([0,50,100,150,200])
+axs[0].set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
+axs[1].set_yticks([0,50,100,150,200])
+axs[1].set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
+
+plt.xlabel('k',fontsize=16)
+#plt.ylabel('q',fontsize=16)
+
+fig.colorbar(images[0],
+             ax=axs,
+             orientation='vertical',
+             shrink=1.0,
+             location='right')
+
+plt.savefig('imshow-'+namesave)
+plt.show()
+
 
 ##### ========================================================================
 ###         Plot the dispersion surfaces with Berry curvature 
