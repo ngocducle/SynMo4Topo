@@ -18,7 +18,7 @@ def Hamiltonian(k,q1,q2,domega,v,dv,U,delta,V1,V2):
     U3 = U 
     U2 = U + delta 
 
-    H = np.array(
+    return np.array(
         [
             [v*k,U1*exp(1j*q1),V1,0,0,0],
             [U1*exp(-1j*q1),-v*k,0,V1,0,0],
@@ -29,26 +29,32 @@ def Hamiltonian(k,q1,q2,domega,v,dv,U,delta,V1,V2):
         ]
     )
 
-    return H 
-
 ##### FUNCTION: Matrix A of the generalized eigenvalue problem 
-def Mat(q1,q2,domega,U,delta,V1,V2):
+def Mat(E,q1,q2,domega,U,delta,V1,V2):
     U1 = U 
     U3 = U 
     U2 = U + delta 
 
-    A = np.array(
+    return np.array(
         [
-            [-E, U1*exp(1j*q1), V1, 0, 0, 0],
-            [U1*exp(-1j*q1), -E, 0, V1, 0, 0],
-            [V1, 0, domega-E, U2, V2, 0],
-            [0, V1, U2, domega - E, 0, V2],
-            [0, 0, V2, 0, -E, U3*exp(-1j*q2)],
-            [0, 0, 0, V2, U3*exp(1j*q2), -E]
+            [-E,  U1*exp(1j*q1), V1, 0,          0, 0],
+            [U1*exp(-1j*q1), -E, 0, V1,          0, 0],
+            [V1, 0,              domega-E, U2,   V2, 0],
+            [0, V1,              U2, domega-E,   0, V2],
+            [0, 0,               V2, 0,          -E, U3*exp(-1j*q2)],
+            [0, 0,               0, V2,          U3*exp(1j*q2), -E]
         ]
     )
 
-    return A 
+##### FUNCTION: Find momentum eigenvalues 
+def FindMomentumEig(E,q1,q2,domega,v,dv,U,delta,V1,V2):
+    A = Mat(E,q1,q2,domega,U,delta,V1,V2)
+    B = np.diag([-v,v,-(v+dv),v+dv,-v,v])
+
+    eigvals,eigvecs = sla.eig(A,B)
+
+    return eigvals,eigvecs  
+
 
 ##### ===================================================================================
 ##### MAIN program
@@ -106,13 +112,9 @@ for iq in range(Nq):
 
         ### The bulk band structure 
         ### ATTENTION! sla.eig gives wrong eigenvalues, leading to constant bands
-        #eigvals,eigvecs = sla.eig(Hamiltonian(k,q1,q2,v,dv,U,Delta,V1,V2))
-        #E_bulk_L[ik,:] = eigvals 
         eigvals = eigvalsh(Hamiltonian(k,q1,q2,domega,v,dv,U,Delta,V1,V2))
         E_bulk_L[ik,:] = eigvals 
 
-        #eigvals,eigvecs = sla.eig(Hamiltonian(k,q1,q2,v,dv,U,-Delta,V1,V2))
-        #E_bulk_R[ik,:] = eigvals
         eigvals = eigvalsh(Hamiltonian(k,q1,q2,domega,v,dv,U,-Delta,V1,V2))
         E_bulk_R[ik,:] = eigvals 
 
@@ -132,51 +134,15 @@ for iq in range(Nq):
         ### Value of energy 
         E = E_array[ie]
 
-        ### The array W 
-        W = []
+        ### Left-hand side
+        eigvalsL, eigvecsL = FindMomentumEig(E,q1,q2,domega,v,dv,U,Delta,V1,V2)
+        #print('Eigenvalues: ')
+        #print(eigvalsL)
 
-        ### The left-hand side generalized eigenvalue problem
-        AL = Mat(q1,q2,domega,U,Delta,V1,V2)
-
-        B = np.diag([-v,v,-(v+dv),v+dv,-v,v])
-
-        eigvals,eigvecs = sla.eig(AL,B)
-
-        print('# Left-hand side:')
-        print('The eigenvalues are k = ')
-        print(eigvals)
-
-        print('The eigenvectors are: ')
-        print(eigvecs)
-
-        for j in range(6):
-            if (np.imag(eigvals[j])>0):
-                W.append(eigvecs[:,j])
-
-        ### The right-hand side generalized eigenvalue problem 
-        AR = Mat(q1,q2,domega,U,-Delta,V1,V2)
-
-        B = np.diag([-v,v,-(v+dv),v+dv,-v,v])
-
-        eigvals,eigvecs = sla.eig(AR,B)
-
-        print('Right-hand side:')
-        print('The eigenvalues are k = ')
-        print(eigvals)
-
-        print('The eigenvectors are: ')
-        print(eigvecs)
-
-        for j in range(6):
-            if (np.imag(eigvals[j])>0):
-                W.append(eigvecs[:,j])
-
-        ### Transform W to array 
-        #W = np.array(W)
-        #print('W = ')
-        #print(W)
-        #print(np.shape(W))
-        #S = np.abs(det(W))
+        ### Right-hand side
+        eigvalsR, eigvecsR = FindMomentumEig(E,q1,q2,domega,v,dv,U,-Delta,V1,V2)
+        print('Eigenvalues: ')
+        print(eigvalsR)
 
 
 
