@@ -25,13 +25,13 @@ Nq = 101
 q_array = linspace(-0.03*2*pi,0.03*2*pi,Nq);
 
 % Criterion for 0 
-epsilon = 1e-5
+epsilon = 1e-3
 
 % Number of E values 
 NE = 501 
 
 % Small incriment in band edge 
-epsilonE = 1e-3
+epsilonE = 1e-4
 
 % Diagonal matrix of v 
 Hv = diag([v,-v,v+dv,-v-dv,v,-v]);
