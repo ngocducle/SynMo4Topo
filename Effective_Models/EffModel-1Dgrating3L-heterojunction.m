@@ -1,3 +1,6 @@
+%%% Solve for the edge state of the analytical model
+%%% OCTAVE version
+
 % Parameters 
 v = 0.3283 
 U = 0.0207 
