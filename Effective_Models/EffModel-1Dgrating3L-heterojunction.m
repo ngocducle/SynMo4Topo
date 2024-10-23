@@ -21,13 +21,13 @@ Nq = 101
 q_array = linspace(-0.03*2*pi,0.03*2*pi,Nq);
 
 % Criterion for 0 
-epsilon = 1e-3
+epsilon = 1e-5
 
 % Number of E values 
 NE = 501 
 
 % Small incriment in band edge 
-epsilonE = 1e-4 
+epsilonE = 1e-2
 
 % Diagonal matrix of v 
 Hv = diag([v,-v,v+dv,-v-dv,v,-v]);
@@ -61,9 +61,15 @@ function [kvecs,kvals] = kPolyEig(E,q1,q2,domega,U,Delta,V1,V2,Hv)
     Ha = H_a(q1,q2,domega,U,U+Delta,U,V1,V2);
 
     %%% Solve the generalized eigenvalue problem A*x=k*B*x 
-    A = Ha-E*eye(6);
-    B = -Hv; 
-    [kvecs,kvals] = eig(A,B)
+    % Method 1: Using the eig function
+    %A = Ha-E*eye(6);
+    %B = -Hv;  
+    %[kvecs,kvals] = eig(A,B)
+
+    % Method 2: Using the polyeig function 
+    A0 = Ha-E*eye(6);
+    A1 = Hv;
+    [kvecs,kvals] = eig(A0,A1);
 
     %%% Move the arguments to the range 0 <= argument < 2*pi
     arg_array = zeros(6,1); 
@@ -80,7 +86,7 @@ function [kvecs,kvals] = kPolyEig(E,q1,q2,domega,U,Delta,V1,V2,Hv)
     [arg_list,ind] = sort(arg_array)
     kvals = kvals(ind,ind) % ATTENTION! kvals is a 6x6 matrix 
     kvecs = kvecs(:,ind);
-    kvecs = kvecs./norm(kvecs,'Fro','cols') % Frobenius norm summed over columns 
+    kvecs = kvecs./norm(kvecs,'Fro','cols'); % Frobenius norm summed over columns 
 end 
 
 %%%%% ===================================================================================
