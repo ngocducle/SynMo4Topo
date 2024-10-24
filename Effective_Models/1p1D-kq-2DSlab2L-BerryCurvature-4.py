@@ -15,65 +15,65 @@ def Hamiltonian(k,q,omega1,eta1,v1,U1,W1,alpha1,
                  omega2,eta2,v2,U2,W2,alpha2,
                  V,beta,dist,d0):
     
-    Hamiltonian = np.zeros((8,8),dtype=complex)
+    H = np.zeros((8,8),dtype=complex)
 
     K = 2.0*np.pi 
 
     ### Block (1,1)
-    Hamiltonian[0,0] = omega1 + eta1 + v1*k + v1*k*k/np.sqrt(2)
-    Hamiltonian[0,1] = W1 
-    Hamiltonian[0,2] = W1 
-    Hamiltonian[0,3] = U1*(1+alpha1)
+    H[0,0] = omega1 + eta1 + v1*k + v1*k*k/np.sqrt(2)
+    H[0,1] = W1 
+    H[0,2] = W1 
+    H[0,3] = U1*(1+alpha1)
 
-    Hamiltonian[1,0] = W1
-    Hamiltonian[1,1] = omega1 - eta1 + v1*k*k/np.sqrt(2)
-    Hamiltonian[1,2] = U1*(1-alpha1)
-    Hamiltonian[1,3] = W1 
+    H[1,0] = W1
+    H[1,1] = omega1 - eta1 + v1*k*k/np.sqrt(2)
+    H[1,2] = U1*(1-alpha1)
+    H[1,3] = W1 
 
-    Hamiltonian[2,0] = W1 
-    Hamiltonian[2,1] = U1*(1-alpha1)
-    Hamiltonian[2,2] = omega1 - eta1 + v1*k*k/np.sqrt(2)
-    Hamiltonian[2,3] = W1 
+    H[2,0] = W1 
+    H[2,1] = U1*(1-alpha1)
+    H[2,2] = omega1 - eta1 + v1*k*k/np.sqrt(2)
+    H[2,3] = W1 
 
-    Hamiltonian[3,0] = U1*(1+alpha1)
-    Hamiltonian[3,1] = W1 
-    Hamiltonian[3,2] = W1 
-    Hamiltonian[3,3] = omega1 + eta1 - v1*k + v1*k*k/np.sqrt(2)
+    H[3,0] = U1*(1+alpha1)
+    H[3,1] = W1 
+    H[3,2] = W1 
+    H[3,3] = omega1 + eta1 - v1*k + v1*k*k/np.sqrt(2)
 
     ### Block (1,2)
-    Hamiltonian[0,4] = -(V + beta*k + beta*k*k/np.sqrt(2))*cmath.exp(-1j*K*q)*np.exp(-dist/d0)
-    Hamiltonian[1,5] = (V + beta*k*k/np.sqrt(2))*np.exp(-dist/d0) 
-    Hamiltonian[2,6] = (V + beta*k*k/np.sqrt(2))*np.exp(-dist/d0)
-    Hamiltonian[3,7] = -(V - beta*k + beta*k*k/np.sqrt(2))*cmath.exp(1j*K*q)*np.exp(-dist/d0)
+    H[0,4] = -(V + beta*k + beta*k*k/np.sqrt(2))*cmath.exp(-1j*K*q)*np.exp(-dist/d0)
+    H[1,5] = (V + beta*k*k/np.sqrt(2))*np.exp(-dist/d0) 
+    H[2,6] = (V + beta*k*k/np.sqrt(2))*np.exp(-dist/d0)
+    H[3,7] = -(V - beta*k + beta*k*k/np.sqrt(2))*cmath.exp(1j*K*q)*np.exp(-dist/d0)
 
     ### Block (2,1)
-    Hamiltonian[4,0] = -(V + beta*k + beta*k*k/np.sqrt(2))*cmath.exp(1j*K*q)*np.exp(-dist/d0)
-    Hamiltonian[5,1] = (V + beta*k*k/np.sqrt(2))*np.exp(-dist/d0)
-    Hamiltonian[6,2] = (V + beta*k*k/np.sqrt(2))*np.exp(-dist/d0)
-    Hamiltonian[7,3] = -(V - beta*k + beta*k*k/np.sqrt(2))*cmath.exp(-1j*K*q)*np.exp(-dist/d0)
+    H[4,0] = -(V + beta*k + beta*k*k/np.sqrt(2))*cmath.exp(1j*K*q)*np.exp(-dist/d0)
+    H[5,1] = (V + beta*k*k/np.sqrt(2))*np.exp(-dist/d0)
+    H[6,2] = (V + beta*k*k/np.sqrt(2))*np.exp(-dist/d0)
+    H[7,3] = -(V - beta*k + beta*k*k/np.sqrt(2))*cmath.exp(-1j*K*q)*np.exp(-dist/d0)
 
     ### Block (2,2)
-    Hamiltonian[4,4] = omega2 + eta2 + v2*k + v2*k*k/np.sqrt(2)
-    Hamiltonian[4,5] = W2 
-    Hamiltonian[4,6] = W2 
-    Hamiltonian[4,7] = U2*(1+alpha2)
+    H[4,4] = omega2 + eta2 + v2*k + v2*k*k/np.sqrt(2)
+    H[4,5] = W2 
+    H[4,6] = W2 
+    H[4,7] = U2*(1+alpha2)
 
-    Hamiltonian[5,4] = W2 
-    Hamiltonian[5,5] = omega2 - eta2 + v2*k*k/np.sqrt(2)
-    Hamiltonian[5,6] = U2*(1-alpha2) 
-    Hamiltonian[5,7] = W2 
+    H[5,4] = W2 
+    H[5,5] = omega2 - eta2 + v2*k*k/np.sqrt(2)
+    H[5,6] = U2*(1-alpha2) 
+    H[5,7] = W2 
 
-    Hamiltonian[6,4] = W2 
-    Hamiltonian[6,5] = U2*(1-alpha2)
-    Hamiltonian[6,6] = omega2 - eta2 + v2*k*k/np.sqrt(2)
-    Hamiltonian[6,7] = W2 
+    H[6,4] = W2 
+    H[6,5] = U2*(1-alpha2)
+    H[6,6] = omega2 - eta2 + v2*k*k/np.sqrt(2)
+    H[6,7] = W2 
 
-    Hamiltonian[7,4] = U2*(1+alpha2)
-    Hamiltonian[7,5] = W2 
-    Hamiltonian[7,6] = W2 
-    Hamiltonian[7,7] = omega2 + eta2 - v2*k + v2*k*k/np.sqrt(2)
+    H[7,4] = U2*(1+alpha2)
+    H[7,5] = W2 
+    H[7,6] = W2 
+    H[7,7] = omega2 + eta2 - v2*k + v2*k*k/np.sqrt(2)
 
-    return Hamiltonian 
+    return H 
 
 ##### ============================================================================
 ##### FUNCTION: the derivative of the Hamiltonian with respect to 
@@ -123,11 +123,11 @@ def dH_q(k,q,dist,V,d0,beta):
 ##### ============================================================================
 ##### The parameters of the calculations 
 omega = 0.29780940 
-eta = -0.003
+eta = 0.0
 v = 0.317
 U = -0.01536996
 W = 0.00146639
-alpha = 0.05
+alpha = 0.00
 
 pomega = 0.0 
 omega1 = omega*(1 + pomega)
@@ -136,11 +136,11 @@ omega2 = omega*(1 - pomega)
 v1 = v 
 v2 = v 
 
-pU = 0.05
+pU = 0.1
 U1 = U*(1+pU)
 U2 = U*(1-pU)
 
-pW = -0.05 
+pW = -0.1 
 W1 = W*(1+pW)
 W2 = W*(1-pW)
 
@@ -164,7 +164,7 @@ dk = (k_array.max()-k_array.min())/(Nk-1)
 
 ### The array of intrinsic momenta q 
 Nq = 201
-Qmax = 0.2
+Qmax = 0.5
 q_array = np.linspace(-Qmax,Qmax,Nq)
 dq = (q_array.max()-q_array.min())/(Nq-1)
 
@@ -287,8 +287,8 @@ plt.close()
 ### The arrays of domains and colormaps 
 fig,axs = plt.subplots(2,1,sharex=True,figsize=(5,12))
 
-norm = colors.Normalize(vmin = np.min(F_array[:,:,0:2]),
-                        vmax = np.max(F_array[:,:,0:2]))
+norm = colors.Normalize(vmin = -np.max(abs(F_array[:,:,0:2])),
+                        vmax = np.max(abs(F_array[:,:,0:2])))
 
 images = []
 
@@ -314,12 +314,41 @@ plt.xlabel('k',fontsize=16)
 fig.colorbar(images[0],
              ax=axs,
              orientation='vertical',
-             shrink=1.0,
+             shrink=0.8,
              location='right')
 
 plt.savefig('imshow-'+namesave)
 plt.show()
 
+##### ========================================================================
+###         Plot the Berry curvature map for bands 1 and 2 separately
+##### ========================================================================
+norm = colors.Normalize(vmin = -np.max(abs(F_array[:,:,0:2])),
+                        vmax = np.max(abs(F_array[:,:,0:2])))
+
+fig,ax = plt.subplots(figsize=(8,8))
+ax.pcolormesh(X,Y,F_array[:,:,0].T,shading='gouraud',cmap='coolwarm',norm=norm)
+ax.set_xlabel('k',fontsize=20)
+ax.set_ylabel('q',fontsize=20)
+ax.set_title(r'Band 1, $\alpha = $'+str(alpha)+r', $\eta = $'+str(eta),fontsize=20)
+fig.colorbar(cm.ScalarMappable(norm=norm,cmap='coolwarm'),
+             orientation='vertical',
+             shrink=1.0,
+             ax=ax)
+plt.savefig('Band1.png')
+plt.show()
+
+fig,ax = plt.subplots(figsize=(8,8))
+ax.pcolormesh(X,Y,F_array[:,:,1].T,shading='gouraud',cmap='coolwarm',norm=norm)
+ax.set_xlabel('k',fontsize=20)
+ax.set_ylabel('q',fontsize=20)
+ax.set_title(r'Band 2, $\alpha = $'+str(alpha)+r', $\eta = $'+str(eta),fontsize=20)
+fig.colorbar(cm.ScalarMappable(norm=norm,cmap='coolwarm'),
+             orientation='vertical',
+             shrink=1.0,
+             ax=ax)
+plt.savefig('Band2.png')
+plt.show()
 
 ##### ========================================================================
 ###         Plot the dispersion surfaces with Berry curvature 
@@ -366,7 +395,7 @@ fig.colorbar(scamap,
              ax=ax)
 ax.view_init(elev=10,azim=135,roll=0)
 plt.savefig('Dis-BCur-'+namesave)
-plt.show()
+#plt.show()
 plt.close()
 
 ##### ========================================================================
@@ -387,4 +416,4 @@ ax.set_xlabel('k',fontsize=14)
 ax.set_ylabel('q',fontsize=14)
 ax.set_zlabel(r'Berry curvature (a.u.)',fontsize=14)
 plt.savefig('BCur-'+namesave)
-plt.show()
+#plt.show()
