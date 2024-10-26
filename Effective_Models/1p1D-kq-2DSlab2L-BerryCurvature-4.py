@@ -78,7 +78,7 @@ def Hamiltonian(k,q,omega1,eta1,v1,U1,W1,alpha1,
 ##### ============================================================================
 ##### FUNCTION: the derivative of the Hamiltonian with respect to 
 ###   the genuine momentum k 
-def dH_k(k,q,v1,v2,beta):
+def dH_k(k,q,v1,v2,beta,dist,d0):
     dHk = np.zeros((8,8),dtype=complex)
 
     K = 2.0*np.pi 
@@ -123,11 +123,11 @@ def dH_q(k,q,dist,V,d0,beta):
 ##### ============================================================================
 ##### The parameters of the calculations 
 omega = 0.29780940 
-eta = 0.0
+eta = -0.0019
 v = 0.317
 U = -0.01536996
 W = 0.00146639
-alpha = 0.00
+alpha = 0.05
 
 pomega = 0.0 
 omega1 = omega*(1 + pomega)
@@ -188,7 +188,7 @@ for ik in range(Nk):
                  V,beta,dist,d0) 
         
         ### The derivative dH/dk 
-        dHk = dH_k(k,q,v1,v2,beta)
+        dHk = dH_k(k,q,v1,v2,beta,dist,d0)
 
         ### The derivative dH/ddelta 
         dHq = dH_q(k,q,dist,V,d0,beta)
@@ -307,6 +307,7 @@ axs[0].set_yticks([0,50,100,150,200])
 axs[0].set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
 axs[1].set_yticks([0,50,100,150,200])
 axs[1].set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
+axs[0].set_title(r'$\alpha=$'+str(alpha)+r', $\eta = $'+str(eta),fontsize=15)
 
 plt.xlabel('k',fontsize=16)
 #plt.ylabel('q',fontsize=16)

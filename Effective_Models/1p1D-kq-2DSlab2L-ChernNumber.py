@@ -122,10 +122,10 @@ def dH_q(k,q,dist,V,d0,beta):
 
 ##### ==============================================================================
 ##### Range of alpha and eta 
-Na = 25
+Na = 41
 alpha_array = np.linspace(-0.08,0.08,Na)
 
-Neta = 25 
+Neta = 51 
 eta_array = np.linspace(-0.005,0.005,Neta)
 
 Chern = np.zeros((Na,Neta,8))
@@ -160,13 +160,13 @@ beta = -0.3
 ##### ================================================================================
 ##### The arrays of k and q 
 ### The array of intrinsic momenta k
-Nk = 21 
+Nk = 101 
 Kmax = 0.05
 k_array = np.linspace(-Kmax,Kmax,Nk)
 dk = (k_array.max()-k_array.min())/(Nk-1)
 
 ### The array of intrinsic momenta q 
-Nq = 21
+Nq = 101
 Qmax = 0.5
 q_array = np.linspace(-Qmax,Qmax,Nq)
 dq = (q_array.max()-q_array.min())/(Nq-1)

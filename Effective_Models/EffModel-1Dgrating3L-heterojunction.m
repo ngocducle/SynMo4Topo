@@ -25,7 +25,7 @@ Nq = 101
 q_array = linspace(-0.03*2*pi,0.03*2*pi,Nq);
 
 % Criterion for 0 
-epsilon = 1e-3
+epsilon = 1e-4
 
 % Number of E values 
 NE = 501 
@@ -73,13 +73,13 @@ function [kvecs,kvals] = kPolyEig(E,q1,q2,domega,U,Delta,V1,V2,Hv)
     % Method 2: Using the polyeig function 
     A0 = Ha-E*eye(6);
     A1 = Hv;
-    [kvecs,kvals] = eig(A0,A1);
+    [kvecs,kvals] = polyeig(A0,A1)
 
     %%% Move the arguments to the range 0 <= argument < 2*pi
     arg_array = zeros(6,1); 
     
     for j=1:6 
-        arg_array(j) = arg(kvals(j,j));
+        arg_array(j) = arg(kvals(j));
 
         if (arg_array(j) < 0)
             arg_array(j) = arg_array(j)+2*pi;
@@ -88,7 +88,7 @@ function [kvecs,kvals] = kPolyEig(E,q1,q2,domega,U,Delta,V1,V2,Hv)
 
     %%% Rearrange kvecs and kvals in increasing order of argument
     [arg_list,ind] = sort(arg_array)
-    kvals = kvals(ind,ind) % ATTENTION! kvals is a 6x6 matrix 
+    kvals = kvals(ind) % ATTENTION! kvals is a 6x6 matrix if we use eig 
     kvecs = kvecs(:,ind);
     kvecs = kvecs./norm(kvecs,'Fro','cols'); % Frobenius norm summed over columns 
 end 
@@ -106,7 +106,7 @@ for iq = 1:Nq
     % The matrix Ha 
     Ha = H_a(q1,q2,domega,U,U+Delta,U,V1,V2); 
 
-    % The arrays of left bands 
+    % The array of left bands
     EL = zeros(Nk,6);
 
     % Scan over k_array and diagonalize the Hamiltonian 
@@ -179,28 +179,16 @@ for iq = 1:Nq
         W = zeros(6);
 
         %%% Left-hand Hamiltonian 
-        %Ha = H_a(q1,q2,domega,U,U+Delta,U,V1,V2);
-
-        % Solve the generalized eigenvalue problem A*x=k*B*x 
-        %A = Ha-E*eye(6);
-        %B = -Hv; 
-        %[kvecs,kvals] = eig(A,B); 
-
-        %%% Left-hand Hamiltonian 
         printf("Left-hand Hamiltonian\n");
         [WL,kL] = kPolyEig(E,q1,q2,domega,U,Delta,V1,V2,Hv); 
-        %kL
-        %WL 
 
         %%% Right-hand Hamiltonian
         printf("Right-hand Hamiltonian\n");
         [WR,kR] = kPolyEig(E,q1,q2,domega,U,-Delta,V1,V2,Hv); 
-        %kR  
-        %WR  
 
         %%% Combine WL and WR to the matrix of eigenstates 
-        W(:,1:3) = WL(:,1:3);
-        W(:,4:6) = -WR(:,4:6);
+        W(:,1:3) = WL(:,4:6);
+        W(:,4:6) = -WR(:,1:3);
 
         %%% The determinant of W 
         S = abs(det(W))
