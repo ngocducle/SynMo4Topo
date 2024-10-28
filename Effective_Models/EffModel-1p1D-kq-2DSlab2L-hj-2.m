@@ -1,17 +1,30 @@
-%%% Solve for the edge states of the effective model
-%%% of 2D slab bilayer 
-%%% OCTAVE version 
+%%%%% Solve for the edge states of the effective model 
+%%%%% of 2D slab 2L 
+%%%%% OCTAVE version 
 
 %%%%% ===================================================================================
 %%%%% FUNCTION: Ha 
 %%%%% The zero order of the Hamiltonian 
-function Ha = H_a(q,omega1,eta1,v1,U1,W1,alpha1,omega2,eta2,v2,U2,W2,alpha2,V,dist,d0)
-    Ha = zeros(8,8);
+function Ha = H_a(q,omega,domega,eta,U,dU,W,dW,alpha,V,dist,d0)
+    Ha = zeros(8);
+
+    omega1 = omega + domega; 
+    eta1 = eta; 
+    U1 = U+dU;
+    W1 = W+dW; 
+    alpha1 = alpha;
+
+    omega2 = omega - domega; 
+    eta2 = eta; 
+    U2 = U-dU;
+    W2 = W-dW; 
+    alpha2 = alpha;
+
     Vt = V*exp(-dist/d0);
 
     %%% Block (1,1)
     Ha(1,1) = omega1 + eta1;
-    Ha(1,2) = W1; 
+    Ha(1,2) = W1;
     Ha(1,3) = W1; 
     Ha(1,4) = U1*(1+alpha1);
 
@@ -62,7 +75,8 @@ function Ha = H_a(q,omega1,eta1,v1,U1,W1,alpha1,omega2,eta2,v2,U2,W2,alpha2,V,di
     Ha(8,6) = W2; 
     Ha(8,7) = W2; 
     Ha(8,8) = omega2 + eta2;
-end % function Ha 
+
+end % function H_a 
 
 %%%%% ===================================================================================
 %%%%% FUNCTION: The coefficient of k
@@ -116,9 +130,9 @@ end % function H2
 
 %%%%% ==============================================================================
 %%%%% FUNCTION: Hamiltonian 
-function H = Hamiltonian(k,q,omega1,eta1,v1,U1,W1,alpha1,omega2,eta2,v2,U2,W2,alpha2,V,beta,dist,d0)
+function H = Hamiltonian(k,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,beta,dist,d0)
 
-    Ha = H_a(q,omega1,eta1,v1,U1,W1,alpha1,omega2,eta2,v2,U2,W2,alpha2,V,dist,d0);
+    Ha = H_a(q,omega,domega,eta,U,dU,W,dW,alpha,V,dist,d0);
     H1 = H_1(q,v1,v2,beta,dist,d0);
     H2 = H_2(q,v1,v2,beta,dist,d0);
 
@@ -126,21 +140,17 @@ function H = Hamiltonian(k,q,omega1,eta1,v1,U1,W1,alpha1,omega2,eta2,v2,U2,W2,al
 
 end % function Hamiltonian
 
-%%%%% ==============================================================================
+%%%%% ==================================================================================
 %%%%% FUNCTION: Solve the polynomial eigenvalue problem 
-function [kvecs,kvals] = kPolyEig(E,q,omega1,eta1,v1,U1,W1,alpha1,omega2,eta2,v2,U2,W2,alpha2,V,dist,d0,beta)
+function [kvecs,kvals] = kPolyEig(E,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,beta,dist,d0)
 
-    %%% The matrix alpha 
-    Ha = H_a(q,omega1,eta1,v1,U1,W1,alpha1,omega2,eta2,v2,U2,W2,alpha2,V,dist,d0);
-    H0 = Ha - E*eye(8); 
-
-    %%% The matrix H1 
+    Ha = H_a(q,omega,domega,eta,U,dU,W,dW,alpha,V,dist,d0);
+    H0 = Ha-E*eye(8);
     H1 = H_1(q,v1,v2,beta,dist,d0);
-
-    %%% The matrix H2
     H2 = H_2(q,v1,v2,beta,dist,d0);
 
-    %%% Solve the polynomial eigenvalue problem 
+    %H = Ha + H1*k + H2*k*k;
+
     [kvecs,kvals] = polyeig(H0,H1,H2);
 
     %%% Move the arguments to the range 0 <= argument <= 2*pi 
@@ -158,38 +168,24 @@ function [kvecs,kvals] = kPolyEig(E,q,omega1,eta1,v1,U1,W1,alpha1,omega2,eta2,v2
     [arg_list,ind] = sort(arg_array);
     kvals = kvals(ind);
     kvecs = kvecs(:,ind);
-    kvecs = kvecs./norm(kvecs,'Fro','cols'); % Frobenius norm summed over columns 
+    kvecs = kvecs./norm(kvecs,'Fro','cols'); % Frobenius norm summed over columns
 
-end % function kPolyEig 
+end % function Hamiltonian
 
-%%%%% ====================================================================================
+%%%%% ==================================================================================
 %%%%% Parameters 
-omega = 0.2978 
-eta = -0.003
+omega = 0.2978
+domega = 0.0*omega 
+eta = -0.003 
 v = 0.317 
 U = -0.01537 
+dU = 0.1*U 
 W = 0.001466 
+dW = -0.1*W 
 alpha = 0.05 
-
-pomega = 0.0
-omega1 = omega*(1+pomega) 
-omega2 = omega*(1-pomega)
 
 v1 = v 
 v2 = v 
-
-pU = 0.1 
-U1 = U*(1+pU)
-U2 = U*(1-pU)
-
-pW = -0.1 
-W1 = W*(1+pW)
-W2 = W*(1-pW)
-
-eta1 = eta 
-eta2 = eta 
-alpha1 = alpha 
-alpha2 = alpha 
 
 d0 = 0.35 
 dist = 0.1 
@@ -197,49 +193,49 @@ V = 0.038
 beta = -0.3 
 
 %%% The gap we calculate the edge state 
-gap = 1
+gap = 1 
 
 %%% The array of genuine momenta 
-Nk = 101
+Nk = 101 
 Kmax = 0.05 
 k_array = linspace(-Kmax,Kmax,Nk);
 
 %%% The array of synthetic momenta 
-Nq = 101
-Qmax = 0.3 
+Nq = 101 
+Qmax = 0.3
 q_array = linspace(-Qmax,Qmax,Nq);
 
 %%% Criterion for 0 
-epsilon = 1e-4;
+epsilon = 1e-4; 
 
 %%% Number of E values to scan 
 NE = 101 
 
-%%% Small incriment in band edge 
+%%% Small increment in band edge 
 epsilonE = 1e-4 
 
 %%% Initialize the edge states to be empty 
 edge_state = [];
 
-%%%%% ===================================================================================
-%%%%% Scan over the q_array 
+%%%%% ===============================================================================
+%%%%% Scan the q_array 
 for iq = 1:Nq 
-    %%%%% The synthetic momentum 
+    %%%%% The synthetic momenta 
     q = q_array(iq);
 
     %%%%% The arrays of left and right bands 
     EL = zeros(Nk,8);
     ER = zeros(Nk,8);
 
-    %%%%% ===============================================================================
+    %%%%% ============================================================================
     for ik = 1:Nk 
         %%%%% The genuine momenta 
         k = k_array(ik);
 
-        %%%%% ===========================================================================
+        %%%%% ========================================================================
         %%%%% The left-hand side 
         %%% The Hamiltonian 
-        H = Hamiltonian(k,q,omega1,eta1,v1,U1,W1,alpha1,omega2,eta2,v2,U2,W2,alpha2,V,beta,dist,d0);
+        H = Hamiltonian(k,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,beta,dist,d0);
 
         %%% Diagonalize the Hamiltonian 
         [Vec,D] = eig(H);
@@ -251,10 +247,10 @@ for iq = 1:Nq
         %%% Save the energy eigenvalues to the array EL 
         EL(ik,:) = eigval;
 
-        %%%%% ===========================================================================
+        %%%%% ========================================================================
         %%%%% The right-hand side 
         %%% The Hamiltonian 
-        H = Hamiltonian(k,q,omega2,eta2,v2,U2,W2,alpha2,omega1,eta1,v1,U1,W1,alpha1,V,beta,dist,d0);
+        H = Hamiltonian(k,q,omega,-domega,eta,v1,v2,U,-dU,W,-dW,alpha,V,beta,dist,d0);
 
         %%% Diagonalize the Hamiltonian 
         [Vec,D] = eig(H);
@@ -263,9 +259,10 @@ for iq = 1:Nq
         Ds = D(ind,ind);
         eigvec = Vec(:,ind);
 
-        %%% Save the energy eigenvalues to the array ER 
+        %%% Save the energy eigenvalues to the array EL 
         ER(ik,:) = eigval;
-    end % ik-loop 
+
+    end % ik-loop   
 
     %%%%% =============================================================================
     %%% Calculate the obstructed bands 
@@ -290,18 +287,18 @@ for iq = 1:Nq
         WW = zeros(8);
 
         % Left-hand Hamiltonian 
-        printf("Left-hand Hamiltonian \n"); 
-        [WL,kL] = kPolyEig(E,q,omega1,eta1,v1,U1,W1,alpha1,omega2,eta2,v2,U2,W2,alpha2,V,dist,d0,beta);
+        printf("Left-hand Hamiltonian \n");
+        [WL,kL] = kPolyEig(E,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,beta,dist,d0);
 
         % Right-hand Hamiltonian 
         printf("Right-hand Hamiltonian \n");
-        [WR,kR] = kPolyEig(E,q,omega2,eta2,v2,U2,W2,alpha2,omega1,eta1,v1,U1,W1,alpha1,V,dist,d0,beta);
+        [WR,kR] = kPolyEig(E,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,beta,dist,d0);
 
         %%% Combine WL and WR to the matrix of eigenstates 
         WW(:,1:4) = WL(:,5:8);
         WW(:,5:8) = -WR(:,1:4);
 
-        %%% The determinant of W 
+        %%% The determinant of WW 
         S = abs(det(WW))
 
         if (S < epsilon) 
@@ -309,7 +306,6 @@ for iq = 1:Nq
         end % IF 
 
     end % iE-loop 
-
 
 end % iq-loop 
 
@@ -324,4 +320,4 @@ plot(q_array,bulk2,color='blue');
 hold off; 
 xlabel('q');
 ylabel('E');
-saveas(1,'transmission1.png')
+saveas(1,'transmission2.png')
