@@ -22,7 +22,7 @@ k_array = linspace(-0.25,0.25,Nk);
 
 % The array of synthetic momenta 
 Nq = 101
-q_array = linspace(-0.03*2*pi,0.03*2*pi,Nq);
+q_array = linspace(-0.5*2*pi,0.5*2*pi,Nq);
 
 % Criterion for 0 
 epsilon = 1e-4

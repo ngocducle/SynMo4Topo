@@ -91,6 +91,11 @@ function [kvecs,kvals] = kPolyEig(E,q1,q2,domega,U,Delta,V1,V2,Hv)
     kvals = kvals(ind,ind); % ATTENTION! kvals is a 6x6 matrix 
     kvecs = kvecs(:,ind);
     kvecs = kvecs./vecnorm(kvecs); % norm of the columns 
+
+    printf("kvals = ")
+    kvals 
+    printf("kvecs = ")
+    kvecs 
 end 
 
 %%%%% ===================================================================================

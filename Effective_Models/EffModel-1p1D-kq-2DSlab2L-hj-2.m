@@ -154,9 +154,9 @@ function [kvecs,kvals] = kPolyEig(E,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,b
     [kvecs,kvals] = polyeig(H0,H1,H2);
 
     %%% Move the arguments to the range 0 <= argument <= 2*pi 
-    arg_array = zeros(8,1);
+    arg_array = zeros(16,1);
 
-    for j = 1:8 
+    for j = 1:16
         arg_array(j) = arg(kvals(j));
 
         if (arg_array(j) < 0) 
@@ -169,13 +169,17 @@ function [kvecs,kvals] = kPolyEig(E,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,b
     kvals = kvals(ind);
     kvecs = kvecs(:,ind);
     kvecs = kvecs./norm(kvecs,'Fro','cols'); % Frobenius norm summed over columns
+    
+    ind 
+    kvals 
+    kvecs
 
 end % function Hamiltonian
 
 %%%%% ==================================================================================
 %%%%% Parameters 
 omega = 0.2978
-domega = 0.0*omega 
+domega = 0.015*omega 
 eta = -0.003 
 v = 0.317 
 U = -0.01537 
@@ -202,7 +206,7 @@ k_array = linspace(-Kmax,Kmax,Nk);
 
 %%% The array of synthetic momenta 
 Nq = 101 
-Qmax = 0.3
+Qmax = 0.4
 q_array = linspace(-Qmax,Qmax,Nq);
 
 %%% Criterion for 0 
@@ -284,7 +288,7 @@ for iq = 1:Nq
         E = E_array(iE);
 
         % The matrix of eigenstates 
-        WW = zeros(8);
+        WW = zeros(8,16);
 
         % Left-hand Hamiltonian 
         printf("Left-hand Hamiltonian \n");
@@ -295,19 +299,27 @@ for iq = 1:Nq
         [WR,kR] = kPolyEig(E,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,beta,dist,d0);
 
         %%% Combine WL and WR to the matrix of eigenstates 
-        WW(:,1:4) = WL(:,5:8);
-        WW(:,5:8) = -WR(:,1:4);
+        WW(:,1:8) = WL(:,9:16);
+        WW(:,9:16) = -WR(:,1:8);
 
-        %%% The determinant of WW 
-        S = abs(det(WW))
+        %WW 
 
-        if (S < epsilon) 
+        %%% The rank of WW 
+        r = rank(WW,epsilon)
+
+        %if (S < epsilon) 
+        %    edge_state = [edge_state;[q,E]];
+        %end % IF 
+
+        if (r < 8) 
             edge_state = [edge_state;[q,E]];
         end % IF 
 
     end % iE-loop 
 
 end % iq-loop 
+
+edge_state
 
 %%%%% ===================================================================================
 %%%%% Plot the figure 
