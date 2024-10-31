@@ -72,22 +72,22 @@ Delta = 0.2*U
 
 %%%%% Array of k 
 Kmax = 0.05
-Nk = 201 
+Nk = 101 
 k_array = linspace(-Kmax,Kmax,Nk);
 
 %%%%% Array of q 
 Qmax = 1.0
-Nq = 201 
+Nq = 101 
 q_array = linspace(-Qmax,Qmax,Nq);
 
 %%% The gap we calculate the edge states 
-gap = 3
+gap = 1
 
 %%% Criterion for 0 
 epsilon = 1e-4
 
 %%% Number of E values to scan 
-NE = 501 
+NE = 101 
 
 %%% Small increment in band edge 
 epsilonE = 1e-4 
