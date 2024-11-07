@@ -218,7 +218,7 @@ function [kvecs,kvals] = kPolyEig(E,q,omega1,eta1,v1,W1,U1,alpha1,omega2,eta2,v2
         end % IF 
     end % j-loop 
 
-    %%% Rearrange kvecs and kvals in increasing order of argument 
+    %%% Rearrange kvecs and kvals in increasing order of argument
     [arg_list,ind] = sort(arg_array);
     kvals = kvals(ind);
     kvecs = kvecs(:,ind);

@@ -214,13 +214,13 @@ end % function CoefficientMatrix
 %%%%% Parameters 
 omega = 0.2978
 domega = 0.015*omega 
-eta = -0.003 
+eta = 0.003 
 v = 0.317 
 U = -0.01537 
 dU = 0.1*U 
 W = 0.001466 
 dW = -0.1*W 
-alpha = 0.05 
+alpha = -0.05 
 
 v1 = v 
 v2 = v 

@@ -84,10 +84,10 @@ q_array = linspace(-Qmax,Qmax,Nq);
 gap = 1
 
 %%% Criterion for 0 
-epsilon = 1e-4
+epsilon = 1e-3
 
 %%% Number of E values to scan 
-NE = 101 
+NE = 501 
 
 %%% Small increment in band edge 
 epsilonE = 1e-4 
