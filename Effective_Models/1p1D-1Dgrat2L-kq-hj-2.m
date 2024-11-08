@@ -169,7 +169,7 @@ for iq = 1:Nq
     E_array = linspace(bulk2(iq)-epsilonE,bulk1(iq)+epsilonE,NE);
 
     %%% Array of determinants 
-    S = zeros(NE,1);
+    %S = zeros(NE,1);
 
     for iE = 1:NE 
         %count 
@@ -194,18 +194,24 @@ for iq = 1:Nq
         %WW = cat(2,WR(:,1:2),-WL(:,3:4))
 
         % The determinant 
-        S(iE) = abs(det(WW));
+        %S(iE) = abs(det(WW));
+
+        S = abs(det(WW));
+
+        if (S < epsilon)
+            Edge_state = [Edge_state;[q,E]];
+        end % IF 
 
         count = count + 1;
 
     end % iE-loop 
 
     %%% Scan E_array again 
-    for iE = 1:NE 
-        if (S(iE)<epsilon)
-            Edge_state = [Edge_state;[q,E_array(iE)]]; 
-        end % IF 
-    end % iE-loop 
+    %for iE = 1:NE 
+    %    if (S(iE)<epsilon)
+    %        Edge_state = [Edge_state;[q,E_array(iE)]]; 
+    %    end % IF 
+    %end % iE-loop 
 
 end % iq-loop 
 

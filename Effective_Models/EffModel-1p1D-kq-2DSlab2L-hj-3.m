@@ -179,13 +179,13 @@ end % function kPolyEig
 %%%%% ==================================================================================
 %%%%% FUNCTION: Derivative of electric field 
 function DE = FieldDerivative(k)
-    DE = diag([sqrt(2)+2*k, ... 
-               2*k, ... 
-               2*k, ... 
-               -sqrt(2)+2*k, ... 
-               -sqrt(2)-2*k, ... 
-               2*k, ... 
-               2*k, ... 
+    DE = diag([sqrt(2)+2*k; ... 
+               2*k; ... 
+               2*k; ... 
+               -sqrt(2)+2*k; ... 
+               -sqrt(2)-2*k; ... 
+               2*k; ... 
+               2*k; ... 
                sqrt(2)-2*k]);
 
     %DE = diag([k,k,k,k,-k,k,k,-k]);
@@ -206,7 +206,7 @@ function WW = CoefficientMatrix(WL,kL,WR,kR)
 
     for j = 1:8 
         WW(9:16,j+8) = -FieldDerivative(kR(j))*WR(:,j);
-    end % j-loop 
+    end % j-loop
 
 end % function CoefficientMatrix  
 
@@ -214,13 +214,13 @@ end % function CoefficientMatrix
 %%%%% Parameters 
 omega = 0.2978
 domega = 0.015*omega 
-eta = 0.003 
+eta = 0.0
 v = 0.317 
 U = -0.01537 
 dU = 0.1*U 
 W = 0.001466 
 dW = -0.1*W 
-alpha = -0.05 
+alpha = 0.0 
 
 v1 = v 
 v2 = v 
@@ -239,18 +239,18 @@ Kmax = 0.05
 k_array = linspace(-Kmax,Kmax,Nk);
 
 %%% The array of synthetic momenta 
-Nq = 201 
-Qmax = 0.5
+Nq = 301 
+Qmax = 0.3
 q_array = linspace(-Qmax,Qmax,Nq);
 
 %%% Criterion for 0 
-epsilon = 1e-3; 
+epsilon = 5e-6; 
 
 %%% Number of E values to scan 
 NE = 501 
 
 %%% Small increment in band edge 
-epsilonE = 1e-4
+epsilonE = 1e-5
 
 %%% Initialize the edge states to be empty 
 edge_state = [];
