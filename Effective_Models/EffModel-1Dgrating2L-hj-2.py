@@ -59,14 +59,14 @@ gap = 0
 epsilon = 1e-3 
 
 ### Increment of band edge 
-epsilonE = 1e-4 
+epsilonE = 1e-4
 
 ### Array of synthetic momenta 
-Nq = 101 
+Nq = 501 
 q_array = np.linspace(0.45,0.55,Nq)
 
 ### Array of genuine momenta 
-Nk = 251 
+Nk = 101 
 k_array = np.linspace(-0.12,0.12,Nk)
 
 ### Number of energy values 
@@ -123,6 +123,8 @@ for iq in range(Nq):
         if (S[iE]<epsilon):
             EdgeStates.append(E_array[iE])
             Qedge.append(q)
+
+print(EdgeStates)
 
 ##### =================================================================================
 ##### Plot the figure 

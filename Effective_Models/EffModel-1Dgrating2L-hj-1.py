@@ -94,7 +94,8 @@ bulk1 = np.zeros(Nq)
 bulk2 = np.zeros(Nq)
 
 ### List of edge states
-edge_state = []
+EdgeStates = []
+Qedge = []
 
 ##### ===========================================================================
 for iq in range(Nq):
@@ -159,6 +160,17 @@ for iq in range(Nq):
     ### Edgestate 
     for iE in range(NE):
         if (S[iE] < epsilon):
-            edge_state.append([q,E_array[iE]])
+            Qedge.append(q)
+            EdgeStates.append(E_array[iE])
 
-print(edge_state)
+print(EdgeStates)
+
+##### =================================================================================
+##### Plot the figure 
+fig,ax = plt.subplots(figsize=(9,12))
+ax.plot(q_array,bulk1,color='darkgrey',linewidth=4)
+ax.plot(q_array,bulk2,color='darkgrey',linewidth=4)
+ax.plot(Qedge,EdgeStates,color='orange',linewidth=4)
+ax.set_xlabel(r'q',fontsize=32)
+ax.set_ylabel(r'$\omega (2\pi c /\lambda)$',fontsize=32)
+plt.show()

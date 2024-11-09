@@ -79,11 +79,11 @@ gap = 0
 epsilon = 1e-3 
 
 ### Increment of band edge 
-epsilonE = 1e-4 
+epsilonE = 1e-5 
 
 ### Array of synthetic momenta 
-Nq = 101 
-q_array = np.linspace(0.45,0.55,Nq)
+Nq = 1001 
+q_array = np.linspace(0.0,1.0,Nq)
 
 ### Array of genuine momenta 
 Nk = 101 
