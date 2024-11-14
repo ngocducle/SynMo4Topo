@@ -36,21 +36,27 @@ def keig(q,E,omega1,v1,U1,omega2,v2,U2,V):
 
     kvals,kvecs = sla.eig(H0,H1)
 
-    #print('kvals = ')
-    #print(kvals)
+    print('kvals = ')
+    print(kvals)
     #print('kvecs = ')
     #print(kvecs)
 
     args = np.angle(kvals*exp(1e-9*1j))
+    #args = np.angle(kvals)
+    print('args = ')
+    print(args)
+
     args[args<0] += 2*np.pi 
+    print('args = ')
+    print(args)
 
     GH = kvecs[:,np.argsort(args)]
 
-    #print('argsort = ')
-    #print(np.argsort(args))
+    print('ind = ')
+    print(np.argsort(args)+1)
 
-    #print('arg_list = ')
-    #print(args[np.argsort(args)])
+    print('arg_list = ')
+    print(args[np.argsort(args)])
 
     #print('kvecs = ')
     #print(GH/np.linalg.norm(GH,axis=0))
@@ -58,19 +64,28 @@ def keig(q,E,omega1,v1,U1,omega2,v2,U2,V):
     return GH/np.linalg.norm(GH,axis=0)
 
 ##### Parameters 
-omega0 = 0.27815 
-v0 = 0.37602 
-U0 = 0.02232 
+#omega0 = 0.27815
+#v0 = 0.37602
+#U0 = 0.02232 
 
-omega1 = 0.27999
-v1 = 0.40590 
-U1 = 0.02621 
-V1 = 0.04511 
+#omega1 = 0.27999
+#v1 = 0.40590  
+#U1 = 0.02621 
+#V1 = 0.04511  
 
-omega2 = 0.28010 
-v2 = 0.40454 
-U2 = 0.02142 
-V2 = 0.04728 
+#omega2 = 0.28010
+#v2 = 0.40454  
+#U2 = 0.02142  
+#V2 = 0.04728 
+
+omega0 = 0.25
+v0 = 0.3
+U0 = 0.02+0.2*0.02
+V1 = 0.05 
+
+omega1 = 0.25 
+v1 = 0.3 
+U1 = 0.02-0.2*0.02
 
 ### Gap where we calculate the edge states 
 gap = 0 
@@ -79,18 +94,18 @@ gap = 0
 epsilon = 1e-3 
 
 ### Increment of band edge 
-epsilonE = 1e-5 
+epsilonE = 1e-4
 
 ### Array of synthetic momenta 
-Nq = 1001 
-q_array = np.linspace(0.0,1.0,Nq)
+Nq = 1601
+q_array = np.linspace(-1.0,1.0,Nq)
 
 ### Array of genuine momenta 
 Nk = 101 
 k_array = np.linspace(-0.12,0.12,Nk)
 
 ### Number of energy values 
-NE = 251 
+NE = 501 
 
 EL = np.zeros((Nk,4))
 ER = np.zeros((Nk,4))
@@ -121,7 +136,7 @@ for iq in range(Nq):
         EL[ik,:] = np.linalg.eigvalsh(HL)
 
         ### The right-hand Hamiltonian 
-        HR = Hamiltonian(k,q,omega0,v0,U0,omega2,v2,U2,V2)
+        HR = Hamiltonian(k,q,omega1,v1,U1,omega0,v0,U0,V1)
 
         ### Diagonalize the right-hand Hamiltonian 
         ER[ik,:] = np.linalg.eigvalsh(HR)
@@ -143,10 +158,12 @@ for iq in range(Nq):
         E = E_array[iE]
 
         # The left-hand side 
+        print('Left-hand Hamiltonian')
         Wa = keig(q,E,omega0,v0,U0,omega1,v1,U1,V1)
 
         # The right-hand side 
-        Wb = keig(q,E,omega0,v0,U0,omega2,v2,U2,V2)
+        print('Right-hand Hamiltonian')
+        Wb = keig(q,E,omega1,v1,U1,omega0,v0,U0,V1)
 
         # Concatentate to the determinant 
         WW = np.concatenate((Wb[:,0:2],-Wa[:,2:4]),axis=1)
@@ -156,11 +173,12 @@ for iq in range(Nq):
 
         # The determinant 
         S[iE] = np.abs(np.linalg.det(WW))
-        #print('q = '+str(q))
-        #print('k = '+str(k))
-        #print('E = '+str(E))
+        print('q = '+str(q))
+        print('k = '+str(k))
+        print('E = '+str(E))
         #print('S = '+str(S[iE]))
-        print(S[iE])
+        print('S = '+str(S[iE]))
+        print('# -----------------------------')
 
         count = count + 1
 

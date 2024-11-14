@@ -76,7 +76,7 @@ Nk = 101
 k_array = linspace(-Kmax,Kmax,Nk);
 
 %%%%% Array of q 
-Qmax = 1.0
+Qmax = 0.3
 Nq = 101 
 q_array = linspace(-Qmax,Qmax,Nq);
 

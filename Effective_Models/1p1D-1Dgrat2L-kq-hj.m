@@ -76,9 +76,9 @@ Nk = 101
 k_array = linspace(-Kmax,Kmax,Nk);
 
 %%%%% Array of q 
-Qmax = 1.0
+Qmax = 1.0 
 Nq = 101 
-q_array = linspace(-Qmax,Qmax,Nq);
+q_array = linspace(-Qmax,Qmax,Nq); %+0.5;
 
 %%% The gap we calculate the edge states 
 gap = 1
@@ -87,7 +87,7 @@ gap = 1
 epsilon = 1e-3
 
 %%% Number of E values to scan 
-NE = 501 
+NE = 201 
 
 %%% Small increment in band edge 
 epsilonE = 1e-4 
@@ -161,7 +161,7 @@ for iq = 1:Nq
     %%%%% ===============================================================================
     %%%%% Calculate the edge states at the synthetic momentum q 
     %%% Array of energies 
-    E_array = linspace(bulk2(iq)+epsilonE,bulk1(iq)-epsilon,NE);
+    E_array = linspace(bulk2(iq)-epsilonE,bulk1(iq)+epsilon,NE);
 
     %%% Scan the energy array E_array 
     for iE = 1:NE 
@@ -180,8 +180,11 @@ for iq = 1:Nq
         [WR,kR] = kPolyEig(E,q,omega0,v,U,-Delta,V); 
 
         %%% Combine WL and WR to the matrix of eigenstates 
-        W(:,1:2) = WL(:,3:4);
-        W(:,3:4) = -WR(:,1:2);
+        %W(:,1:2) = WL(:,3:4);
+        %W(:,3:4) = -WR(:,1:2);
+
+        W(:,1:2) = WR(:,1:2);
+        W(:,3:4) = -WL(:,3:4);
 
         %%% The determinant of W 
         S = abs(det(W))
@@ -204,7 +207,7 @@ plot(q_array,bulk1,color='red');
 plot(q_array,bulk2,color='blue');
 scatter(edge_state(:,1),edge_state(:,2));
 hold off; 
-xlim([-Qmax,Qmax]);
+%xlim([-Qmax,Qmax]);
 xlabel('q');
 ylabel('E');
 saveas(1,'transmission.png')
