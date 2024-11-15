@@ -141,6 +141,7 @@ function [kvecs,kvals] = kPolyEig(E,q,omega1,v1,U1,W1,alpha1,eta1,omega2,v2,U2,W
     H0 = Ha - E*eye(8);
 
     [kvecs,kvals] = polyeig(H0,H1,H2);
+    kvals = kvals*exp(i*1e-9);
 
     %%% Move the arguments to the range 0 <= argument <= 2*pi 
     arg_array = zeros(16,1);
@@ -249,18 +250,18 @@ UL2 = U0
 WL2 = W0 
 alphaL2 = alpha 
 
-omegaR1 = omega2  
+omegaR1 = omega0 
 etaR1 = eta
-vR1 = v2  
-UR1 = U2  
-WR1 = W2 
+vR1 = v0  
+UR1 = U0  
+WR1 = W0 
 alphaR1 = alpha  
 
-omegaR2 = omega0  
+omegaR2 = omega1  
 etaR2 = eta
-vR2 = v0  
-UR2 = U0  
-WR2 = W0  
+vR2 = v1  
+UR2 = U1  
+WR2 = W1  
 alphaR2 = alpha  
 
 dL = dist   

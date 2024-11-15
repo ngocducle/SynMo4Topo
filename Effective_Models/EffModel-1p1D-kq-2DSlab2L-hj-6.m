@@ -1,6 +1,12 @@
 %%%%% Solve for the edge states of the effective model 
 %%%%% of 2D slab 2L 
 %%%%% OCTAVE version 
+%%%%%
+%%%%% The inputs of this code are: 
+%%%%% Mean values of U and W 
+%%%%% Difference in U and W: dU and dW 
+%%%%% 
+%%%%% The MAIN program uses U, W, dU, dW to calculate U1,W1,U2,W2 of both sides
 
 %%%%% ================================================================================
 %%%%% FUNCTION: Ha 

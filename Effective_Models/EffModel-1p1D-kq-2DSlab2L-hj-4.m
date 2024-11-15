@@ -1,6 +1,12 @@
 %%%%% Solve for the edge states of the effective model 
 %%%%% of 2D slab 2L 
 %%%%% OCTAVE version 
+%%%%%
+%%%%% The inputs of this code are: 
+%%%%% Mean values of U and W 
+%%%%% Difference in U and W: dU and dW 
+%%%%% 
+%%%%% The functions take U, W, dU and dW as inputs 
 
 %%%%% ===================================================================================
 %%%%% FUNCTION: Ha 
@@ -144,14 +150,22 @@ end % function Hamiltonian
 %%%%% FUNCTION: Solve the polynomial eigenvalue problem 
 function [kvecs,kvals] = kPolyEig(E,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,beta,dist,d0)
 
+    %%% Establish the matrices H0, H1 and H2 
     Ha = H_a(q,omega,domega,eta,U,dU,W,dW,alpha,V,dist,d0);
     H0 = Ha-E*eye(8);
     H1 = H_1(q,v1,v2,beta,dist,d0);
     H2 = H_2(q,v1,v2,beta,dist,d0);
 
-    %H = Ha + H1*k + H2*k*k;
-
+    %%% Polynomial diagonalization 
     [kvecs,kvals] = polyeig(H0,H1,H2);
+
+    %%% We move the real eigenvalues to have infinitely small positive imaginary parts,
+    %%% phase and argument, so we multiply kvals by exp(i*1e-9)
+    %%% In MATLAB/OCTAVE, the POSITIVE REAL eigenvalues are given by 
+    %%% a - {small value}*i and have phase 6.28... 
+    %%% We need to convert their argument/phase to infinitisemal positive value 
+    %%% Otherwise, the program will be wrong 
+    kvals = kvals*exp(i*1e-9);
 
     %%% Move the arguments to the range 0 <= argument <= 2*pi 
     arg_array = zeros(16,1);
@@ -170,9 +184,9 @@ function [kvecs,kvals] = kPolyEig(E,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,b
     kvecs = kvecs(:,ind);
     kvecs = kvecs./norm(kvecs,'Fro','cols'); % Frobenius norm summed over columns
     
-    ind; 
-    kvals;
-    kvecs;
+    %ind; 
+    %kvals;
+    %kvecs;
 
 end % function kPolyEig 
 
@@ -187,8 +201,6 @@ function DE = FieldDerivative(k)
                2*k; ... 
                2*k; ... 
                sqrt(2)-2*k]);
-
-    %DE = diag([k,k,k,k,-k,k,k,-k]);
 end % function FieldDerivative 
 
 %%%%% ==================================================================================
@@ -213,14 +225,14 @@ end % function CoefficientMatrix
 %%%%% ==================================================================================
 %%%%% Parameters 
 omega = 0.2978
-domega = 0.015*omega 
-eta = 0.0
+domega = 0.005*omega 
+eta = 0.0032
 v = 0.317 
 U = -0.01537 
 dU = 0.1*U 
 W = 0.001466 
 dW = -0.1*W 
-alpha = 0.0 
+alpha = -0.05
 
 v1 = v 
 v2 = v 
@@ -234,12 +246,12 @@ beta = -0.3
 gap = 1
 
 %%% The array of genuine momenta 
-Nk = 101 
-Kmax = 0.05
+Nk = 201 
+Kmax = 0.10
 k_array = linspace(-Kmax,Kmax,Nk);
 
 %%% The array of synthetic momenta 
-Nq = 301 
+Nq = 1001 
 Qmax = 0.3
 q_array = linspace(-Qmax,Qmax,Nq);
 
@@ -339,9 +351,9 @@ for iq = 1:Nq
         S(iE) = abs(det(WW)); 
 
         %%% If S<epsilon then add (k,E) to the edge state 
-        %if (S < epsilon) 
-        %    edge_state = [edge_state;[q,E]];
-        %end % IF 
+        if (S(iE) < epsilon) 
+            edge_state = [edge_state;[q,E,S(iE)]];
+        end % IF 
 
     end % iE-loop 
 
@@ -351,13 +363,13 @@ for iq = 1:Nq
     %    edge_state = [edge_state;[q,E_array(imin)]];
     %end % IF 
 
-    for iE = 2:NE-1 
-        if (S(iE)<epsilon)
-            if ((S(iE-1)>S(iE)) & (S(iE+1)>S(iE)))
-                edge_state = [edge_state;[q,E_array(iE)]];
-            end % IF 
-        end % IF 
-    end % iE-loop 
+    %for iE = 2:NE-1 
+    %    if (S(iE)<epsilon)
+    %        if ((S(iE-1)>S(iE)) & (S(iE+1)>S(iE)))
+    %            edge_state = [edge_state;[q,E_array(iE)]];
+    %        end % IF 
+    %    end % IF 
+    %end % iE-loop 
 
 end % iq-loop 
 
@@ -374,4 +386,9 @@ scatter(edge_state(:,1),edge_state(:,2));
 hold off; 
 xlabel('q');
 ylabel('E');
-saveas(1,'transmission2.png')
+saveas(1,'transmission4.png')
+
+%%%%% ====================================================================================
+%%%%% Print the data to file 
+%writematrix('EdgeState.txt',edge_state,'Delimiter','tab'); % MATLAB
+dlmwrite('EdgeState.txt',edge_state,'Delimiter','\t');

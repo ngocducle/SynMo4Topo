@@ -141,6 +141,7 @@ function [kvecs,kvals] = kPolyEig(E,q,omega1,v1,U1,W1,alpha1,eta1,omega2,v2,U2,W
     H0 = Ha - E*eye(8);
 
     [kvecs,kvals] = polyeig(H0,H1,H2);
+    kvals = kvals*exp(i*1e-9);
 
     %%% Move the arguments to the range 0 <= argument <= 2*pi 
     arg_array = zeros(16,1);
@@ -234,16 +235,16 @@ gap = 1
 
 %%% The array of genuine momenta 
 Nk = 101 
-Kmax = 0.05 
+Kmax = 0.10 
 k_array = linspace(-Kmax,Kmax,Nk);
 
 %%% The array of synthetic momenta 
-Nq = 201 
+Nq = 501 
 Qmax = 0.5
 q_array = linspace(-Qmax,Qmax,Nq);
 
 %%% Criterion for 0 
-epsilon = 1e-4
+epsilon = 1e-3
 
 %%% Number of E values to scan 
 NE = 501 
