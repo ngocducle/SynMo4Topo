@@ -225,14 +225,14 @@ end % function CoefficientMatrix
 %%%%% ==================================================================================
 %%%%% Parameters 
 omega = 0.2978
-domega = 0.005*omega 
-eta = 0.0032
+domega = 0.015*omega 
+eta = 0.0
 v = 0.317 
 U = -0.01537 
 dU = 0.1*U 
 W = 0.001466 
 dW = -0.1*W 
-alpha = -0.05
+alpha = 0.0
 
 v1 = v 
 v2 = v 
@@ -251,15 +251,15 @@ Kmax = 0.10
 k_array = linspace(-Kmax,Kmax,Nk);
 
 %%% The array of synthetic momenta 
-Nq = 1001 
-Qmax = 0.3
+Nq = 201 
+Qmax = 0.5
 q_array = linspace(-Qmax,Qmax,Nq);
 
 %%% Criterion for 0 
 epsilon = 1e-3; 
 
 %%% Number of E values to scan 
-NE = 501 
+NE = 51 
 
 %%% Small increment in band edge 
 epsilonE = 1e-5
@@ -375,6 +375,17 @@ end % iq-loop
 
 %edge_state
 
+
+%%%%% ====================================================================================
+%%%%% Print the data to file 
+%writematrix('EdgeState.txt',edge_state,'Delimiter','tab'); % MATLAB
+dlmwrite('EdgeState.txt',edge_state,'Delimiter','\t');
+dlmwrite('q_array.txt',q_array,'Delimiter','\n');
+dlmwrite('allEmin.txt',allEmin,'Delimiter','\n');
+dlmwrite('allEmax.txt',allEmax,'Delimiter','\n');
+dlmwrite('bulk1.txt',bulk1,'Delimiter','\n');
+dlmwrite('bulk2.txt',bulk2,'Delimiter','\n');
+
 %%%%% ===================================================================================
 %%%%% Plot the figure 
 figure(1)
@@ -387,8 +398,3 @@ hold off;
 xlabel('q');
 ylabel('E');
 saveas(1,'transmission4.png')
-
-%%%%% ====================================================================================
-%%%%% Print the data to file 
-%writematrix('EdgeState.txt',edge_state,'Delimiter','tab'); % MATLAB
-dlmwrite('EdgeState.txt',edge_state,'Delimiter','\t');
