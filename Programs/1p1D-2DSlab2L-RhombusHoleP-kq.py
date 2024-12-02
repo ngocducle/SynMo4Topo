@@ -40,7 +40,7 @@ def main():
     #################################################################################
 
     ### Resolution 
-    resolution = mp.Vector3(32,32,32)      # pixels/a 
+    resolution = mp.Vector3(16,16,16)      # pixels/a 
     print('# Resolution = '+str(resolution))
 
     ### Number of bands 
