@@ -224,18 +224,18 @@ end % function CoefficientMatrix
 
 %%%%% ==================================================================================
 %%%%% Parameters 
-omega = 0.2978
-domega = 0.015*omega 
+omega = 0.297935225
+domega = 0.004078865 
 eta = 0.0
 v = 0.317 
-U = -0.01537 
-dU = 0.1*U 
-W = 0.001466 
-dW = -0.1*W 
+U = -0.01530998
+dU = -0.00192594
+W = 0.00142098
+dW = 0.00048395
 alpha = 0.0
 
-v1 = v 
-v2 = v 
+v1 = 0.31480478 
+v2 = 0.30891336
 
 d0 = 0.35 
 dist = 0.1 
@@ -246,20 +246,20 @@ beta = -0.3
 gap = 1
 
 %%% The array of genuine momenta 
-Nk = 201 
+Nk = 101 
 Kmax = 0.10
 k_array = linspace(-Kmax,Kmax,Nk);
 
 %%% The array of synthetic momenta 
-Nq = 201 
-Qmax = 0.5
-q_array = linspace(-Qmax,Qmax,Nq);
+Nq = 1001 
+Qmax = 0.2
+q_array = linspace(0.15,0.20,Nq);
 
 %%% Criterion for 0 
 epsilon = 1e-3; 
 
 %%% Number of E values to scan 
-NE = 51 
+NE = 501 
 
 %%% Small increment in band edge 
 epsilonE = 1e-5
