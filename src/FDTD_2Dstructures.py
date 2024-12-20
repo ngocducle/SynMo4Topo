@@ -14,16 +14,122 @@ import meep as mp
 ##### square unit cell and rhombus hole. The structure is rotated so that 
 ##### the source emits the electromagnetic wave along the diagonal direction 
 ##### that we choose to be the x-direction 
-### 
 ###   
+###   d: diagonal length of the unit cell 
+###   h: thickness of the 2D photonic crystal slab
+###   b: edge length of the undeformed square hole
+###   e: deformation parameter (e = 0 for square hole, e !=0 for rhombus hole)
+###   vertice: the set of vertices of the hole, assuming that its center is place at (0,0,0)
+###   Mater: material of the slab
+###   Envir: the environment
+###   Ncell: the number of cells (Ncell = 0 if there is no structure)
+###   sx: size of the simulation region along the x-direction
+###   structurey: size of the structure along the y-direction
 
-def geo_2DSlab1L_RHole(d,h,b,e,vertice_cell,
-                       Mater,Envir,
-                       Ncell,sx,sy,Lz,
-                       structurex,structurey):
-    
+def geo_2DSlab1L_RHole(d,h,b,e,vertice,Mater,Envir,Ncell,sx,structurey):
     ### Initialize the geometry with environment 
     geometry = []
 
+    geometry.append(mp.Block(
+        center = mp.Vector3(0,0,0),
+        size = mp.Vector3(mp.inf,mp.inf,mp.inf),
+        material = Envir 
+        )
+    )
 
+    ### Add the 2D slab of thickness h 
+    geometry.append(mp.Block(
+        center = mp.Vector3(0,0,0),
+        size = mp.Vector3(1.5*sx,1.5*structurey,h),
+        material = Mater 
+        )
+    )
+
+    ### We divide 2 cases: 
+    # If Ncell is odd: the central hole is located at the point (0,0,0)
+    # If Ncell is even: there is no central block, and the holes start to 
+    # be placed at points (0.5*d,0,0) and (-0.5*d,0,0)
+    if Ncell%2 == 1:
+        # The number of unit cells in each half
+        Nhalf = int((Ncell-1)/2)
+        print('Nhalf = '+str(Nhalf))
+
+        # The cells on the central line 
+        for j in np.arange(-Nhalf,Nhalf+1):
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice,
+                    height = h,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3(j*d,0,0),
+                    material = Envir 
+                )
+            )
+
+        # The cells on the upper line and the lower line
+        for j in np.arange(-Nhalf,Nhalf):
+            # The cells on the upper line 
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice,
+                    height = h,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3((j+0.5)*d,0.5*d,0),
+                    material = Envir 
+                )
+            )
+
+            # The cells on the lower line
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice,
+                    height = h,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3((j+0.5)*d,-0.5*d,0),
+                    material = Envir 
+                )
+            )
+
+
+    else:
+        # The number of unit cells in each half 
+        Nhalf = int(Ncell/2)
+        print('Nhalf = '+str(Nhalf))
+
+        # The cells on the central line 
+        for j in np.arange(-Nhalf,Nhalf):
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice,
+                    height = h,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3((j+0.5)*d,0,0),
+                    material = Envir 
+                )
+            )
+
+        # The cells on the upper line and the lower line
+        for j in np.arange(-Nhalf+1,Nhalf):
+            # The upper line 
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice,
+                    height = h,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3(j*d,0.5*d,0),
+                    material = Envir 
+                )
+            )
+
+            # The lower line 
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice,
+                    height = h,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3(j*d,-0.5*d,0),
+                    material = Envir 
+                )
+            )
+        
     return geometry 
