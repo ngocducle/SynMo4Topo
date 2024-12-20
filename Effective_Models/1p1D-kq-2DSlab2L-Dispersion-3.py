@@ -90,11 +90,11 @@ omega2 = omega*(1 - pomega)
 v1 = v 
 v2 = v 
 
-pU = 0.0 
+pU = -0.05
 U1 = U*(1+pU)
 U2 = U*(1-pU)
 
-pW = 0.0
+pW = 0.05
 W1 = W*(1+pW)
 W2 = W*(1-pW)
 

@@ -1,33 +1,38 @@
 import numpy as np
 import scipy 
-import meep as mp 
+import meep as mp
 import matplotlib.pyplot as plt
 
 import sys 
 sys.path.insert(0,'../src')
-from Heterojunctions import * 
 from Materials import * 
+from FDTD_2Dstructures import *
 
 import os 
 
 ### Resolution 
-resolution = 20
+resolution = 10 
 
-### Absorber layer 
-dpml = 6.0 # PML thickness 
-abs_layers = [mp.Absorber(direction = mp.X,
-                          thickness = dpml),
-              mp.Absorber(direction = mp.Z,
-                          thickness = dpml)    
+### Boundary layers 
+# PML 
+dboundary = 2.0  # PML/Absorber thickness 
+pml_layers = [mp.PML(direction = mp.X,
+                     thickness = dboundary),
+              mp.PML(direction = mp.Z,
+                     thickness = dboundary)
             ]
-#pml_layerZ = [mp.PML(direction = mp.Z,
-#                     thickness = dpml)]
+ 
+abs_layers = [mp.Absorber(direction = mp.X,
+                          thickness = dboundary),
+              mp.Absorber(direction = mp.Z,
+                          thickness = dboundary)
+            ]
 
-### The number of unit cells along the x-direction of each side 
-Ncell = 0
+### The number of unit cells along the line y = 0
+Ncell = 1
 
-### Padding block 
-pad = 2.0 
+### Padding block
+pad = 3.0 
 
 ### Geometrical parameters 
 # The diagonal of one square unit cell
@@ -35,33 +40,33 @@ d = np.sqrt(2.0)
 
 # The layer 1 
 h1 = 0.35   # Thickness of the upper layer 
-b1 = 0.41   # The edge length of the undeformed square hole 
+b1 = 0.41   # The edge length of the undeformed square hole
 e1 = 0.1    # The deformation parameter 
 
 # The layer 2 
-h2 = 0.35   # Thickness of the lower layer
+h2 = 0.35   # Thickness of the lower layer 
 b2 = 0.35   # The edge length of the undeformed square hole 
 e2 = 0.1    # The deformation parameter 
 
 # The interlayer distance 
-dist = 0.1 
+dist = 0.1
 
-# The total size of the bilayer along the x-axis
-structurex = (2*Ncell-0.5)*d 
+# The total size of the structure along the x-axis
+structurex = Ncell*d 
 
-# The total size of the bilayer along the y-axis
+# The total size of the structure along the y-axis
 structurey = d 
 
-# The total thickness of the bilayer 
+# The total thickness of the bilayer (z-direction)
 hbilayer = h1 + dist + h2 
 
-# The height of the unit cell along the z-direction
-Lz = 1.5*hbilayer 
+# The height of the unit cell along the z-direction (not including the PML/Absorber layer)
+Lz = 3*hbilayer 
 
 ### Size of the simulation cell 
-sx = (2*Ncell-0.5)*d + 2*(dpml+pad)
-sy = d   # no PML, no pad 
-sz = Lz + 2*dpml 
+sx = structurex + 2*(pad + dboundary)
+sy = d      # no PML, no pad 
+sz = Lz + 2*dboundary 
 
 ### Define the simulation cell 
 cell = mp.Vector3(sx,sy,sz)
@@ -69,8 +74,6 @@ cell = mp.Vector3(sx,sy,sz)
 ### The materials 
 Mater = Si 
 Envir = PMMA 
-Mater1 = Mater 
-Mater2 = Mater 
 
 ### The vertices of the unit cells and rhombus holes
 vertice_cell = [
@@ -95,57 +98,55 @@ vertice2 = [
 ]
 
 ##### The array of shift 
-### ATTENTION! Here is the fraction of the shift / d
-Nq0 = 1
-q0_array = np.linspace(0.5,0.5,Nq0)
+### ATTENTION! Here is the fraction of the shift/d
+Ndelta = 1 
+delta_array = np.linspace(0.5,0.5,Ndelta)
 
 ### The source 
-fcen = 0.255    # pulse center frequency  
+fcen = 0.255    # pulse center frequency 
 df = 0.015      # pulse width 
-nfreq = 1001    # number of frequencies 
-component = mp.Ey # the component 
+nfreq = 501     # number of frequencies
+component = mp.Ey   # the component 
 sources = [
     mp.Source(
-        mp.GaussianSource(fcen,fwidth=df),
+        mp.GaussianSource(fcen,fwidth=df,is_integrated=True),
         component = component,
-        center = mp.Vector3(-0.5*sx+dpml+0.5*pad,0,0),
-        size = mp.Vector3(0,structurey,Lz)
+        center = mp.Vector3(-0.5*sx+dboundary+0.5*pad,0,0),
+        size = mp.Vector3(0,structurey,hbilayer)
     )
 ]
 
 # The array of frequencies
 freq_array = np.linspace(fcen-df,fcen+df,nfreq)
 
-##### ==================================================================================
+##### ===================================================================================
 ##### Compute the flux spectrum
-freg = mp.FluxRegion(center = mp.Vector3(0.5*sx-dpml-0.5*pad),
-                     size = mp.Vector3(0,structurey,Lz),
+freg = mp.FluxRegion(center = mp.Vector3(0.5*sx-dboundary-0.5*pad,0,0),
+                     size = mp.Vector3(0,structurey,hbilayer),
                      direction = mp.X)
 
-##### ==================================================================================
-### The position of the monitor 
-pt = mp.Vector3(0.5*sx-dpml-0.5*pad,0,0)
+##### ====================================================================================
+##### The position of the monitor
+pt = mp.Vector3(0.5*sx-dboundary-0.5*pad,0,0)
 
-##### ==================================================================================
-#####           We scan over the shift delta 
-##### ==================================================================================
-for idelta in range(Nq0):
-    ### The shift 
-    delta = d*q0_array[idelta]
+##### =====================================================================================
+#####               We scan over the shift 
+##### =====================================================================================
+for idelta in range(Ndelta):
+    ### The shift
+    delta = d*delta_array[idelta]
 
-    ##### ==================================================================================
+    ##### =================================================================================
     ##### GEOMETRY 
-    geometry = [mp.Block(
-        center = mp.Vector3(0,0,0),
-        size = mp.Vector3(mp.inf,mp.inf,mp.inf),
-        material = Envir
-    )]
+    geometry = [
+        mp.Block(
+            center = mp.Vector3(0,0,0),
+            size = mp.Vector3(mp.inf,mp.inf,mp.inf),
+            material = Envir
+        )
+    ]
 
-    geometry = geo_2DSlab2L_RHole_hj_PBCy(d,h1,b1,e1,h2,b2,e2,dist,
-                                          vertice_cell,vertice1,vertice2,
-                                          Mater1,Mater2,Envir,
-                                          Ncell,sx,sy,
-                                          structurex,structurey,hbilayer,delta)
+
 
     ##### ==================================================================================
     ##### Define the simulation 
@@ -154,37 +155,41 @@ for idelta in range(Nq0):
         boundary_layers = abs_layers,
         geometry = geometry,
         sources = sources,
-        resolution =resolution 
+        resolution = resolution
     )
 
     ##### ==================================================================================
-    ##### Transmitted flux 
+    ##### Transmitted flux
     trans = sim.add_flux(fcen,df,nfreq,freg)
 
     ##### ==================================================================================
     ##### Run the simulation 
-    sim.run(until_after_sources = mp.stop_when_fields_decayed(1000,component,pt,1e-3))
-    #sim.run(until=50)
+    sim.run(until_after_sources = mp.stop_when_fields_decayed(
+        dt = 100,
+        c = component,
+        pt = pt,
+        decay_by = 1e-3
+    ))
 
-    ##### ==================================================================================
-    ### Get the dielectric function into the array 
+    ##### ===================================================================================
+    ### Get the dielectric function into array 
     eps_data = sim.get_array(center = mp.Vector3(0,0,0),
                              size = cell,
                              component = mp.Dielectric)
-
+    
     print('sx = '+str(sx))
     print('sy = '+str(sy))
     print('sx = '+str(sz))
     print('Shape of eps_data: '+str(np.shape(eps_data)))
 
-    ##### Plot the dielectric function 
+     ##### Plot the dielectric function 
     shape = np.shape(eps_data)
     Nx = shape[0]
     Ny = shape[1]
     Nz = shape[2]
 
     ##### The name of the files
-    namesave = 'q0_{0:.4f}'.format(q0_array[idelta])
+    namesave = 'delta_{0:.4f}'.format(delta_array[idelta])
 
     os.system('mkdir '+namesave)
 
