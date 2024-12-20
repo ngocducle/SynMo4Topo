@@ -103,6 +103,9 @@ freg = mp.FluxRegion(center = mp.Vector3(0.5*sx-dboundary-0.5*pad,0,0),
 ##### The position of the monitor
 pt = mp.Vector3(0.5*sx-dboundary-0.5*pad,0,0)
 
+##### The plane on which we output the field
+vol = mp.Volume(mp.Vector3(0,0,0), size=mp.Vector3(sx,sy,0)) 
+
 ##### =================================================================================
 ##### GEOMETRY 
 geometry = geo_2DSlab1L_RHole(d,h,b,e,vertice,Mater,Envir,Ncell,sx,structurey)
@@ -122,14 +125,20 @@ sim = mp.Simulation(
 trans = sim.add_flux(fcen,df,nfreq,freg)
 
 ##### ==================================================================================
-##### Run the simulation 
-sim.run(until_after_sources = mp.stop_when_fields_decayed(
-        dt = 100,
+##### Run the simulation
+sim.run(
+    # Finish the simulation when the field at the point pt decays,
+    # check the maximum of the field every dt
+    until_after_sources = mp.stop_when_fields_decayed(
+        dt = 1000,
         c = component,
         pt = pt,
-        decay_by = 1e-3
+        decay_by = 1e-4
     )
 )
+
+### Output the Ey-field after the simulation
+#sim.run(mp.at_every(1/fcen/20, mp.output_hfield_z), until=1/fcen)
 
 ##### ===================================================================================
 ### Get the dielectric function into array 
