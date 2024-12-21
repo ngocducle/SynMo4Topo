@@ -26,7 +26,7 @@ import meep as mp
 ###   sx: size of the simulation region along the x-direction
 ###   structurey: size of the structure along the y-direction
 
-def geo_2DSlab1L_RHole(d,h,b,e,vertice,Mater,Envir,Ncell,sx,structurey):
+def geo_2DSlab1L_RHoleP(d,h,b,e,vertice,Mater,Envir,Ncell,sx,structurey):
     ### Initialize the geometry with environment 
     geometry = []
 
@@ -132,4 +132,118 @@ def geo_2DSlab1L_RHole(d,h,b,e,vertice,Mater,Envir,Ncell,sx,structurey):
                 )
             )
         
-    return geometry 
+    return geometry
+
+##### ===================================================================================
+##### FUNCTION: define the geometry of the heterojunction between two
+##### 2D photonic crystal slab monolayers with 
+##### square unit cell and rhombus hole. The structure is rotated so that 
+##### the source emits the electromagnetic wave along the diagonal direction 
+##### that we choose to be the x-direction 
+##### ATTENTION! The two photonic crystal slabs are made of the SAME material
+###   
+###   d: diagonal length of the unit cell 
+###   h: thickness of the 2D photonic crystal slab
+###   b: edge length of the undeformed square hole
+###   e: deformation parameter (e = 0 for square hole, e !=0 for rhombus hole)
+###   vertice: the set of vertices of the hole, assuming that its center is place at (0,0,0)
+###   Mater: material of the slab
+###   Envir: the environment
+###   Ncell: the number of cells (Ncell = 0 if there is no structure)
+###   sx: size of the simulation region along the x-direction
+###   structurey: size of the structure along the y-direction
+
+def geo_2DSlab1L_RholeP_hj_sameMater(d,h,
+                                     vertice1,vertice2,
+                                     Mater,Envir,Ncell,sx,structurey):
+    ### Initialize the geometry with environment 
+    geometry = []
+
+    geometry.append(
+        mp.Block(
+            center = mp.Vector3(0,0,0),
+            size = mp.Vector3(mp.inf,mp.inf,mp.inf),
+            material = Envir 
+        )
+    )
+
+    ### Add the 2D slab of thickness h 
+    geometry.append(
+        mp.Block(
+            center = mp.Vector3(0,0,0),
+            size = mp.Vector3(1.5*sx,1.5*structurey,h),
+            material = Mater
+        )
+    )
+
+    ### The right-hand side slab
+    for j in np.arange(0,Ncell):
+        # Central line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(0.25*d+j*d,0,0),
+                material = Envir
+            )
+        )
+
+        # Upper line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(0.75*d+j*d,0.5*d,0),
+                material = Envir
+            )
+        )
+
+        # Lower line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(0.75*d+j*d,-0.5*d,0),
+                material = Envir
+            )
+        )
+
+    ### The left-hand side slab
+    for j in np.arange(0,Ncell):
+        # The central line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-0.75*d-j*d,0,0),
+                material = Envir
+            )
+        )
+
+        # The upper line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-0.25*d-j*d,0.5*d,0),
+                material = Envir
+            )
+        )
+
+        # The lower line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-0.25*d-j*d,-0.5*d,0),
+                material = Envir
+            )
+        )
+
+    return geometry
