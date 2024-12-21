@@ -83,7 +83,7 @@ nfreq = 501     # number of frequencies
 component = mp.Ey   # the component 
 sources = [
     mp.Source(
-        mp.GaussianSource(fcen,fwidth=df,is_integrated=True),
+        mp.ContinuousSource(frequency=fcen,is_integrated=True),
         component = component,
         center = mp.Vector3(-0.5*sx+dboundary+0.5*pad,0,0),
         size = mp.Vector3(0,structurey,h)
@@ -102,9 +102,6 @@ freg = mp.FluxRegion(center = mp.Vector3(0.5*sx-dboundary-0.5*pad,0,0),
 ##### ====================================================================================
 ##### The position of the monitor
 pt = mp.Vector3(0.5*sx-dboundary-0.5*pad,0,0)
-
-##### The plane on which we output the field
-vol = mp.Volume(mp.Vector3(0,0,0), size=mp.Vector3(sx,sy,0)) 
 
 ##### =================================================================================
 ##### GEOMETRY 
@@ -128,78 +125,6 @@ trans = sim.add_flux(fcen,df,nfreq,freg)
 
 ##### ==================================================================================
 ##### Run the simulation
-sim.run(
-    # Finish the simulation when the field at the point pt decays,
-    # check the maximum of the field every dt
-    until_after_sources = mp.stop_when_fields_decayed(
-        dt = 1000,
-        c = component,
-        pt = pt,
-        decay_by = 1e-4
-    )
-)
-
-### Output the Ey-field after the simulation
-#sim.run(mp.at_every(1/fcen/20, mp.output_hfield_z), until=1/fcen)
-
-##### ===================================================================================
-### Get the dielectric function into array 
-eps_data = sim.get_array(center = mp.Vector3(0,0,0),
-                         size = cell,
-                         component = mp.Dielectric)
-    
-print('sx = '+str(sx))
-print('sy = '+str(sy))
-print('sx = '+str(sz))
-print('Shape of eps_data: '+str(np.shape(eps_data)))
-
-##### Plot the dielectric function 
-shape = np.shape(eps_data)
-Nx = shape[0]
-Ny = shape[1]
-Nz = shape[2]
-
-##### The name of the files
-namesave = '2DSlab1L_'
-
-os.system('mkdir '+namesave)
-
-for i in range(Nx):
-    plt.figure()
-    plt.imshow(eps_data[i,:,:].transpose(),interpolation='spline36',cmap='coolwarm')
-    plt.xlabel('y')
-    plt.ylabel('z')
-    plt.savefig('x-'+str(i)+'.png')
-    plt.close()
-
-for j in range(Ny):
-    plt.figure()
-    plt.imshow(eps_data[:,j,:].transpose(),interpolation='spline36',cmap='coolwarm')
-    plt.xlabel('x')
-    plt.ylabel('z')
-    plt.savefig('y-'+str(j)+'.png')
-    plt.close()
-
-for k in range(Nz):
-    plt.figure()
-    plt.imshow(eps_data[:,:,k].transpose(),interpolation='spline36',cmap='coolwarm')
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.savefig('z-'+str(k)+'.png')
-    plt.close()
-
-os.system('mv *.png '+namesave)
-
-##### ===============================================================================
-##### Get the flux
-trans_flux = np.array(mp.get_fluxes(trans))
-
-datasave = np.column_stack((freq_array,trans_flux))
-
-print(np.shape(trans_flux))
-
-##### ===============================================================================
-##### Save the transmitted flux to file
-filename = namesave + '.txt'
-with open(filename,'w') as file:
-    np.savetxt(file,datasave,'%.8f')
+sim.run(mp.at_beginning(mp.output_epsilon),
+        mp.to_appended("ey", mp.at_every(0.5, mp.output_efield_y)),
+        until=200)
