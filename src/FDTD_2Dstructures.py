@@ -337,6 +337,42 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
         Nhalf = int(Ncell/2)
         print('Nhalf = '+str(Nhalf))
 
+        # The cells on the central line 
+        for j in np.arange(-Nhalf,Nhalf):
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice1,
+                    height = h1,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3((j+0.5)*d+0.5*delta,0,0.5*(hbilayer-h1)),
+                    material = Envir 
+                )
+            )
+
+        # The cells on the upper line and the lower line
+        for j in np.arange(-Nhalf+1,Nhalf):
+            # The upper line 
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice1,
+                    height = h1,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3(j*d+0.5*delta,0.5*d,0.5*(hbilayer-h1)),
+                    material = Envir 
+                )
+            )
+
+            # The lower line 
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice1,
+                    height = h1,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3(j*d+0.5*delta,-0.5*d,0.5*(hbilayer-h1)),
+                    material = Envir 
+                )
+            )
+
     ##### LAYER 2:
     ### We divide 2 cases: 
     # If Ncell is odd: the central hole is located at the point (-0.5*delta,0,-0.5*(hbilayer-h2))
@@ -388,5 +424,40 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
         Nhalf = int(Ncell/2)
         print('Nhalf = '+str(Nhalf))
 
+        # The cells on the central line 
+        for j in np.arange(-Nhalf,Nhalf):
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice2,
+                    height = h2,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3((j+0.5)*d-0.5*delta,0,-0.5*(hbilayer-h2)),
+                    material = Envir 
+                )
+            )
+
+        # The cells on the upper line and the lower line
+        for j in np.arange(-Nhalf+1,Nhalf):
+            # The upper line 
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice2,
+                    height = h2,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3(j*d-0.5*delta,0.5*d,-0.5*(hbilayer-h2)),
+                    material = Envir 
+                )
+            )
+
+            # The lower line 
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice2,
+                    height = h2,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3(j*d-0.5*delta,-0.5*d,-0.5*(hbilayer-h2)),
+                    material = Envir 
+                )
+            )
 
     return geometry 

@@ -11,7 +11,7 @@ from FDTD_2Dstructures import geo_2DSlab2L_RHoleP
 import os 
 
 ### Resolution 
-resolution = 20 
+resolution = 16
 
 ### Boundary layers 
 # PML 
@@ -29,7 +29,7 @@ abs_layers = [mp.Absorber(direction = mp.X,
             ]
 
 ### The number of unit cells along the line y = 0
-Ncell = 7
+Ncell = 5
 
 ### Padding block
 pad = 3.0 
