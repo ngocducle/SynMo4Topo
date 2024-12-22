@@ -280,7 +280,7 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
         )
     )
 
-    ### Add the 2D slab of thickness h
+    ### Add the 2D slabs of thickness h1 and h2 
     geometry.append(
         mp.Block(
             center = mp.Vector3(0,0,0.5*(hbilayer-h1)),
@@ -470,5 +470,199 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                     material = Envir 
                 )
             )
+
+    return geometry
+
+ ##### =======================================================================
+##### FUNCTION: define the geometry of 2D photonic crystal slab bilayer 
+##### square unit cell and rhombus hole. The structure is rotated so that
+##### the source emits the electromagnetic wave along the diagonal direction
+##### that we choose to be the x-direction
+###      
+###     d: diagonal length of the unit cell
+###     h1: thickness of layer 1
+###     h2: thickness of layer 2 
+###     hbilayer = h1 + dist + h2: total thickness of bilayer
+###     delta: shift 
+###     vertice1: set of vertices of layer 1 
+###     vertice2: set of vertices of layer 2 
+###     Mater: material of the bilayer 
+###     Envir: environment 
+###     Ncell: number of unit cells along the x-direction (diagonal)
+###     sx: cell structure along the x-direction
+###     sy: cell structure along the y-direction
+
+def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
+                                     vertice1,vertice2,
+                                     Mater,Envir,Ncell,sx,sy):
+    ### Initialize the geometry with environment 
+    geometry = []
+
+    geometry.append(
+        mp.Block(
+            center = mp.Vector3(0,0,0),
+            size = mp.Vector3(mp.inf,mp.inf,mp.inf),
+            material = Envir 
+        )
+    )
+
+    ### Add the 2D slabs of thickness h 
+    geometry.append(
+        mp.Block(
+            center = mp.Vector3(0,0,0.5*(hbilayer-h)),
+            size = mp.Vector3(1.5*sx,1.5*sy,h),
+            material = Mater 
+        )
+    )
+
+    geometry.append(
+        mp.Block(
+            center = mp.Vector3(0,0,-0.5*(hbilayer-h)),
+            size = mp.Vector3(1.5*sx,1.5*sy,h),
+            material = Mater 
+        )
+    )
+
+    ##### LAYER 1:
+    ### The right-hand side slab
+    for j in np.arange(0,Ncell):
+        # Central line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(0.25*d+j*d+0.5*delta,0,0.5*(hbilayer-h)),
+                material = Envir
+            )
+        )
+
+        # Upper line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(0.75*d+j*d+0.5*delta,0.5*d,0.5*(hbilayer-h)),
+                material = Envir
+            )
+        )
+
+        # Lower line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(0.75*d+j*d+0.5*delta,-0.5*d,0.5*(hbilayer-h)),
+                material = Envir
+            )
+        )
+
+    ### The left-hand side slab
+    for j in np.arange(0,Ncell):
+        # The central line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-0.75*d-j*d+0.5*delta,0,0.5*(hbilayer-h)),
+                material = Envir
+            )
+        )
+
+        # The upper line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-0.25*d-j*d+0.5*delta,0.5*d,0.5*(hbilayer-h)),
+                material = Envir
+            )
+        )
+
+        # The lower line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-0.25*d-j*d+0.5*delta,-0.5*d,0.5*(hbilayer-h)),
+                material = Envir
+            )
+        )
+
+    ##### LAYER 2:
+    ### The right-hand side slab
+    for j in np.arange(0,Ncell):
+        # Central line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(0.25*d+j*d-0.5*delta,0,-0.5*(hbilayer-h)),
+                material = Envir
+            )
+        )
+
+         # Upper line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(0.75*d+j*d-0.5*delta,0.5*d,-0.5*(hbilayer-h)),
+                material = Envir
+            )
+        )
+
+        # Lower line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice1,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(0.75*d+j*d-0.5*delta,-0.5*d,-0.5*(hbilayer-h)),
+                material = Envir
+            )
+        )
+
+    ### The left-hand side slab
+    for j in np.arange(0,Ncell):
+        # The central line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-0.75*d-j*d-0.5*delta,0,-0.5*(hbilayer-h)),
+                material = Envir
+            )
+        )
+
+        # The upper line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-0.25*d-j*d-0.5*delta,0.5*d,-0.5*(hbilayer-h)),
+                material = Envir
+            )
+        )
+
+        # The lower line 
+        geometry.append(
+            mp.Prism(
+                vertices = vertice2,
+                height = h,
+                axis = mp.Vector3(0,0,1),
+                center = mp.Vector3(-0.25*d-j*d-0.5*delta,-0.5*d,-0.5*(hbilayer-h)),
+                material = Envir
+            )
+        )
 
     return geometry 
