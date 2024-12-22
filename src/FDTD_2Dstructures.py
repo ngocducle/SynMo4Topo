@@ -255,6 +255,17 @@ def geo_2DSlab1L_RholeP_hj_sameMater(d,h,
 ##### that we choose to be the x-direction
 ###      
 ###     d: diagonal length of the unit cell
+###     h1: thickness of layer 1
+###     h2: thickness of layer 2 
+###     hbilayer = h1 + dist + h2: total thickness of bilayer
+###     delta: shift 
+###     vertice1: set of vertices of layer 1 
+###     vertice2: set of vertices of layer 2 
+###     Mater: material of the bilayer 
+###     Envir: environment 
+###     Ncell: number of unit cells along the x-direction (diagonal)
+###     sx: cell structure along the x-direction
+###     sy: cell structure along the y-direction 
 
 def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                         vertice1,vertice2,
