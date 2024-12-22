@@ -6,16 +6,16 @@ import matplotlib.pyplot as plt
 import sys 
 sys.path.insert(0,'../src')
 from Materials import * 
-from FDTD_2Dstructures import *
+from FDTD_2Dstructures import geo_2DSlab2L_RHoleP
 
 import os 
 
 ### Resolution 
-resolution = 10 
+resolution = 20 
 
 ### Boundary layers 
 # PML 
-dboundary = 2.0  # PML/Absorber thickness 
+dboundary = 3.0  # PML/Absorber thickness 
 pml_layers = [mp.PML(direction = mp.X,
                      thickness = dboundary),
               mp.PML(direction = mp.Z,
@@ -29,22 +29,21 @@ abs_layers = [mp.Absorber(direction = mp.X,
             ]
 
 ### The number of unit cells along the line y = 0
-Ncell = 1
+Ncell = 7
 
 ### Padding block
 pad = 3.0 
 
 ### Geometrical parameters 
-# The diagonal of one square unit cell
-d = np.sqrt(2.0)
+d = np.sqrt(2.0)   # The diagonal of one square unit cell
 
 # The layer 1 
-h1 = 0.35   # Thickness of the upper layer 
+h1 = 0.35   # Thickness of layer 1 
 b1 = 0.41   # The edge length of the undeformed square hole
 e1 = 0.1    # The deformation parameter 
 
 # The layer 2 
-h2 = 0.35   # Thickness of the lower layer 
+h2 = 0.35   # Thickness of layer 2
 b2 = 0.35   # The edge length of the undeformed square hole 
 e2 = 0.1    # The deformation parameter 
 
@@ -138,15 +137,9 @@ for idelta in range(Ndelta):
 
     ##### =================================================================================
     ##### GEOMETRY 
-    geometry = [
-        mp.Block(
-            center = mp.Vector3(0,0,0),
-            size = mp.Vector3(mp.inf,mp.inf,mp.inf),
-            material = Envir
-        )
-    ]
-
-
+    geometry = geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
+                                   vertice1,vertice2,
+                                   Mater,Envir,Ncell,sx,sy)
 
     ##### ==================================================================================
     ##### Define the simulation 
@@ -155,6 +148,8 @@ for idelta in range(Ndelta):
         boundary_layers = abs_layers,
         geometry = geometry,
         sources = sources,
+        k_point = mp.Vector3(0,0,0), # PBC
+	    ensure_periodicity = True,   # PBC
         resolution = resolution
     )
 
@@ -164,12 +159,16 @@ for idelta in range(Ndelta):
 
     ##### ==================================================================================
     ##### Run the simulation 
-    sim.run(until_after_sources = mp.stop_when_fields_decayed(
-        dt = 100,
-        c = component,
-        pt = pt,
-        decay_by = 1e-3
-    ))
+    sim.run(
+        # Finish the simulation when the field at the point pt decays,
+        # check the maximum of the field every dt
+        until_after_sources = mp.stop_when_fields_decayed(
+            dt = 100,
+            c = component,
+            pt = pt,
+            decay_by = 1e-3
+        )
+    )
 
     ##### ===================================================================================
     ### Get the dielectric function into array 

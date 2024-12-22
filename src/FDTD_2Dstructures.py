@@ -155,7 +155,7 @@ def geo_2DSlab1L_RHoleP(d,h,b,e,vertice,Mater,Envir,Ncell,sx,structurey):
 
 def geo_2DSlab1L_RholeP_hj_sameMater(d,h,
                                      vertice1,vertice2,
-                                     Mater,Envir,Ncell,sx,structurey):
+                                     Mater,Envir,Ncell,sx,sy):
     ### Initialize the geometry with environment 
     geometry = []
 
@@ -171,7 +171,7 @@ def geo_2DSlab1L_RholeP_hj_sameMater(d,h,
     geometry.append(
         mp.Block(
             center = mp.Vector3(0,0,0),
-            size = mp.Vector3(1.5*sx,1.5*structurey,h),
+            size = mp.Vector3(1.5*sx,1.5*sy,h),
             material = Mater
         )
     )
@@ -247,3 +247,146 @@ def geo_2DSlab1L_RholeP_hj_sameMater(d,h,
         )
 
     return geometry
+
+##### =======================================================================
+##### FUNCTION: define the geometry of 2D photonic crystal slab bilayer 
+##### square unit cell and rhombus hole. The structure is rotated so that
+##### the source emits the electromagnetic wave along the diagonal direction
+##### that we choose to be the x-direction
+###      
+###     d: diagonal length of the unit cell
+
+def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
+                        vertice1,vertice2,
+                        Mater,Envir,Ncell,sx,sy):
+    ### Initialize the geometry with environment
+    geometry = []
+
+    geometry.append(mp.Block(
+        center = mp.Vector3(0,0,0),
+        size = mp.Vector3(mp.inf,mp.inf,mp.inf),
+        material = Envir
+        )
+    )
+
+    ### Add the 2D slab of thickness h
+    geometry.append(
+        mp.Block(
+            center = mp.Vector3(0,0,0.5*(hbilayer-h1)),
+            size = mp.Vector3(1.5*sx,1.5*sy,h1),
+            material = Mater 
+        )
+    )
+
+    geometry.append(
+        mp.Block(
+            center = mp.Vector3(0,0,-0.5*(hbilayer-h2)),
+            size = mp.Vector3(1.5*sx,1.5*sy,h2),
+            material = Mater 
+        )
+    )
+
+    ##### LAYER 1:
+    ### We divide 2 cases: 
+    # If Ncell is odd: the central hole is located at the point (0.5*delta,0,0.5*(hbilayer-h1))
+    # If Ncell is even: there is no central block, and the holes start to 
+    # be placed at points (0.5*d+0.5*delta,0,0.5*(hbilayer-h1)) and (-0.5*d+0.5*delta,0,0.5*(hbilayer-h1))
+    if Ncell%2 == 1:
+        # The number of unit cells in each half 
+        Nhalf = int((Ncell-1)/2)
+        print('Nhalf = '+str(Nhalf))
+
+        # The cells on the central line 
+        for j in np.arange(-Nhalf,Nhalf+1):
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice1,
+                    height = h1,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3(j*d+0.5*delta,0,0.5*(hbilayer-h1)),
+                    material = Envir 
+                )
+            )
+
+        # The cells on the upper line and the lower line
+        for j in np.arange(-Nhalf,Nhalf):
+            # The cells on the upper line 
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice1,
+                    height = h1,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3((j+0.5)*d+0.5*delta,0.5*d,0.5*(hbilayer-h1)),
+                    material = Envir 
+                )
+            )
+
+            # The cells on the lower line
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice1,
+                    height = h1,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3((j+0.5)*d+0.5*delta,-0.5*d,0.5*(hbilayer-h1)),
+                    material = Envir 
+                )
+            )
+
+    else:
+        # The number of unit cells in each half
+        Nhalf = int(Ncell/2)
+        print('Nhalf = '+str(Nhalf))
+
+    ##### LAYER 2:
+    ### We divide 2 cases: 
+    # If Ncell is odd: the central hole is located at the point (-0.5*delta,0,-0.5*(hbilayer-h2))
+    # If Ncell is even: there is no central block, and the holes start to 
+    # be placed at points (0.5*d-0.5*delta,0,-0.5*(hbilayer-h2)) and (-0.5*d-0.5*delta,0,-0.5*(hbilayer-h2))
+    if Ncell%2 == 1:
+        # The number of unit cells in each half
+        Nhalf = int((Ncell-1)/2)
+        print('Nhalf = '+str(Nhalf))
+
+        # The cells on the central line 
+        for j in np.arange(-Nhalf,Nhalf+1):
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice2,
+                    height = h2,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3(j*d-0.5*delta,0,-0.5*(hbilayer-h2)),
+                    material = Envir 
+                )
+            )
+
+        # The cells on the upper line and the lower line
+        for j in np.arange(-Nhalf,Nhalf):
+            # The cells on the upper line 
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice2,
+                    height = h2,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3((j+0.5)*d-0.5*delta,0.5*d,-0.5*(hbilayer-h2)),
+                    material = Envir 
+                )
+            )
+
+            # The cells on the lower line
+            geometry.append(
+                mp.Prism(
+                    vertices = vertice2,
+                    height = h2,
+                    axis = mp.Vector3(0,0,1),
+                    center = mp.Vector3((j+0.5)*d-0.5*delta,-0.5*d,-0.5*(hbilayer-h2)),
+                    material = Envir 
+                )
+            )
+
+    else:
+        # The number of unit cells in each half
+        Nhalf = int(Ncell/2)
+        print('Nhalf = '+str(Nhalf))
+
+
+    return geometry 

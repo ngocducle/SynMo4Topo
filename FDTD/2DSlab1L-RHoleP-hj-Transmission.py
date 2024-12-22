@@ -30,7 +30,7 @@ abs_layers = [
 ]
 
 ### The number of unit cells along the line y = 0 for each side
-Ncell = 4
+Ncell = 3
 
 ### Padding block
 pad = 3.0 
@@ -121,7 +121,7 @@ pt = mp.Vector3(0.5*sx-dboundary-0.5*pad,0,0)
 ##### GEOMETRY 
 geometry = geo_2DSlab1L_RholeP_hj_sameMater(d,h,
                                             vertice1,vertice2,
-                                            Mater,Envir,Ncell,sx,structurey)
+                                            Mater,Envir,Ncell,sx,sy)
 
 ##### ==================================================================================
 ##### Define the simulation 
