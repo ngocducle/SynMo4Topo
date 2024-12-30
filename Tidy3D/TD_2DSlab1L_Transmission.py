@@ -29,7 +29,7 @@ t_stop = runtime/freqw
 print(f"Total runtim <= {t_stop*1e12} ps")
 
 # Number of unit cell along the diagonal direction (set to be x)
-Ncell = 1 
+Ncell = 7 
 
 # Materials
 ep_slab = 3.54**2  # Si 
@@ -72,12 +72,12 @@ slab = td.Structure(
 sim_structures = [envir,slab]
 
 ### Define the rhombus hole 
-vertices = np.array([ (b*(1+e)/(1-e)/np.sqrt(2),  0),
+"""vertices = np.array([ (b*(1+e)/(1-e)/np.sqrt(2),  0),
                     (0,  b*(1-e)/(1+e)/np.sqrt(2)),
                     (-b*(1+e)/(1-e)/np.sqrt(2), 0),
-                    (0, -b*(1-e)/(1+e)/np.sqrt(2)) ])
+                    (0, -b*(1-e)/(1+e)/np.sqrt(2)) ])"""
 
-hole = td.Structure(
+"""hole = td.Structure(
         geometry = td.PolySlab(
             axis = 2,
             reference_plane = 'middle',
@@ -86,9 +86,90 @@ hole = td.Structure(
             ),
         medium = mat_envir,
         name = 'hole',
-        )
+        )"""
 
-sim_structures.append(hole)
+#sim_structures.append(hole)
+
+Nhalf = int((Ncell-1)/2)
+print('Nhalf = '+str(Nhalf))
+
+# Central line
+for j in np.arange(-Nhalf,Nhalf+1):
+    holename = 'holec_'+str(j)
+
+    vertices = np.array(
+            [
+                (j*d + b*(1+e)/(1-e)/np.sqrt(2),0),
+                (j*d, b*(1-e)/(1+e)/np.sqrt(2)),
+                (j*d - b*(1+e)/(1-e)/np.sqrt(2),0),
+                (j*d, -b*(1-e)/(1+e)/np.sqrt(2))
+                ]
+            )
+
+    hole = td.Structure(
+                geometry = td.PolySlab(
+                    axis = 2,
+                    reference_plane = 'middle',
+                    slab_bounds = [-0.5*h,0.5*h],
+                    vertices = vertices,
+                    ),
+                medium = mat_envir,
+                name = holename,
+                )
+
+    sim_structures.append(hole)
+
+# Upper line
+for j in np.arange(-Nhalf,Nhalf):
+    holename = 'holeu_'+str(j)
+
+    vertices = np.array(
+            [
+                ( (j+0.5)*d + b*(1+e)/(1-e)/np.sqrt(2),0.5*d),
+                ( (j+0.5)*d, b*(1-e)/(1+e)/np.sqrt(2) +0.5*d),
+                ( (j+0.5)*d - b*(1+e)/(1-e)/np.sqrt(2),0.5*d),
+                ( (j+0.5)*d, -b*(1-e)/(1+e)/np.sqrt(2)+0.5*d)
+                ]
+            )
+
+    hole = td.Structure(
+                geometry = td.PolySlab(
+                    axis = 2,
+                    reference_plane = 'middle',
+                    slab_bounds = [-0.5*h,0.5*h],
+                    vertices = vertices,
+                    ),
+                medium = mat_envir,
+                name = holename,
+                )
+
+    sim_structures.append(hole)
+
+# Lower line 
+for j in np.arange(-Nhalf,Nhalf):
+    holename = 'holel_'+str(j)
+
+    vertices = np.array(
+            [
+                ( (j+0.5)*d + b*(1+e)/(1-e)/np.sqrt(2),-0.5*d),
+                ( (j+0.5)*d, b*(1-e)/(1+e)/np.sqrt(2) -0.5*d),
+                ( (j+0.5)*d - b*(1+e)/(1-e)/np.sqrt(2),-0.5*d),
+                ( (j+0.5)*d, -b*(1-e)/(1+e)/np.sqrt(2)-0.5*d)
+                ]
+            )
+
+    hole = td.Structure(
+                geometry = td.PolySlab(
+                    axis = 2,
+                    reference_plane = 'middle',
+                    slab_bounds = [-0.5*h,0.5*h],
+                    vertices = vertices,
+                    ),
+                medium = mat_envir,
+                name = holename,
+                )
+
+    sim_structures.append(hole)
 
 ### Boundary conditions
 bspec = td.BoundarySpec(
