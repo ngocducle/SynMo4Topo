@@ -2,7 +2,11 @@ import numpy as np
 import tidy3d as td 
 from tidy3d import web
 from tidy3d.constants import C_0
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+
+import sys 
+sys.path.insert(0,'../src')
+from Tidy3D_2Dstructures import td_2DSlab1L_RHoleP
 
 # Geometrical parameters  
 a = 0.78         # Period (micrometer)
@@ -48,7 +52,7 @@ print(f"dl = {dl*1000} nm")
 # Simulation size 
 sim_size = Lx,Ly,Lz = (2*pad+Ncell*d,d,h+2*h*lambda_range[-1])
 
-### The environment
+"""### The environment
 envir = td.Structure(
         geometry = td.Box(
             center = (0,0,0),
@@ -69,7 +73,7 @@ slab = td.Structure(
         )
 
 ### Initially, the simulated structure contains the environment and the slab
-sim_structures = [envir,slab]
+sim_structures = [envir,slab]"""
 
 ### Define the rhombus hole 
 """vertices = np.array([ (b*(1+e)/(1-e)/np.sqrt(2),  0),
@@ -90,7 +94,7 @@ sim_structures = [envir,slab]
 
 #sim_structures.append(hole)
 
-Nhalf = int((Ncell-1)/2)
+"""Nhalf = int((Ncell-1)/2)
 print('Nhalf = '+str(Nhalf))
 
 # Central line
@@ -169,7 +173,9 @@ for j in np.arange(-Nhalf,Nhalf):
                 name = holename,
                 )
 
-    sim_structures.append(hole)
+    sim_structures.append(hole)"""
+
+sim_structures = td_2DSlab1L_RHoleP(d,b,h,e,mat_envir,mat_slab,Ncell)
 
 ### Boundary conditions
 bspec = td.BoundarySpec(
