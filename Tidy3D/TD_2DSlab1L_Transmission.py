@@ -26,14 +26,20 @@ freq0 = np.sum(freq_range)/2
 lambda0 = C_0 / freq0 
 width = 0.3 
 freqw = width*(freq_range[1]-freq_range[0])
+print(f"Central wavelength = {1000*lambda0} nm")
 
 # Runtime 
 runtime = 100.0 # in unit of 1/frequency bandwidth of the source 
 t_stop = runtime/freqw 
 print(f"Total runtim <= {t_stop*1e12} ps")
 
+# Frequencies and wavelengths of monitor
+Nfreq = 1001 
+monitor_freqs = np.linspace(freq_range[0],freq_range[1],Nfreq)
+monitor_lambda = C_0 / monitor_freqs
+
 # Number of unit cell along the diagonal direction (set to be x)
-Ncell = 7 
+Ncell = 6
 
 # Materials
 ep_slab = 3.54**2  # Si 
@@ -42,7 +48,7 @@ ep_envir = 1.46**2 # PMMA/SiO2
 mat_envir = td.Medium(permittivity=ep_envir,name='PMMA')
 
 # Space between PhC slabs and PML
-pad_dimless = 1.0 
+pad_dimless = 1.5 
 pad = pad_dimless * lambda_range[-1]
 
 # Grid size # micrometer 
@@ -50,131 +56,9 @@ dl = lambda_range[0]/30/np.sqrt(ep_slab) # 30 grids per smallest wavelength in m
 print(f"dl = {dl*1000} nm")
 
 # Simulation size 
-sim_size = Lx,Ly,Lz = (2*pad+Ncell*d,d,h+2*h*lambda_range[-1])
+sim_size = Lx,Ly,Lz = (2*pad+Ncell*d,d,h+2*lambda_range[-1])
 
-"""### The environment
-envir = td.Structure(
-        geometry = td.Box(
-            center = (0,0,0),
-            size = (td.inf,td.inf,td.inf),
-            ),
-        medium = mat_envir,
-        name = 'envir',
-        )
-
-### Define the slab
-slab = td.Structure(
-        geometry = td.Box(
-            center = (0,0,0),
-            size = (td.inf,td.inf,h),
-            ),
-        medium = mat_slab,
-        name = 'slab',
-        )
-
-### Initially, the simulated structure contains the environment and the slab
-sim_structures = [envir,slab]"""
-
-### Define the rhombus hole 
-"""vertices = np.array([ (b*(1+e)/(1-e)/np.sqrt(2),  0),
-                    (0,  b*(1-e)/(1+e)/np.sqrt(2)),
-                    (-b*(1+e)/(1-e)/np.sqrt(2), 0),
-                    (0, -b*(1-e)/(1+e)/np.sqrt(2)) ])"""
-
-"""hole = td.Structure(
-        geometry = td.PolySlab(
-            axis = 2,
-            reference_plane = 'middle',
-            slab_bounds = [-0.5*h,0.5*h],
-            vertices = vertices,
-            ),
-        medium = mat_envir,
-        name = 'hole',
-        )"""
-
-#sim_structures.append(hole)
-
-"""Nhalf = int((Ncell-1)/2)
-print('Nhalf = '+str(Nhalf))
-
-# Central line
-for j in np.arange(-Nhalf,Nhalf+1):
-    holename = 'holec_'+str(j)
-
-    vertices = np.array(
-            [
-                (j*d + b*(1+e)/(1-e)/np.sqrt(2),0),
-                (j*d, b*(1-e)/(1+e)/np.sqrt(2)),
-                (j*d - b*(1+e)/(1-e)/np.sqrt(2),0),
-                (j*d, -b*(1-e)/(1+e)/np.sqrt(2))
-                ]
-            )
-
-    hole = td.Structure(
-                geometry = td.PolySlab(
-                    axis = 2,
-                    reference_plane = 'middle',
-                    slab_bounds = [-0.5*h,0.5*h],
-                    vertices = vertices,
-                    ),
-                medium = mat_envir,
-                name = holename,
-                )
-
-    sim_structures.append(hole)
-
-# Upper line
-for j in np.arange(-Nhalf,Nhalf):
-    holename = 'holeu_'+str(j)
-
-    vertices = np.array(
-            [
-                ( (j+0.5)*d + b*(1+e)/(1-e)/np.sqrt(2),0.5*d),
-                ( (j+0.5)*d, b*(1-e)/(1+e)/np.sqrt(2) +0.5*d),
-                ( (j+0.5)*d - b*(1+e)/(1-e)/np.sqrt(2),0.5*d),
-                ( (j+0.5)*d, -b*(1-e)/(1+e)/np.sqrt(2)+0.5*d)
-                ]
-            )
-
-    hole = td.Structure(
-                geometry = td.PolySlab(
-                    axis = 2,
-                    reference_plane = 'middle',
-                    slab_bounds = [-0.5*h,0.5*h],
-                    vertices = vertices,
-                    ),
-                medium = mat_envir,
-                name = holename,
-                )
-
-    sim_structures.append(hole)
-
-# Lower line 
-for j in np.arange(-Nhalf,Nhalf):
-    holename = 'holel_'+str(j)
-
-    vertices = np.array(
-            [
-                ( (j+0.5)*d + b*(1+e)/(1-e)/np.sqrt(2),-0.5*d),
-                ( (j+0.5)*d, b*(1-e)/(1+e)/np.sqrt(2) -0.5*d),
-                ( (j+0.5)*d - b*(1+e)/(1-e)/np.sqrt(2),-0.5*d),
-                ( (j+0.5)*d, -b*(1-e)/(1+e)/np.sqrt(2)-0.5*d)
-                ]
-            )
-
-    hole = td.Structure(
-                geometry = td.PolySlab(
-                    axis = 2,
-                    reference_plane = 'middle',
-                    slab_bounds = [-0.5*h,0.5*h],
-                    vertices = vertices,
-                    ),
-                medium = mat_envir,
-                name = holename,
-                )
-
-    sim_structures.append(hole)"""
-
+# Simulation structure
 sim_structures = td_2DSlab1L_RHoleP(d,b,h,e,mat_envir,mat_slab,Ncell)
 
 ### Boundary conditions
@@ -184,14 +68,45 @@ bspec = td.BoundarySpec(
         z = td.Boundary(minus=td.PML(num_layers=12),plus=td.PML(num_layers=12)),
         )
 
+##### Plane wave source, gaussian pulse, placed just in advance of the slab (toward positive x)
+source = td.PlaneWave(
+        source_time = td.GaussianPulse(
+            freq0 = freq0,
+            fwidth = freqw
+            ),
+        size = (0,td.inf,h),
+        center = (-0.5*Lx+0.5*pad,0,0),
+        direction = '+',
+        angle_theta = 0,
+        pol_angle = 0,
+        name = 'planewave'
+        )
+
+### Flux monitor 
+monitor = td.FluxMonitor(
+        center = (0.5*Lx-0.5*pad,0,0),
+        size = (0,td.inf,h),
+        freqs = monitor_freqs,
+        name = 'flux',
+        )
+
+### Time monitor
+monitor_time = td.FieldTimeMonitor(
+        center = (0.5*Lx-0.5*pad,0,0),
+        size = (0,td.inf,h),
+        interval = 1000,
+        fields = ['Ex','Ey','Ez','Hx','Hy','Hz'],
+        name = 'time',
+        )
+
 ##### Define the simulation
 sim = td.Simulation(
         center = (0,0,0),
         size = sim_size,
         grid_spec = td.GridSpec.uniform(dl=dl),
         structures = sim_structures,
-        sources = [],
-        monitors = [],
+        sources = [source],
+        monitors = [monitor],
         run_time = t_stop,
         shutoff = 1e-7,
         boundary_spec = bspec,
@@ -204,3 +119,25 @@ fig,ax = plt.subplots(1,2,tight_layout=True,figsize=(10,4))
 sim.plot(z=0.0,ax=ax[0])
 sim.plot(x=0.0,ax=ax[1])
 plt.show()
+
+##### Check probe and source
+f,(ax1,ax2) = plt.subplots(1,2,tight_layout=True,figsize=(8,4))
+plot_time = 2e-12
+ax1 = sim.sources[0].source_time.plot(times=np.linspace(0,plot_time,1001),ax=ax1)
+ax1.set_xlim(0,plot_time)
+ax1.legend(('source amplitude',))
+ax2 = sim.sources[0].source_time.plot_spectrum(times=np.linspace(0,sim.run_time,10001),val='abs',ax=ax2)
+fill_max = 2.5e-14
+ymax = 3e-14
+ax2.fill_between(freq_range,[-0e-16,-0e-16],[fill_max,fill_max],alpha=0.4,color='g')
+ax2.legend(('source spectrum','measurement'))
+ax2.set_ylim(-1e-16,ymax)
+plt.show()
+
+##### Simulation without structure
+#sim0 = sim.copy(update={'structures':[]})
+
+##### Running simulation
+#sim_data0 = web.run(sim0,task_name='2DSlab1L_normalization',path=f'data/data0_2DSlab1L_Ncell{Ncell}_pad{pad}.hdf5')
+sim_data = web.run(sim,task_name='2DSlab1L_transmission',path=f'data/data_2DSlab1L_Ncell{Ncell}_pad{pad}.hdf5')
+

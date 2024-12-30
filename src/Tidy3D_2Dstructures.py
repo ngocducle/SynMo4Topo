@@ -15,6 +15,14 @@ from tidy3d.constants import C_0
 ##### square unit cell and rhombus hole. The structure is rotated so that 
 ##### the source emits the electromagnetic wave along the diagonal direction 
 ##### that we choose to be the x-direction 
+###
+###     d: diagonal length of the primitive cell
+###     b: edge length of undeformed square hole
+###     h: thickness of the slab
+###     e: deformation parameter 
+###     mat_envir: the material forming the environment
+###     mat_slab: the material forming the slab
+###     Ncell: the number of unit cells forming the slab
 
 def td_2DSlab1L_RHoleP(d,b,h,e,mat_envir,mat_slab,Ncell):
 
@@ -126,6 +134,83 @@ def td_2DSlab1L_RHoleP(d,b,h,e,mat_envir,mat_slab,Ncell):
     else:
         Nhalf = int(Ncell/2)
         print('Nhalf = '+str(Nhalf))
-    
+
+        # Central line
+        for j in np.arange(-Nhalf,Nhalf):
+            holename = 'holec_'+str(j)
+
+            vertices = np.array(
+                [
+                    ((j+0.5)*d + b*(1+e)/(1-e)/np.sqrt(2),0),
+                    ((j+0.5)*d, b*(1-e)/(1+e)/np.sqrt(2)),
+                    ((j+0.5)*d - b*(1+e)/(1-e)/np.sqrt(2),0),
+                    ((j+0.5)*d, -b*(1-e)/(1+e)/np.sqrt(2))
+                ]
+            )
+
+            hole = td.Structure(
+                geometry = td.PolySlab(
+                    axis = 2,
+                    reference_plane = 'middle',
+                    slab_bounds = [-0.5*h,0.5*h],
+                    vertices = vertices,
+                    ),
+                medium = mat_envir,
+                name = holename,
+                )
+
+            sim_structures.append(hole)
+
+        # Upper line
+        for j in np.arange(-Nhalf,Nhalf):
+            holename = 'holeu_'+str(j)
+
+            vertices = np.array(
+                [
+                    ( j*d + b*(1+e)/(1-e)/np.sqrt(2),0.5*d),
+                    ( j*d, b*(1-e)/(1+e)/np.sqrt(2) +0.5*d),
+                    ( j*d - b*(1+e)/(1-e)/np.sqrt(2),0.5*d),
+                    ( j*d, -b*(1-e)/(1+e)/np.sqrt(2)+0.5*d)
+                ]
+            )
+
+            hole = td.Structure(
+                geometry = td.PolySlab(
+                    axis = 2,
+                    reference_plane = 'middle',
+                    slab_bounds = [-0.5*h,0.5*h],
+                    vertices = vertices,
+                    ),
+                medium = mat_envir,
+                name = holename,
+                )
+
+            sim_structures.append(hole)
+
+        # Lower line
+        for j in np.arange(-Nhalf,Nhalf):
+            holename = 'holel_'+str(j)
+
+            vertices = np.array(
+                [
+                    ( j*d + b*(1+e)/(1-e)/np.sqrt(2),-0.5*d),
+                    ( j*d, b*(1-e)/(1+e)/np.sqrt(2) -0.5*d),
+                    ( j*d - b*(1+e)/(1-e)/np.sqrt(2),-0.5*d),
+                    ( j*d, -b*(1-e)/(1+e)/np.sqrt(2)-0.5*d)
+                ]
+            )
+
+            hole = td.Structure(
+                geometry = td.PolySlab(
+                    axis = 2,
+                    reference_plane = 'middle',
+                    slab_bounds = [-0.5*h,0.5*h],
+                    vertices = vertices,
+                    ),
+                medium = mat_envir,
+                name = holename,
+                )
+
+            sim_structures.append(hole)
 
     return sim_structures
