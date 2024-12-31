@@ -31,7 +31,7 @@ print(f"Central wavelength = {1000*lambda0} nm")
 # Runtime 
 runtime = 100.0 # in unit of 1/frequency bandwidth of the source 
 t_stop = runtime/freqw 
-print(f"Total runtim <= {t_stop*1e12} ps")
+print(f"Total runtime <= {t_stop*1e12} ps")
 
 # Frequencies and wavelengths of monitor
 Nfreq = 1001 
@@ -51,7 +51,7 @@ mat_envir = td.Medium(permittivity=ep_envir,name='PMMA')
 pad_dimless = 1.5 
 pad = pad_dimless * lambda_range[-1]
 
-# Grid size # micrometer 
+# Grid size (micrometer) 
 dl = lambda_range[0]/30/np.sqrt(ep_slab) # 30 grids per smallest wavelength in medium
 print(f"dl = {dl*1000} nm")
 
