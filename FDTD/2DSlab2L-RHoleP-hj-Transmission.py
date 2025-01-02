@@ -28,11 +28,20 @@ abs_layers = [mp.Absorber(direction = mp.X,
                           thickness = dboundary)
             ]
 
+### The source 
+fcen = 0.255    # pulse center frequency 
+df = 0.015      # pulse width 
+nfreq = 501     # number of frequencies
+
+# The array of frequencies and wavelength
+freq_array = np.linspace(fcen-df,fcen+df,nfreq)
+wvl_array = 1/freq_array 
+
 ### The number of unit cells along the line y = 0
-Ncell = 5
+Ncell = 2
 
 ### Padding block
-pad = 3.0 
+pad = 2.0*wvl_array[0] 
 
 ### Geometrical parameters 
 d = np.sqrt(2.0)   # The diagonal of one square unit cell
@@ -47,7 +56,7 @@ b2 = 0.30   # The edge length of the undeformed square hole
 e2 = 0.1    # The deformation parameter 
 
 # The interlayer distance 
-dist = 0.1
+dist = 0.5
 
 # The total size of the structure along the x-axis
 structurex = 2*Ncell*d 
@@ -100,10 +109,7 @@ vertice2 = [
 Ndelta = 1 
 delta_array = np.linspace(0.5,0.5,Ndelta)
 
-### The source 
-fcen = 0.255    # pulse center frequency 
-df = 0.015      # pulse width 
-nfreq = 501     # number of frequencies
+##### The source
 component = mp.Ey   # the component 
 sources = [
     mp.Source(
@@ -113,9 +119,6 @@ sources = [
         size = mp.Vector3(0,structurey,hbilayer)
     )
 ]
-
-# The array of frequencies
-freq_array = np.linspace(fcen-df,fcen+df,nfreq)
 
 ##### ===================================================================================
 ##### Compute the flux spectrum

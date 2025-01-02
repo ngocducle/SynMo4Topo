@@ -13,11 +13,11 @@ a = 1             # Period (micrometer)
 d = a*np.sqrt(2)  # Diagonal length 
 h = 0.35*a        # Slab thickness 
 b1 = 0.35*a       # Edge of the undeformed square hole (left-hand side)
-e1 = 0.0          # deformation parameter (left-hand side)
+e1 = 0.1          # deformation parameter (left-hand side)
 b2 = 0.41*a       # Edge of the undeformed square hole (right-hand side)
-e2 = 0.0          # deformation parameter (right-hand side)
+e2 = 0.1          # deformation parameter (right-hand side)
 dist = 0.1        # Distance between 2 slabs
-delta = 0.5       # Relative displacement (fraction of d)
+delta = 0.54      # Relative displacement (fraction of d)
 
 # Number of unit cells for each side along the diagonal direction (set to be x)
 Ncell = 8
@@ -35,7 +35,7 @@ freqw = width*(freq_range[1]-freq_range[0])
 print(f"Central wavelength = {1000*lambda0} nm")
 
 # Runtime 
-runtime = 50.0 # in unit of 1/frequency bandwidth of the source
+runtime = 100.0 # in unit of 1/frequency bandwidth of the source
 t_stop = runtime / freqw 
 print(f"Total runtime <= {t_stop*1e12} ps")
 
@@ -117,7 +117,7 @@ sim = td.Simulation(
 )
 
 ##### Plot the structure 
-namesave = 'Ncell_{Ncell:d}-'
+namesave = f'Ncell_{Ncell:d}-'
 
 fig,ax = plt.subplots(3,1,tight_layout=True,figsize=(10,6))
 sim.plot(z=0.5*(h+dist),ax=ax[0])
@@ -139,8 +139,8 @@ ax1 = sim.sources[0].source_time.plot(times=np.linspace(0,plot_time,1001),ax=ax1
 ax1.set_xlim(0,plot_time)
 ax1.legend(('source amplitude',))
 ax2 = sim.sources[0].source_time.plot_spectrum(times=np.linspace(0,sim.run_time,10001),val='abs',ax=ax2)
-fill_max = 3e-14
-ymax = 3e-14
+fill_max = 6e-14
+ymax = 6e-14
 ax2.fill_between(freq_range,[-0e-16,-0e-16],[fill_max,fill_max],alpha=0.4,color='g')
 ax2.legend(('source spectrum','measurement'))
 ax2.set_ylim(-1e-16,ymax)
