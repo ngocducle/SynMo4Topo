@@ -14,7 +14,6 @@ import os
 resolution = 10
 
 ### Boundary layers 
-# PML 
 dboundary = 3.0  # PML/Absorber thickness 
 pml_layers = [mp.PML(direction = mp.X,
                      thickness = dboundary),
@@ -26,6 +25,12 @@ abs_layers = [mp.Absorber(direction = mp.X,
                           thickness = dboundary),
               mp.Absorber(direction = mp.Z,
                           thickness = dboundary)
+            ]
+
+mix_layers = [mp.Absorber(direction = mp.X,
+                          thickness = dboundary),
+              mp.PML(direction = mp.Z,
+                    thickness = dboundary)
             ]
 
 ### The source 
