@@ -11,7 +11,7 @@ from FDTD_2Dstructures import geo_2DSlab2L_RHoleP_hj_sameMater
 import os 
 
 ### Resolution 
-resolution = 16
+resolution = 10
 
 ### Boundary layers 
 # PML 
@@ -192,33 +192,34 @@ for idelta in range(Ndelta):
     ##### The name of the files
     namesave = 'delta_{0:.4f}'.format(delta_array[idelta])
 
-    os.system('mkdir '+namesave)
+    if mp.am_master():
+        os.system('mkdir '+namesave)
 
-    for i in range(Nx):
-        plt.figure()
-        plt.imshow(eps_data[i,:,:].transpose(),interpolation='spline36',cmap='coolwarm')
-        plt.xlabel('y')
-        plt.ylabel('z')
-        plt.savefig('x-'+str(i)+'.png')
-        plt.close()
+        for i in range(Nx):
+            plt.figure()
+            plt.imshow(eps_data[i,:,:].transpose(),interpolation='spline36',cmap='coolwarm')
+            plt.xlabel('y')
+            plt.ylabel('z')
+            plt.savefig('x-'+str(i)+'.png')
+            plt.close()
 
-    for j in range(Ny):
-        plt.figure()
-        plt.imshow(eps_data[:,j,:].transpose(),interpolation='spline36',cmap='coolwarm')
-        plt.xlabel('x')
-        plt.ylabel('z')
-        plt.savefig('y-'+str(j)+'.png')
-        plt.close()
+        for j in range(Ny):
+            plt.figure()
+            plt.imshow(eps_data[:,j,:].transpose(),interpolation='spline36',cmap='coolwarm')
+            plt.xlabel('x')
+            plt.ylabel('z')
+            plt.savefig('y-'+str(j)+'.png')
+            plt.close()
 
-    for k in range(Nz):
-        plt.figure()
-        plt.imshow(eps_data[:,:,k].transpose(),interpolation='spline36',cmap='coolwarm')
-        plt.xlabel('x')
-        plt.ylabel('y')
-        plt.savefig('z-'+str(k)+'.png')
-        plt.close()
+        for k in range(Nz):
+            plt.figure()
+            plt.imshow(eps_data[:,:,k].transpose(),interpolation='spline36',cmap='coolwarm')
+            plt.xlabel('x')
+            plt.ylabel('y')
+            plt.savefig('z-'+str(k)+'.png')
+            plt.close()
 
-    os.system('mv *.png '+namesave)
+        os.system('mv *.png '+namesave)
 
     ##### ===============================================================================
     ##### Get the flux
@@ -230,7 +231,8 @@ for idelta in range(Ndelta):
 
     ##### ===============================================================================
     ##### Save the transmitted flux to file
-    filename = namesave + '.txt'
-    with open(filename,'w') as file:
-        np.savetxt(file,datasave,'%.8f')
+    if mp.am_master():
+        filename = namesave + '.txt'
+        with open(filename,'w') as file:
+            np.savetxt(file,datasave,'%.8f')
 

@@ -246,21 +246,21 @@ beta = -0.3
 gap = 1
 
 %%% The array of genuine momenta 
-Nk = 101 
+Nk = 501 
 Kmax = 0.10
 k_array = linspace(-Kmax,Kmax,Nk);
 
 %%% The array of synthetic momenta 
-Nq = 2501 
-Qmax = 0.50
+Nq = 5001 
+Qmax = 0.20
 q_array = linspace(-Qmax,Qmax,Nq);
 
 %%% Criterion for 0 
 epsilon = 1e-2; 
 
 %%% Array of energy
-Emin = 0.248
-Emax = 0.260
+Emin = 0.256
+Emax = 0.258
 NE = 10001 
 E_array = linspace(Emin,Emax,NE)
 
@@ -398,6 +398,8 @@ plot(q_array,bulk1,color='red');
 plot(q_array,bulk2,color='blue');
 scatter(edge_state(:,1),edge_state(:,2));
 hold off; 
+xlim([-Qmax,Qmax]);
+ylim([Emin,Emax]);
 xlabel('q');
 ylabel('E');
 saveas(1,'transmission4.png')
