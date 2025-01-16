@@ -8,7 +8,7 @@ a = 1       # Period (micrometer)
 freq_range_dimless = (0.24,0.27) # Dimensionless unit fa/c
 
 ### Import data from file
-sim_data = td.SimulationData.from_file('data/2DSlab2L-Ncell_8-delta_0.5400.hdf5')
+sim_data = td.SimulationData.from_file('data/2DSlab2L-Ncell_8-delta_0.5000.hdf5')
 sim_data0 = td.SimulationData.from_file('data/2DSlab2L-normalization.hdf5')
 
 ### Retrieve the power flux through the monitor plane 
