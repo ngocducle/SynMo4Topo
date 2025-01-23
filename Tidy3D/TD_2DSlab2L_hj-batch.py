@@ -13,11 +13,12 @@ a = 1             # Period (micrometer)
 d = a*np.sqrt(2)  # Diagonal length 
 h = 0.35*a        # Slab thickness 
 b1 = 0.35*a       # Edge of the undeformed square hole (left-hand side)
-e1 = 0.1          # deformation parameter (left-hand side)
+e1 = 0.0          # deformation parameter (left-hand side)
 b2 = 0.41*a       # Edge of the undeformed square hole (right-hand side)
-e2 = 0.1          # deformation parameter (right-hand side)
+e2 = 0.0          # deformation parameter (right-hand side)
 dist = 0.1        # Distance between 2 slabs
-delta = 0.40      # Relative displacement (fraction of d)
+Ndelta = 5
+delta_array = np.linspace(0.35,0.39,Ndelta)      # Relative displacement (fraction of d)
 
 # Number of unit cells for each side along the diagonal direction (set to be x)
 Ncell = 8
@@ -61,9 +62,6 @@ print(f"dl = {dl*1000} nm")
 # Simulation size 
 sim_size = Lx,Ly,Lz = (2*pad+2*Ncell*d,d,2*h+dist+2*lambda_range[-1])
 
-# Simulation structure 
-sim_structures = td_2DSlab2L_RHoleP_hj(d,h,b1,e1,b2,e2,Lx,pad,dist,delta,mat_envir,mat_slab,Ncell)
-
 ### Boundary conditions
 bspec = td.BoundarySpec(
     x = td.Boundary(minus=td.PML(num_layers=12),plus=td.PML(num_layers=12)),
@@ -102,50 +100,69 @@ monitor_time = td.FieldTimeMonitor(
     name = 'time',
 )
 
-##### Define the simulation 
-sim = td.Simulation(
-    center = (0,0,0),
-    size = sim_size,
-    grid_spec = td.GridSpec.uniform(dl=dl),
-    structures = sim_structures,
-    sources = [source],
-    monitors = [monitor],
-    run_time = t_stop,
-    shutoff = 1e-5,
-    boundary_spec = bspec,
-    normalize_index = None,
-)
+##### Simulations
+sims = {}
+
+for i in range(Ndelta):
+    delta = delta_array[i]
+
+    # Simulation structure 
+    sim_structures = td_2DSlab2L_RHoleP_hj(d,h,b1,e1,b2,e2,Lx,pad,dist,delta,mat_envir,mat_slab,Ncell)
+
+    ##### Define the simulation 
+    sims[f"sim_{i}"] = td.Simulation(
+        center = (0,0,0),
+        size = sim_size,
+        grid_spec = td.GridSpec.uniform(dl=dl),
+        structures = sim_structures,
+        sources = [source],
+        monitors = [monitor],
+        run_time = t_stop,
+        shutoff = 1e-5,
+        boundary_spec = bspec,
+        normalize_index = None,
+    )
 
 ##### Plot the structure 
-namesave = f'Ncell_{Ncell:d}-'
+namesave = f'Ncell_{Ncell:d}-delta_{delta:.4f}-'
 
 fig,ax = plt.subplots(3,1,tight_layout=True,figsize=(10,6))
-sim.plot(z=0.5*(h+dist),ax=ax[0])
-sim.plot(z=0.0,ax=ax[1])
-sim.plot(z=-0.5*(h+dist),ax=ax[2])
+sims["sim_0"].plot(z=0.5*(h+dist),ax=ax[0])
+sims["sim_0"].plot(z=0.0,ax=ax[1])
+sims["sim_0"].plot(z=-0.5*(h+dist),ax=ax[2])
 plt.savefig(namesave+'Structure_xy_plane.png')
-plt.show()
+#plt.show()
 
 fig,ax = plt.subplots(1,2,tight_layout=True,figsize=(10,6))
-sim.plot(x=0.0,ax=ax[0])
-sim.plot(y=0.0,ax=ax[1])
+sims["sim_0"].plot(x=0.0,ax=ax[0])
+sims["sim_0"].plot(y=0.0,ax=ax[1])
 plt.savefig(namesave+'Structure_yz_xz_planes.png')
-plt.show()
+#plt.show()
 
 ##### Check probe and source
 f,(ax1,ax2) = plt.subplots(1,2,tight_layout=True,figsize=(8,4))
 plot_time = 2e-12
-ax1 = sim.sources[0].source_time.plot(times=np.linspace(0,plot_time,1001),ax=ax1)
+ax1 = sims["sim_0"].sources[0].source_time.plot(times=np.linspace(0,plot_time,1001),ax=ax1)
 ax1.set_xlim(0,plot_time)
 ax1.legend(('source amplitude',))
-ax2 = sim.sources[0].source_time.plot_spectrum(times=np.linspace(0,sim.run_time,10001),val='abs',ax=ax2)
+ax2 = sims["sim_0"].sources[0].source_time.plot_spectrum(times=np.linspace(0,sims["sim_0"].run_time,10001),val='abs',ax=ax2)
 fill_max = 6e-14
 ymax = 6e-14
 ax2.fill_between(freq_range,[-0e-16,-0e-16],[fill_max,fill_max],alpha=0.4,color='g')
 ax2.legend(('source spectrum','measurement'))
 ax2.set_ylim(-1e-16,ymax)
 plt.savefig(namesave+'Sources_profile.png')
-plt.show()
+#plt.show()
 
 ##### Running simulation
-sim_data = web.run(sim,task_name='2DSlab2L_transmission',path=f'data/2DSlab2L-Ncell_{Ncell:d}-delta_{delta:.4f}.hdf5')
+#sim_data = web.run(sim,task_name='2DSlab2L_transmission',path=f'data/2DSlab2L-Ncell_{Ncell:d}-delta_{delta:.4f}.hdf5')
+
+### Run the simulations as a Batch
+# Initialize a batch and run them all
+batch = td.web.Batch(simulations=sims,verbose=True)
+
+# Run the batch and store all of the data in the 'data_batch/' dir
+batch_data = batch.run(path_dir="data_batch")
+
+# Save batch to metadata
+batch.to_file("data_batch/batch_data.json")

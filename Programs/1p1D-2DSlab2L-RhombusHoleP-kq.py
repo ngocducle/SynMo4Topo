@@ -40,18 +40,18 @@ def main():
     #################################################################################
 
     ### Resolution 
-    resolution = mp.Vector3(16,16,16)      # pixels/a 
+    resolution = mp.Vector3(20,20,20)      # pixels/a 
     print('# Resolution = '+str(resolution))
 
     ### Number of bands 
-    num_bands = 25
+    num_bands = 20
     print('# The number of bands to simulate: '+str(num_bands))
 
     ### Geometrical parameters 
     # The upper layer 
     h1 = 0.35 # Thickness of the upper layer 
-    b1 = 0.38  # The edge length of the undeformed square hole 
-    e1 = 0.0  # The anisotropy between the two diagonals of the upper layer 
+    b1 = 0.44  # The edge length of the undeformed square hole 
+    e1 = -0.1  # The anisotropy between the two diagonals of the upper layer 
 
     print('\n# Upper slab:')
     print('# Thickness h1 = '+str(h1))
@@ -60,8 +60,8 @@ def main():
 
     # The lower layer 
     h2 = 0.35 # Thickness of the lower layer 
-    b2 = 0.38  # The edge length of the undeformed square hole 
-    e2 = 0.0  # The anisotropy between the two diagonals of the lower layer 
+    b2 = 0.32  # The edge length of the undeformed square hole 
+    e2 = -0.1  # The anisotropy between the two diagonals of the lower layer 
 
     print('\n# Lower slab:')
     print('# Thickness h2 = '+str(h2))
@@ -70,7 +70,7 @@ def main():
 
     # The interlayer parameters
     dist = 0.10   # Distance between the two layers 
-    Lz = 10.0     # The height of the unit cell along the z-direction 
+    Lz = 8.0     # The height of the unit cell along the z-direction 
 
     print('\n# The distance between the two layers d = '+str(dist))
     print('# The height of the simulation cell Lz = '+str(Lz))
@@ -96,7 +96,7 @@ def main():
     ]
 
     k_points = mp.interpolate(Nk,k_points)"""
-    k_points = [mp.Vector3(0.0,0.0,0.0)]
+    k_points = [mp.Vector3(0.5,0.5,0.0)]
 
     ### The array of k-points (to print)
     k_array = np.linspace(Kmin,Kmax,Nk+2) 

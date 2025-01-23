@@ -23,7 +23,7 @@ dist = 0.1          # Distance between 2 slabs
 delta = 0.50        # Relative displacement (fraction of d)
 
 # Number of unit cells for each side along the diagonal direction (set to be x)
-Ncell = 28
+Ncell = 8
 
 # Wavelength and frequency range of interest 
 # C_0 = speed of light (micrometer / s)

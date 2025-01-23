@@ -224,17 +224,17 @@ end % function CoefficientMatrix
 
 %%%%% ==================================================================================
 %%%%% Parameters 
-omega = 0.297935225
-domega = 0.004078865 
-eta = 0.0
+omega = (0.29250415+0.30363263)/2
+domega = (0.30363263-0.29250415)/2 
+eta = -0.0032
 v = 0.317 
-U = -0.01530998
-dU = -0.00192594
-W = 0.00142098
-dW = 0.00048395
-alpha = 0.0
+U = (-0.01338404-0.01759402)/2
+dU = (-0.01759402+0.01338404)/2
+W = (0.00211467+0.00093703)/2
+dW = (0.00093703-0.00211467)/2
+alpha = 0.062
 
-v1 = 0.31480478 
+v1 = 0.31704465 
 v2 = 0.30891336
 
 d0 = 0.35 
@@ -251,9 +251,9 @@ Kmax = 0.10
 k_array = linspace(-Kmax,Kmax,Nk);
 
 %%% The array of synthetic momenta 
-Nq = 1001 
-Qmax = 0.2
-q_array = linspace(0.15,0.20,Nq);
+Nq = 20001 
+Qmax = 0.5
+q_array = linspace(-Qmax,Qmax,Nq);
 
 %%% Criterion for 0 
 epsilon = 1e-3; 
@@ -337,11 +337,11 @@ for iq = 1:Nq
         E = E_array(iE);
 
         % Left-hand Hamiltonian 
-        printf("Left-hand Hamiltonian \n");
+        %printf("Left-hand Hamiltonian \n");
         [WL,kL] = kPolyEig(E,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,beta,dist,d0);
 
         % Right-hand Hamiltonian 
-        printf("Right-hand Hamiltonian \n");
+        %printf("Right-hand Hamiltonian \n");
         [WR,kR] = kPolyEig(E,q,omega,-domega,eta,v1,v2,U,-dU,W,-dW,alpha,V,beta,dist,d0);
 
         %%% Assembly to the coefficient matrix 
