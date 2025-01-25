@@ -11,7 +11,7 @@ from FDTD_2Dstructures import geo_2DSlab2L_RHoleP_hj_sameMater
 import os 
 
 ### Resolution 
-resolution = 10
+resolution = 20
 
 ### Boundary layers 
 dboundary = 3.0  # PML/Absorber thickness 

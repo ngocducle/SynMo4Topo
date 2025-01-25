@@ -112,9 +112,7 @@ for i1 in range(N1):
         show_fig = 'No'
 
         ### The title and the name of the files 
-        namesave = '1p1D-2DSlab2L-RHoleP-h1_'+str(h1)+'-b1_'+str(b1)+'-e1_'+str(e1) \
-            + '-h2_'+str(h2)+'-b2_'+str(b2)+'-e2_'+str(e2) \
-            + '-d_'+str(dist)+'_kq'
+        namesave = f'1p1D-2DSlab2L-RHoleP-h1_{h1:.2f}-b1_{b1:.2f}-e1_{e1:.2f}-h2_{h2:.2f}-b2_{b2:.2f}-e2_{e2:.2f}-d_{dist:.2f}_kq'
     
         ### Calculate the dispersion for the light cone with Envir and k_points
         print('# Calculate the light cone dispersion')
