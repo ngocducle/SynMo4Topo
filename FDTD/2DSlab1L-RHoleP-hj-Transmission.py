@@ -97,7 +97,7 @@ nfreq = 501    # number of frequencies
 component = mp.Ey   # the component 
 sources = [
     mp.Source(
-        mp.GaussianSource(fcen,fwidth=df,is_integrated=True),
+        mp.GaussianSource(fcen,fwidth=df), # is_integrated=False (default because no source extended into the PML)
         component = component,
         center = mp.Vector3(-0.5*sx+dboundary+0.5*pad,0,0),
         size = mp.Vector3(0,structurey,h)
@@ -124,7 +124,7 @@ geometry = geo_2DSlab1L_RholeP_hj_sameMater(d,h,
 ##### Define the simulation 
 sim = mp.Simulation(
         cell_size = cell,
-        boundary_layers = abs_layers,
+        boundary_layers = pml_layers,
         geometry = geometry,
         sources = sources,
         k_point = mp.Vector3(0,0,0), # PBC

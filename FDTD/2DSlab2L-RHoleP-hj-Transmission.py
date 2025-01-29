@@ -118,7 +118,7 @@ delta_array = np.linspace(0.5,0.5,Ndelta)
 component = mp.Ey   # the component 
 sources = [
     mp.Source(
-        mp.GaussianSource(fcen,fwidth=df,is_integrated=True),
+        mp.GaussianSource(fcen,fwidth=df), # is_integrated=False (default because no source extended into the PML)
         component = component,
         center = mp.Vector3(-0.5*sx+dboundary+0.5*pad,0,0),
         size = mp.Vector3(0,structurey,hbilayer)
@@ -152,7 +152,7 @@ for idelta in range(Ndelta):
     ##### Define the simulation 
     sim = mp.Simulation(
         cell_size = cell,
-        boundary_layers = abs_layers,
+        boundary_layers = pml_layers,
         geometry = geometry,
         sources = sources,
         k_point = mp.Vector3(0,0,0), # PBC
@@ -170,10 +170,10 @@ for idelta in range(Ndelta):
         # Finish the simulation when the field at the point pt decays,
         # check the maximum of the field every dt
         until_after_sources = mp.stop_when_fields_decayed(
-            dt = 100,
+            dt = 3000,
             c = component,
             pt = pt,
-            decay_by = 1e-3
+            decay_by = 1e-4
         )
     )
 

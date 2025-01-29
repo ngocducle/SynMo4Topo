@@ -76,7 +76,7 @@ component = mp.Ey   # the component
 
 sources = [
     mp.Source(
-        mp.GaussianSource(fcen,fwidth=df,is_integrated=True),
+        mp.GaussianSource(fcen,fwidth=df), # is_integrated=False (default because no source extended into the PML)
         component = component,
         center = mp.Vector3(-0.5*sx+dboundary+0.5*pad,0,0),
         size = mp.Vector3(0,d,hbilayer)
@@ -137,7 +137,7 @@ sim.run(
     # Finish the simulation when the field at the point pt decays,
     # check the maximum of the field every dt 
     until_after_sources = mp.stop_when_fields_decayed(
-        dt = 100,
+        dt = 3000,
         c = component,
         pt = pt,
         decay_by = 1e-4

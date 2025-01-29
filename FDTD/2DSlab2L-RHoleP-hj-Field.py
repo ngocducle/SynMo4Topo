@@ -119,7 +119,7 @@ vertice2 = [
 component = mp.Ey   # the component 
 sources = [
     mp.Source(
-        mp.GaussianSource(fcen,fwidth=df,is_integrated=True),
+        mp.GaussianSource(fcen,fwidth=df),
         component = component,
         center = mp.Vector3(-0.5*sx+dboundary+0.5*pad,0,0),
         size = mp.Vector3(0,structurey,hbilayer)

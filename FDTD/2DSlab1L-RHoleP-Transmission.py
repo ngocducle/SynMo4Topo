@@ -83,15 +83,12 @@ nfreq = 501     # number of frequencies
 component = mp.Ey   # the component 
 sources = [
     mp.Source(
-        mp.GaussianSource(fcen,fwidth=df,is_integrated=True),
+        mp.GaussianSource(fcen,fwidth=df),
         component = component,
         center = mp.Vector3(-0.5*sx+dboundary+0.5*pad,0,0),
         size = mp.Vector3(0,structurey,h)
     )
 ]
-
-# The array of frequencies
-freq_array = np.linspace(fcen-df,fcen+df,nfreq)
 
 ##### ===================================================================================
 ##### Compute the flux spectrum
@@ -187,10 +184,12 @@ os.system('mv *.png '+namesave)
 ##### ===============================================================================
 ##### Get the flux
 trans_flux = np.array(mp.get_fluxes(trans))
+freq_flux = np.array(mp.get_flux_freqs(trans))
 
-datasave = np.column_stack((freq_array,trans_flux))
+datasave = np.column_stack((freq_flux,trans_flux))
 
 print(np.shape(trans_flux))
+print(np.shape(freq_flux))
 
 ##### ===============================================================================
 ##### Save the transmitted flux to file
