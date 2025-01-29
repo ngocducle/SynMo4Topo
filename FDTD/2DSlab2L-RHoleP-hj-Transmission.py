@@ -229,10 +229,12 @@ for idelta in range(Ndelta):
     ##### ===============================================================================
     ##### Get the flux
     trans_flux = np.array(mp.get_fluxes(trans))
+    freq_flux = np.array(mp.get_flux_freqs(trans))
 
-    datasave = np.column_stack((freq_array,trans_flux))
+    datasave = np.column_stack((freq_flux,trans_flux))
 
     print(np.shape(trans_flux))
+    print(np.shape(freq_flux))
 
     ##### ===============================================================================
     ##### Save the transmitted flux to file
