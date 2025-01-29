@@ -11,7 +11,7 @@ from FDTD_2Dstructures import geo_2DSlab2L_RHoleP
 import os 
 
 ### Resolution 
-resolution = 16
+resolution = 20
 
 ### Boundary layers 
 # PML 
@@ -29,7 +29,7 @@ abs_layers = [mp.Absorber(direction = mp.X,
             ]
 
 ### The number of unit cells along the line y = 0
-Ncell = 5
+Ncell = 2
 
 ### Padding block
 pad = 3.0 
@@ -40,12 +40,12 @@ d = np.sqrt(2.0)   # The diagonal of one square unit cell
 # The layer 1 
 h1 = 0.35   # Thickness of layer 1 
 b1 = 0.41   # The edge length of the undeformed square hole
-e1 = 0.1    # The deformation parameter 
+e1 = -0.1    # The deformation parameter 
 
 # The layer 2 
 h2 = 0.35   # Thickness of layer 2
 b2 = 0.35   # The edge length of the undeformed square hole 
-e2 = 0.1    # The deformation parameter 
+e2 = -0.1    # The deformation parameter 
 
 # The interlayer distance 
 dist = 0.1
@@ -102,8 +102,8 @@ Ndelta = 1
 delta_array = np.linspace(0.5,0.5,Ndelta)
 
 ### The source 
-fcen = 0.255    # pulse center frequency 
-df = 0.015      # pulse width 
+fcen = 0.260    # pulse center frequency 
+df = 0.010      # pulse width 
 nfreq = 501     # number of frequencies
 component = mp.Ey   # the component 
 sources = [
@@ -221,10 +221,12 @@ for idelta in range(Ndelta):
     ##### ===============================================================================
     ##### Get the flux
     trans_flux = np.array(mp.get_fluxes(trans))
+    freq_flux = np.array(mp.get_flux_freqs(trans))
 
-    datasave = np.column_stack((freq_array,trans_flux))
+    datasave = np.column_stack((freq_flux,trans_flux))
 
     print(np.shape(trans_flux))
+    print(np.shape(freq_flux))
 
     ##### ===============================================================================
     ##### Save the transmitted flux to file

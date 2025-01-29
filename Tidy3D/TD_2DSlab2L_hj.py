@@ -23,7 +23,7 @@ delta = 0.40      # Relative displacement (fraction of d)
 Ncell = 8
 
 # Wavelength and frequency range 
-freq_range_dimless = (0.24,0.26) # Dimensionless unit fa/c
+freq_range_dimless = (0.245,0.265) # Dimensionless unit fa/c
 freq_range = (freq_range_dimless[0]*C_0/a,freq_range_dimless[1]*C_0/a)
 lambda_range = (a/freq_range_dimless[1],a/freq_range_dimless[0])
 freq0 = np.sum(freq_range)/2
@@ -35,7 +35,7 @@ freqw = width*(freq_range[1]-freq_range[0])
 print(f"Central wavelength = {1000*lambda0} nm")
 
 # Runtime 
-runtime = 100.0 # in unit of 1/frequency bandwidth of the source
+runtime = 50.0 # in unit of 1/frequency bandwidth of the source
 t_stop = runtime / freqw 
 print(f"Total runtime <= {t_stop*1e12} ps")
 
