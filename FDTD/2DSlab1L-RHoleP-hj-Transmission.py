@@ -104,9 +104,6 @@ sources = [
     )
 ]
 
-# The array of frequencies
-freq_array = np.linspace(fcen-df,fcen+df,nfreq)
-
 ##### ===================================================================================
 ##### Compute the flux spectrum
 freg = mp.FluxRegion(center = mp.Vector3(0.5*sx-dboundary-0.5*pad,0,0),

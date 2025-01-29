@@ -10,7 +10,7 @@ from Materials import *
 import os 
 
 ### Resolution 
-resolution = 16 
+resolution = 20
 
 ### PML layer 
 dboundary = 3.0  # PML/Absorber thickness 
@@ -27,7 +27,7 @@ abs_layers = [mp.Absorber(direction = mp.X,
             ]
 
 ### The number of unit cells along the line y = 0
-Ncell = 8 
+Ncell = 8
 
 ### Padding block
 pad = 3.0 
@@ -69,8 +69,8 @@ Envir = PMMA
 
 ##### ====================================================================
 ### The source 
-fcen = 0.255         # pulse center frequency 
-df   = 0.015         # pulse width 
+fcen = 0.26         # pulse center frequency 
+df   = 0.01         # pulse width 
 nfreq = 501          # number of frequencies
 component = mp.Ey   # the component 
 
@@ -82,9 +82,6 @@ sources = [
         size = mp.Vector3(0,d,hbilayer)
     )
 ]
-
-# The array of frequencies 
-freq_array = np.linspace(fcen-df,fcen+df,nfreq)
 
 ##### =============================================================================
 ##### Compute the flux spectrum 
@@ -195,10 +192,12 @@ os.system('mv *.png no_structure')
 ##### ===============================================================================
 ##### Get the flux
 trans_flux = np.array(mp.get_fluxes(trans))
+freq_flux = np.array(mp.get_flux_freqs(trans))
 
-datasave = np.column_stack((freq_array,trans_flux))
+datasave = np.column_stack((freq_flux,trans_flux))
 
 print(np.shape(trans_flux))
+print(np.shape(freq_flux))
 
 ##### Save the transmitted flux to file
 with open('./no_structure/normalized_flux.txt','w') as file:

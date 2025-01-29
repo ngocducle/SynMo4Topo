@@ -39,14 +39,14 @@ df = 0.010      # pulse width
 nfreq = 1001     # number of frequencies
 
 # The array of frequencies and wavelength
-freq_array = np.linspace(fcen-df,fcen+df,nfreq)
+freq_array = np.linspace(fcen-df/2,fcen+df/2,nfreq)
 wvl_array = 1/freq_array 
 
 ### The number of unit cells along the line y = 0
 Ncell = 8
 
 ### Padding block
-pad = 2.0*wvl_array[0] 
+pad = 3.0 # 2.0*wvl_array[0] 
 
 ### Geometrical parameters 
 d = np.sqrt(2.0)   # The diagonal of one square unit cell
