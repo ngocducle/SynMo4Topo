@@ -40,7 +40,7 @@ def main():
     #################################################################################
 
     ### Resolution 
-    resolution = mp.Vector3(20,20,20)      # pixels/a 
+    resolution = mp.Vector3(32,32,32)      # pixels/a 
     print('# Resolution = '+str(resolution))
 
     ### Number of bands 
@@ -50,8 +50,8 @@ def main():
     ### Geometrical parameters 
     # The upper layer 
     h1 = 0.35 # Thickness of the upper layer 
-    b1 = 0.44  # The edge length of the undeformed square hole 
-    e1 = 0.0  # The anisotropy between the two diagonals of the upper layer 
+    b1 = 0.46  # The edge length of the undeformed square hole 
+    e1 = 0.05  # The anisotropy between the two diagonals of the upper layer 
 
     print('\n# Upper slab:')
     print('# Thickness h1 = '+str(h1))
@@ -60,8 +60,8 @@ def main():
 
     # The lower layer 
     h2 = 0.35 # Thickness of the lower layer 
-    b2 = 0.32  # The edge length of the undeformed square hole 
-    e2 = 0.0  # The anisotropy between the two diagonals of the lower layer 
+    b2 = 0.30  # The edge length of the undeformed square hole 
+    e2 = 0.05  # The anisotropy between the two diagonals of the lower layer 
 
     print('\n# Lower slab:')
     print('# Thickness h2 = '+str(h2))

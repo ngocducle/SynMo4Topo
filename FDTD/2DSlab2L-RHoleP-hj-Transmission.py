@@ -53,11 +53,11 @@ d = np.sqrt(2.0)   # The diagonal of one square unit cell
 h = 0.35           # Thickness of the two layers
 
 # The layer 1 
-b1 = 0.46   # The edge length of the undeformed square hole
+b1 = 0.44   # The edge length of the undeformed square hole
 e1 = -0.1    # The deformation parameter 
 
 # The layer 2 
-b2 = 0.30   # The edge length of the undeformed square hole 
+b2 = 0.34   # The edge length of the undeformed square hole 
 e2 = -0.1    # The deformation parameter 
 
 # The interlayer distance 

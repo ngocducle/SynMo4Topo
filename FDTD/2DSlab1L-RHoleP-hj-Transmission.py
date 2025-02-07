@@ -30,7 +30,7 @@ abs_layers = [
 ]
 
 ### The number of unit cells along the line y = 0 for each side
-Ncell = 3
+Ncell = 8
 
 ### Padding block
 pad = 3.0 
@@ -41,11 +41,11 @@ h = 0.35            # Thickness of the layer
 
 # Left-hand side
 b1 = 0.35            # The edge length of the undeformed square hole
-e1 = 0.1             # The deformation parameter 
+e1 = -0.1             # The deformation parameter 
 
 # Right-hand side
 b2 = 0.41            # The edge length of the undeformed square hole
-e2 = 0.1             # The deformation parameter 
+e2 = -0.1             # The deformation parameter 
 
 # The total size of the structure along the x-axis
 structurex = 2*Ncell*d 
