@@ -129,11 +129,11 @@ def dH_q(k,q,dist,V,d0,beta):
 ##### ======================================================================
 ##### The parameters of the effective model 
 omega = 0.29780940 
-eta = 0.01
+eta = 0.0
 v = 0.317 
 U = -0.01503117
 W = 0.001466 
-alpha = 0.01
+alpha = 0.0
 
 pomega = 0.0
 omega1 = omega*(1+pomega)
@@ -142,11 +142,11 @@ omega2 = omega*(1-pomega)
 v1 = v
 v2 = v 
 
-pU = 1e-4
+pU = 0
 U1 = U*(1+pU)
 U2 = U*(1-pU)
 
-pW = 1e-4
+pW = 0
 W1 = W*(1+pW)
 W2 = W*(1-pW)
 
@@ -242,8 +242,8 @@ center_k = 0.0
 center_q = 0.0 
 
 ### The radius of the contour
-contour_kaxis = 0.1*Kmax 
-contour_qaxis = 0.1*Qmax
+contour_kaxis = 0.05 #0.1*Kmax 
+contour_qaxis = 0.05 #0.1*Qmax
 
 ### The array of angles 
 Ntheta = 200 
@@ -283,10 +283,21 @@ for j in range(Ntheta):
 ### Calculate the Berry winding
 Berry_winding = 0
 
+#for j in range(Ntheta-1):
+#    Berry_winding = Berry_winding + np.angle( np.vdot(U_list[j],U_list[j+1]) )
+
+#Berry_winding = Berry_winding + np.angle( np.vdot(U_list[Ntheta-1],U_list[0]) )
+
 for j in range(Ntheta-1):
     Berry_winding = Berry_winding + np.angle( np.vdot(U_list[j],U_list[j+1]) )
 
 Berry_winding = Berry_winding + np.angle( np.vdot(U_list[Ntheta-1],U_list[0]) )
+
+for j in range(Ntheta-1):
+    print(f'j = {j:d}: {np.vdot(U_list[j],U_list[j+1]):.16f}')
+
+print(f'j = {Ntheta-1:d}: {np.vdot(U_list[Ntheta-1],U_list[0]):.16f}')
+
 Berry_winding = Berry_winding / np.pi 
 
 print('Berry winding = ')
