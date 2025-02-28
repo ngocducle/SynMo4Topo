@@ -123,7 +123,7 @@ def dH_q(k,q,dist,V,d0,beta):
 ##### ============================================================================
 ##### The parameters of the calculations 
 omega = 0.29780940 
-eta = -0.0019
+eta = 0.0010
 v = 0.317
 U = -0.01536996
 W = 0.00146639
@@ -136,11 +136,11 @@ omega2 = omega*(1 - pomega)
 v1 = v 
 v2 = v 
 
-pU = 0.1
+pU = -0.1
 U1 = U*(1+pU)
 U2 = U*(1-pU)
 
-pW = -0.1 
+pW = 0.1 
 W1 = W*(1+pW)
 W2 = W*(1-pW)
 
@@ -158,7 +158,7 @@ beta = -0.3
 ##### The arrays of k and q 
 ### The array of intrinsic momenta k
 Nk = 201 
-Kmax = 0.05
+Kmax = 0.1
 k_array = np.linspace(-Kmax,Kmax,Nk)
 dk = (k_array.max()-k_array.min())/(Nk-1)
 
@@ -315,7 +315,7 @@ plt.xlabel('k',fontsize=16)
 fig.colorbar(images[0],
              ax=axs,
              orientation='vertical',
-             shrink=0.8,
+             shrink=1.0,
              location='right')
 
 plt.savefig('imshow-'+namesave)
@@ -329,6 +329,10 @@ norm = colors.Normalize(vmin = -np.max(abs(F_array[:,:,0:2])),
 
 fig,ax = plt.subplots(figsize=(8,8))
 ax.pcolormesh(X,Y,F_array[:,:,0].T,shading='gouraud',cmap='coolwarm',norm=norm)
+ax.set_xticks([-Kmax,-0.5*Kmax,0,0.5*Kmax,Kmax])
+ax.set_xticklabels([-Kmax,-0.5*Kmax,0,0.5*Kmax,Kmax],fontsize=15)
+ax.set_yticks([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax])
+ax.set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
 ax.set_xlabel('k',fontsize=20)
 ax.set_ylabel('q',fontsize=20)
 ax.set_title(r'Band 1, $\alpha = $'+str(alpha)+r', $\eta = $'+str(eta),fontsize=20)
@@ -341,6 +345,10 @@ plt.show()
 
 fig,ax = plt.subplots(figsize=(8,8))
 ax.pcolormesh(X,Y,F_array[:,:,1].T,shading='gouraud',cmap='coolwarm',norm=norm)
+ax.set_xticks([-Kmax,-0.5*Kmax,0,0.5*Kmax,Kmax])
+ax.set_xticklabels([-Kmax,-0.5*Kmax,0,0.5*Kmax,Kmax],fontsize=15)
+ax.set_yticks([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax])
+ax.set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
 ax.set_xlabel('k',fontsize=20)
 ax.set_ylabel('q',fontsize=20)
 ax.set_title(r'Band 2, $\alpha = $'+str(alpha)+r', $\eta = $'+str(eta),fontsize=20)

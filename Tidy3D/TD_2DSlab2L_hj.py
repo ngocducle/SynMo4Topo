@@ -12,12 +12,12 @@ from Tidy3D_2Dstructures import td_2DSlab2L_RHoleP_hj
 a = 1             # Period (micrometer)
 d = a*np.sqrt(2)  # Diagonal length 
 h = 0.35*a        # Slab thickness 
-b1 = 0.35*a       # Edge of the undeformed square hole (left-hand side)
+b1 = 0.46*a       # Edge of the undeformed square hole (left-hand side)
 e1 = 0.1          # deformation parameter (left-hand side)
-b2 = 0.41*a       # Edge of the undeformed square hole (right-hand side)
+b2 = 0.30*a       # Edge of the undeformed square hole (right-hand side)
 e2 = 0.1          # deformation parameter (right-hand side)
 dist = 0.1        # Distance between 2 slabs
-delta = 0.40      # Relative displacement (fraction of d)
+delta = 0.50      # Relative displacement (fraction of d)
 
 # Number of unit cells for each side along the diagonal direction (set to be x)
 Ncell = 8
@@ -126,10 +126,14 @@ sim.plot(z=-0.5*(h+dist),ax=ax[2])
 plt.savefig(namesave+'Structure_xy_plane.png')
 plt.show()
 
-fig,ax = plt.subplots(1,2,tight_layout=True,figsize=(10,6))
-sim.plot(x=0.0,ax=ax[0])
-sim.plot(y=0.0,ax=ax[1])
-plt.savefig(namesave+'Structure_yz_xz_planes.png')
+fig,ax = plt.subplots(1,1,tight_layout=True,figsize=(10,8))
+sim.plot(x=0.0)
+plt.savefig(namesave+'Structure_yz_planes.png')
+plt.show()
+
+fig,ax = plt.subplots(1,1,tight_layout=True,figsize=(20,8))
+sim.plot(y=0.0)
+plt.savefig(namesave+'Structure_xz_planes.png')
 plt.show()
 
 ##### Check probe and source
@@ -148,4 +152,4 @@ plt.savefig(namesave+'Sources_profile.png')
 plt.show()
 
 ##### Running simulation
-sim_data = web.run(sim,task_name='2DSlab2L_transmission',path=f'data/2DSlab2L-Ncell_{Ncell:d}-delta_{delta:.4f}.hdf5')
+#sim_data = web.run(sim,task_name='2DSlab2L_transmission',path=f'data/2DSlab2L-Ncell_{Ncell:d}-delta_{delta:.4f}.hdf5')
