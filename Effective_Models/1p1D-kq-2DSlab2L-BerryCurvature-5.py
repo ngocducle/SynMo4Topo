@@ -251,9 +251,6 @@ for i0 in range(21):
     with open('Berry_Curvature.txt','w') as file:
         np.savetxt(file,F_array[:,:,0],fmt='%.8f')
 
-
-
-
     ##### =================================================================================
     #####       Plot the 2D maps of the Berry curvature of bands 1 and 2 
     ##### =================================================================================
