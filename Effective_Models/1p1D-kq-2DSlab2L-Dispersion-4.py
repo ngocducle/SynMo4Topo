@@ -78,28 +78,46 @@ def Hamiltonian(k,q,omega1,eta1,v1,U1,W1,alpha1,
 
 ##### ============================================================================
 ##### The parameters of the calculations 
-omega = 0.29780940 
-eta = 0.0005
-v = 0.317
-U = -0.01536996
-W = 0.00146639
-alpha = 0.05
+#omega = 0.29780940 
+#eta = 0.0005
+#v = 0.317
+#U = -0.01536996
+#W = 0.00146639
+#alpha = 0.05
 
-pomega = 0.0 
-omega1 = omega*(1 + pomega)
-omega2 = omega*(1 - pomega)
+#pomega = 0.0 
+#omega1 = omega*(1 + pomega)
+#omega2 = omega*(1 - pomega)
 
-v1 = v 
-v2 = v 
+#v1 = v 
+#v2 = v 
 
-pU = -0.1
-U1 = U*(1+pU)
-U2 = U*(1-pU)
+#pU = -0.1
+#U1 = U*(1+pU)
+#U2 = U*(1-pU)
 
-pW = 0.1
-W1 = W*(1+pW)
-W2 = W*(1-pW)
+#pW = 0.1
+#W1 = W*(1+pW)
+#W2 = W*(1-pW)
 
+#eta1 = eta 
+#eta2 = eta 
+#alpha1 = alpha 
+#alpha2 = alpha 
+
+shift = 0.0012
+omega1 = 0.31005326 + shift    
+v1 = 0.32164670   
+U1 = -0.01938546   
+W1 = 0.00289494
+
+omega2 = 0.28832678 + shift   
+v2 = 0.30520880   
+U2 = -0.01112112   
+W2 = 0.00062349
+
+alpha = -0.062
+eta = 0.0032
 eta1 = eta 
 eta2 = eta 
 alpha1 = alpha 

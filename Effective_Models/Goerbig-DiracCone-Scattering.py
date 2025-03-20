@@ -8,8 +8,8 @@ from matplotlib.patches import Circle
 ### The parameters 
 m = 2
 c = 0
-Delta = 0.0
-Mass = 0.0
+Delta = 0.5
+Mass = 0.0001
 
 ### Array of momenta 
 Nx = 501 
@@ -74,8 +74,8 @@ ls = colors.LightSource(azdeg=225, altdeg=5,
                         hsv_min_val=0, hsv_max_val=1, 
                         hsv_min_sat=1, hsv_max_sat=0)
 
-fcolors1 = ls.shade(E_array[:,:,0],cmap='binary',vert_exag=0.1,blend_mode='soft')
-fcolors2 = ls.shade(E_array[:,:,1],cmap='binary',vert_exag=0.1,blend_mode='soft')
+#fcolors1 = ls.shade(E_array[:,:,0],cmap='binary',vert_exag=0.1,blend_mode='soft')
+#fcolors2 = ls.shade(E_array[:,:,1],cmap='binary',vert_exag=0.1,blend_mode='soft')
 
 fig,ax = plt.subplots(subplot_kw={'projection':'3d'},figsize=(12,10))
 
@@ -91,8 +91,8 @@ y_axis_z = np.linspace(0,0,Ny)
 ax.plot(y_axis_x,y_axis_y,y_axis_z,color='black',linewidth=2)
 ax.text(0,1.5,-0.4,r'$k_y$',fontsize=24)
 
-ax.plot_surface(X,Y,E_array[:,:,0].T,facecolor=fcolors1)
-ax.plot_surface(X,Y,E_array[:,:,1].T,facecolor=fcolors2)
+ax.plot_surface(X,Y,E_array[:,:,0].T)
+ax.plot_surface(X,Y,E_array[:,:,1].T)
 ax.set_xlabel('qx',fontsize=14)
 ax.set_ylabel('qy',fontsize=14)
 ax.view_init(elev=5, azim=30, roll=0)

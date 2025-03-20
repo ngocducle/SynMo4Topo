@@ -122,28 +122,46 @@ def dH_q(k,q,dist,V,d0,beta):
 
 ##### ============================================================================
 ##### The parameters of the calculations 
-omega = 0.29780940 
-eta = 0.0010
-v = 0.317
-U = -0.01536996
-W = 0.00146639
-alpha = 0.05
+#omega = 0.29780940 
+#eta = 0.0010
+#v = 0.317
+#U = -0.01536996
+#W = 0.00146639
+#alpha = 0.05
 
-pomega = 0.0 
-omega1 = omega*(1 + pomega)
-omega2 = omega*(1 - pomega)
+#pomega = 0.0 
+#omega1 = omega*(1 + pomega)
+#omega2 = omega*(1 - pomega)
 
-v1 = v 
-v2 = v 
+#v1 = v 
+#v2 = v 
 
-pU = -0.1
-U1 = U*(1+pU)
-U2 = U*(1-pU)
+#pU = -0.1
+#U1 = U*(1+pU)
+#U2 = U*(1-pU)
 
-pW = 0.1 
-W1 = W*(1+pW)
-W2 = W*(1-pW)
+#pW = 0.1 
+#W1 = W*(1+pW)
+#W2 = W*(1-pW)
 
+#eta1 = eta 
+#eta2 = eta 
+#alpha1 = alpha 
+#alpha2 = alpha
+
+shift = 0.0012
+omega1 = 0.31005326 + shift    
+v1 = 0.32164670   
+U1 = -0.01938546   
+W1 = 0.00289494
+
+omega2 = 0.28832678 + shift   
+v2 = 0.30520880   
+U2 = -0.01112112   
+W2 = 0.00062349
+
+alpha = -0.062
+eta = 0.0032
 eta1 = eta 
 eta2 = eta 
 alpha1 = alpha 
@@ -151,8 +169,13 @@ alpha2 = alpha
 
 d0 = 0.35 
 dist = 0.1
-V = 0.038
+V = 0.039
 beta = -0.3 
+
+mU = (U1-U2)/(U2+U1)
+mW = (W1-W2)/(W2+W1)
+print('mU = '+str(mU))
+print('mW = '+str(mW))
 
 ##### ================================================================================
 ##### The arrays of k and q 
@@ -287,8 +310,10 @@ plt.close()
 ### The arrays of domains and colormaps 
 fig,axs = plt.subplots(2,1,sharex=True,figsize=(5,12))
 
-norm = colors.Normalize(vmin = -np.max(abs(F_array[:,:,0:2])),
-                        vmax = np.max(abs(F_array[:,:,0:2])))
+#F_array = np.tanh(F_array) 
+
+norm = colors.Normalize(vmin = -0.04*np.max(abs(F_array[:,:,0:2])),
+                        vmax = 0.04*np.max(abs(F_array[:,:,0:2])))
 
 images = []
 
@@ -307,7 +332,8 @@ axs[0].set_yticks([0,50,100,150,200])
 axs[0].set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
 axs[1].set_yticks([0,50,100,150,200])
 axs[1].set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
-axs[0].set_title(r'$\alpha=$'+str(alpha)+r', $\eta = $'+str(eta),fontsize=15)
+#axs[0].set_title(r'$\alpha=$'+str(alpha)+r', $\eta = $'+str(eta),fontsize=15)
+axs[0].set_title('e = 0.1',fontsize=24)
 
 plt.xlabel('k',fontsize=16)
 #plt.ylabel('q',fontsize=16)
@@ -351,7 +377,8 @@ ax.set_yticks([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax])
 ax.set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
 ax.set_xlabel('k',fontsize=20)
 ax.set_ylabel('q',fontsize=20)
-ax.set_title(r'Band 2, $\alpha = $'+str(alpha)+r', $\eta = $'+str(eta),fontsize=20)
+#ax.set_title(r'Band 2, $\alpha = $'+str(alpha)+r', $\eta = $'+str(eta),fontsize=20)
+ax.set_title('e = -0.1',fontsize=20)
 fig.colorbar(cm.ScalarMappable(norm=norm,cmap='coolwarm'),
              orientation='vertical',
              shrink=1.0,
