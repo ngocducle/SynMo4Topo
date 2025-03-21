@@ -191,8 +191,8 @@ v = 0.31429072
 U = -0.01563435   
 W = 0.00148791
 
-eta = 0.0032 
-alpha = -0.062 
+eta = -0.0032 
+alpha = 0.062
 
 ro = 0.1353 
 rv = 0.0892 
@@ -205,18 +205,19 @@ beta = -0.3
 
 ##### ========================================================================
 ##### Plot the Berry curvature F_{kq} in the plane m = const 
+##### ========================================================================
 ### The value of m 
-m = 0.1
+m = 0.01
 
 ### The array of genuine momenta k 
 Nk = 201 
-Kmax = 0.1 
+Kmax = 0.05 
 k_array = np.linspace(-Kmax,Kmax,Nk)
 dk = (k_array.max()-k_array.min())/(Nk-1)
 
 ### The array of synthetic momenta q 
 Nq = 201 
-Qmax = 0.5 
+Qmax = 0.5
 q_array = np.linspace(-Qmax,Qmax,Nq)
 dq = (q_array.max()-q_array.min())/(Nq-1)
 
@@ -264,16 +265,14 @@ for ik in range(Nk):
                     Fqm_array[ik,iq,n] = Fqm_array[ik,iq,n] -2.0*np.imag(dHqe[n,l]*dHme[l,n]) / (E[n]-E[l])**2
                     Fmk_array[ik,iq,n] = Fmk_array[ik,iq,n] -2.0*np.imag(dHme[n,l]*dHke[l,n]) / (E[n]-E[l])**2 
 
-##### =======================================================================
-#####           Plot the 2D maps of the Berry curvature of bands 1 and 2
-##### =======================================================================
 
+##### Plot the 2D maps of the Berry curvature of bands 1 and 2
 ### The arrays of domains and colormaps 
 X,Y = np.meshgrid(k_array,q_array)
 cmap = 'RdBu'
-maxabs_kq = abs(Fkq_array[:,:,0]).max()
-maxabs_qm = abs(Fqm_array[:,:,0]).max()
-maxabs_mk = abs(Fmk_array[:,:,0]).max()
+maxabs_kq = 0.1*abs(Fkq_array[:,:,0]).max()
+maxabs_qm = 0.1*abs(Fqm_array[:,:,0]).max()
+maxabs_mk = 0.1*abs(Fmk_array[:,:,0]).max()
 
 ### Plot the Berry curvature 
 fig,axs = plt.subplots(1,3,sharey=True,figsize=(15,5))
@@ -304,11 +303,256 @@ images.append(axs[2].imshow(np.flipud(Fmk_array[:,:,1].T),
 
 axs[0].set_xticks([0,50,100,150,200])
 axs[0].set_xticklabels([-Kmax,-0.5*Kmax,0,0.5*Kmax,Kmax],fontsize=15)
+axs[0].set_title(r'$F_m = F_{kq}$',fontsize=18)
 axs[1].set_xticks([0,50,100,150,200])
 axs[1].set_xticklabels([-Kmax,-0.5*Kmax,0,0.5*Kmax,Kmax],fontsize=15)
+axs[1].set_title(r'$F_k = F_{qm}$',fontsize=18)
 axs[2].set_xticks([0,50,100,150,200])
 axs[2].set_xticklabels([-Kmax,-0.5*Kmax,0,0.5*Kmax,Kmax],fontsize=15)
+axs[2].set_title(r'$F_q = F_{mk}$',fontsize=18)
 axs[0].set_yticks([0,50,100,150,200])
 axs[0].set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
 
+axs[0].set_xlabel('k',fontsize=16)
+axs[1].set_xlabel('k',fontsize=16)
+axs[2].set_xlabel('k',fontsize=16)
+axs[0].set_ylabel('q',fontsize=16)
+
 plt.show()
+
+"""
+##### ========================================================================
+##### Plot the Berry curvature F_{kq} in the plane k = const 
+##### ========================================================================
+### The value of k
+k = 0
+
+### The array of mass m
+Nm = 201 
+Mmax = 0.5 
+m_array = np.linspace(-Mmax,Mmax,Nm)
+dm = (m_array.max()-m_array.min())/(Nm-1)
+
+### The array of synthetic momenta q 
+Nq = 201 
+Qmax = 0.5
+q_array = np.linspace(-Qmax,Qmax,Nq)
+dq = (q_array.max()-q_array.min())/(Nq-1)
+
+### The array of energy 
+Energy_array = np.zeros((Nm,Nq,8))
+
+### The arrays of Berry curvature 
+Fkq_array = np.zeros((Nm,Nq,8))
+Fqm_array = np.zeros((Nm,Nq,8))
+Fmk_array = np.zeros((Nm,Nq,8))
+
+##### We scan over the intrinsic and the synthetic momenta 
+for im in range(Nm):
+    # The genuine momentum 
+    m = m_array[im]
+
+    for iq in range(Nq):
+        # The synthetic momentum 
+        q = q_array[iq]
+
+        # The Hamiltonian 
+        H = Hamiltonian(k,q,m,omega,eta,v,U,W,alpha,ro,rv,rW,V,beta,dist,d0)
+
+        # The derivative dH/dk 
+        dHk = dH_k(k,q,m,v,rv,beta,dist,d0)
+
+        # The derivative dH/dq 
+        dHq = dH_q(k,q,dist,V,d0,beta)
+
+        # The derivative dH/dm 
+        dHm = dH_m(k,omega,v,W,U,alpha,ro,rv,rW)
+
+        # Diagonalize the Hamiltonian 
+        E,states = sla.eigh(H)
+
+        # Convert dHk, dHq, dHm to the basis of energy eigenstates 
+        dHke = np.matmul((states.conjugate()).transpose(),np.matmul(dHk,states))
+        dHqe = np.matmul((states.conjugate()).transpose(),np.matmul(dHq,states))
+        dHme = np.matmul((states.conjugate()).transpose(),np.matmul(dHm,states))
+
+        for n in range(8):
+            for l in range(8):
+                if (l != n):
+                    Fkq_array[ik,iq,n] = Fkq_array[ik,iq,n] -2.0*np.imag(dHke[n,l]*dHqe[l,n]) / (E[n]-E[l])**2
+                    Fqm_array[ik,iq,n] = Fqm_array[ik,iq,n] -2.0*np.imag(dHqe[n,l]*dHme[l,n]) / (E[n]-E[l])**2
+                    Fmk_array[ik,iq,n] = Fmk_array[ik,iq,n] -2.0*np.imag(dHme[n,l]*dHke[l,n]) / (E[n]-E[l])**2 
+
+
+##### Plot the 2D maps of the Berry curvature of bands 1 and 2
+### The arrays of domains and colormaps 
+X,Y = np.meshgrid(m_array,q_array)
+cmap = 'RdBu'
+maxabs_kq = 0.1*abs(Fkq_array[:,:,0]).max()
+maxabs_qm = 0.1*abs(Fqm_array[:,:,0]).max()
+maxabs_mk = 0.1*abs(Fmk_array[:,:,0]).max()
+
+### Plot the Berry curvature 
+fig,axs = plt.subplots(1,3,sharey=True,figsize=(15,5))
+
+norm_kq = colors.Normalize(vmin = -0.05*np.max(abs(Fkq_array[:,:,0:2])),
+                           vmax = 0.05*np.max(abs(Fkq_array[:,:,0:2])))
+
+norm_qm = colors.Normalize(vmin = -0.05*np.max(abs(Fqm_array[:,:,0:2])),
+                           vmax = 0.05*np.max(abs(Fqm_array[:,:,0:2])))
+
+norm_mk = colors.Normalize(vmin = -0.05*np.max(abs(Fmk_array[:,:,0:2])),
+                           vmax = 0.05*np.max(abs(Fmk_array[:,:,0:2])))
+
+images = []
+
+images.append(axs[0].imshow(np.flipud(Fkq_array[:,:,0].T),
+                            cmap='coolwarm',
+                            norm=norm_kq,
+                            aspect=1.25))
+images.append(axs[1].imshow(np.flipud(Fqm_array[:,:,1].T),
+                            cmap='coolwarm',
+                            norm=norm_qm,
+                            aspect=1.25))
+images.append(axs[2].imshow(np.flipud(Fmk_array[:,:,1].T),
+                            cmap='coolwarm',
+                            norm=norm_mk,
+                            aspect=1.25))
+
+axs[0].set_xticks([0,50,100,150,200])
+axs[0].set_xticklabels([-Mmax,-0.5*Mmax,0,0.5*Mmax,Mmax],fontsize=15)
+axs[0].set_title(r'$F_m = F_{kq}$',fontsize=18)
+axs[1].set_xticks([0,50,100,150,200])
+axs[1].set_xticklabels([-Mmax,-0.5*Mmax,0,0.5*Mmax,Mmax],fontsize=15)
+axs[1].set_title(r'$F_k = F_{qm}$',fontsize=18)
+axs[2].set_xticks([0,50,100,150,200])
+axs[2].set_xticklabels([-Mmax,-0.5*Mmax,0,0.5*Mmax,Mmax],fontsize=15)
+axs[2].set_title(r'$F_q = F_{mk}$',fontsize=18)
+axs[0].set_yticks([0,50,100,150,200])
+axs[0].set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
+
+axs[0].set_xlabel('m',fontsize=16)
+axs[1].set_xlabel('m',fontsize=16)
+axs[2].set_xlabel('m',fontsize=16)
+axs[0].set_ylabel('q',fontsize=16)
+
+plt.show()
+
+
+##### ========================================================================
+##### Plot the Berry curvature F_{kq} in the plane q = const 
+##### ========================================================================
+### The value of q
+q = 0
+
+### The array of mass m
+Nm = 201 
+Mmax = 0.5 
+m_array = np.linspace(-Mmax,Mmax,Nm)
+dm = (m_array.max()-m_array.min())/(Nm-1)
+
+### The array of genuine momenta k 
+Nk = 201 
+Kmax = 0.5
+k_array = np.linspace(-Kmax,Kmax,Nk)
+dk = (k_array.max()-k_array.min())/(Nk-1)
+
+### The array of energy 
+Energy_array = np.zeros((Nm,Nk,8))
+
+### The arrays of Berry curvature 
+Fkq_array = np.zeros((Nm,Nk,8))
+Fqm_array = np.zeros((Nm,Nk,8))
+Fmk_array = np.zeros((Nm,Nk,8))
+
+##### We scan over the intrinsic and the synthetic momenta 
+for im in range(Nm):
+    # The genuine momentum 
+    m = m_array[im]
+
+    for ik in range(Nk):
+        # The synthetic momentum 
+        k = k_array[ik]
+
+        # The Hamiltonian 
+        H = Hamiltonian(k,q,m,omega,eta,v,U,W,alpha,ro,rv,rW,V,beta,dist,d0)
+
+        # The derivative dH/dk 
+        dHk = dH_k(k,q,m,v,rv,beta,dist,d0)
+
+        # The derivative dH/dq 
+        dHq = dH_q(k,q,dist,V,d0,beta)
+
+        # The derivative dH/dm 
+        dHm = dH_m(k,omega,v,W,U,alpha,ro,rv,rW)
+
+        # Diagonalize the Hamiltonian 
+        E,states = sla.eigh(H)
+
+        # Convert dHk, dHq, dHm to the basis of energy eigenstates 
+        dHke = np.matmul((states.conjugate()).transpose(),np.matmul(dHk,states))
+        dHqe = np.matmul((states.conjugate()).transpose(),np.matmul(dHq,states))
+        dHme = np.matmul((states.conjugate()).transpose(),np.matmul(dHm,states))
+
+        for n in range(8):
+            for l in range(8):
+                if (l != n):
+                    Fkq_array[ik,iq,n] = Fkq_array[ik,iq,n] -2.0*np.imag(dHke[n,l]*dHqe[l,n]) / (E[n]-E[l])**2
+                    Fqm_array[ik,iq,n] = Fqm_array[ik,iq,n] -2.0*np.imag(dHqe[n,l]*dHme[l,n]) / (E[n]-E[l])**2
+                    Fmk_array[ik,iq,n] = Fmk_array[ik,iq,n] -2.0*np.imag(dHme[n,l]*dHke[l,n]) / (E[n]-E[l])**2 
+
+
+##### Plot the 2D maps of the Berry curvature of bands 1 and 2
+### The arrays of domains and colormaps 
+X,Y = np.meshgrid(m_array,k_array)
+cmap = 'RdBu'
+maxabs_kq = 0.1*abs(Fkq_array[:,:,0]).max()
+maxabs_qm = 0.1*abs(Fqm_array[:,:,0]).max()
+maxabs_mk = 0.1*abs(Fmk_array[:,:,0]).max()
+
+### Plot the Berry curvature 
+fig,axs = plt.subplots(1,3,sharey=True,figsize=(15,5))
+
+norm_kq = colors.Normalize(vmin = -0.05*np.max(abs(Fkq_array[:,:,0:2])),
+                           vmax = 0.05*np.max(abs(Fkq_array[:,:,0:2])))
+
+norm_qm = colors.Normalize(vmin = -0.05*np.max(abs(Fqm_array[:,:,0:2])),
+                           vmax = 0.05*np.max(abs(Fqm_array[:,:,0:2])))
+
+norm_mk = colors.Normalize(vmin = -0.05*np.max(abs(Fmk_array[:,:,0:2])),
+                           vmax = 0.05*np.max(abs(Fmk_array[:,:,0:2])))
+
+images = []
+
+images.append(axs[0].imshow(np.flipud(Fkq_array[:,:,0].T),
+                            cmap='coolwarm',
+                            norm=norm_kq,
+                            aspect=1.25))
+images.append(axs[1].imshow(np.flipud(Fqm_array[:,:,1].T),
+                            cmap='coolwarm',
+                            norm=norm_qm,
+                            aspect=1.25))
+images.append(axs[2].imshow(np.flipud(Fmk_array[:,:,1].T),
+                            cmap='coolwarm',
+                            norm=norm_mk,
+                            aspect=1.25))
+
+axs[0].set_xticks([0,50,100,150,200])
+axs[0].set_xticklabels([-Mmax,-0.5*Mmax,0,0.5*Mmax,Mmax],fontsize=15)
+axs[0].set_title(r'$F_m = F_{kq}$',fontsize=18)
+axs[1].set_xticks([0,50,100,150,200])
+axs[1].set_xticklabels([-Mmax,-0.5*Mmax,0,0.5*Mmax,Mmax],fontsize=15)
+axs[1].set_title(r'$F_k = F_{qm}$',fontsize=18)
+axs[2].set_xticks([0,50,100,150,200])
+axs[2].set_xticklabels([-Mmax,-0.5*Mmax,0,0.5*Mmax,Mmax],fontsize=15)
+axs[2].set_title(r'$F_q = F_{mk}$',fontsize=18)
+axs[0].set_yticks([0,50,100,150,200])
+axs[0].set_yticklabels([Kmax,0.5*Kmax,0,-0.5*Kmax,-Kmax],fontsize=15)
+
+axs[0].set_xlabel('m',fontsize=16)
+axs[1].set_xlabel('m',fontsize=16)
+axs[2].set_xlabel('m',fontsize=16)
+axs[0].set_ylabel('k',fontsize=16)
+
+plt.show()"
+"""
