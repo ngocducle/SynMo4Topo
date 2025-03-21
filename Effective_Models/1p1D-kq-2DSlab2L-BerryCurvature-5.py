@@ -179,13 +179,13 @@ for i0 in range(21):
 
     ##### ================================================================================
     ##### The arrays of k and q 
-    ### The array of intrinsic momenta k
+    ### The array of genuine momenta k
     Nk = 201 
     Kmax = 0.1
     k_array = np.linspace(-Kmax,Kmax,Nk)
     dk = (k_array.max()-k_array.min())/(Nk-1)
 
-    ### The array of intrinsic momenta q 
+    ### The array of synthetic momenta q 
     Nq = 201
     Qmax = 0.5
     q_array = np.linspace(-Qmax,Qmax,Nq)
