@@ -191,8 +191,8 @@ v = 0.31429072
 U = -0.01563435   
 W = 0.00148791
 
-eta = -0.0032 
-alpha = 0.062
+eta = 0.0
+alpha = 0.0
 
 ro = 0.1353 
 rv = 0.0892 
@@ -320,12 +320,11 @@ axs[0].set_ylabel('q',fontsize=16)
 
 plt.show()
 
-"""
 ##### ========================================================================
 ##### Plot the Berry curvature F_{kq} in the plane k = const 
 ##### ========================================================================
 ### The value of k
-k = 0
+k = 0.05
 
 ### The array of mass m
 Nm = 201 
@@ -443,7 +442,7 @@ plt.show()
 ##### Plot the Berry curvature F_{kq} in the plane q = const 
 ##### ========================================================================
 ### The value of q
-q = 0
+q = 0.05
 
 ### The array of mass m
 Nm = 201 
@@ -554,5 +553,4 @@ axs[1].set_xlabel('m',fontsize=16)
 axs[2].set_xlabel('m',fontsize=16)
 axs[0].set_ylabel('k',fontsize=16)
 
-plt.show()"
-"""
+plt.show()
