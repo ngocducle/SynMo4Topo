@@ -135,7 +135,7 @@ def dH_q(k,q,dist,V,d0,beta):
 ##### =====================================================================
 ##### FUNCTION: The derivative of the Hamiltonian with respect to 
 ##### the mass m 
-def dH_m(k,omega,v,W,U,alpha,ro,rv,rW):
+def dH_m(k,omega,v,U,W,alpha,ro,rv,rW):
     dHm = np.zeros((8,8),dtype=complex)
 
     ### Block (1,1) 
@@ -186,10 +186,10 @@ def dH_m(k,omega,v,W,U,alpha,ro,rv,rW):
 ##### The MAIN program goes here 
 #m = -0.10164457   
 shift = 0.0012 
-omega = 0.29793535 + shift    
-v = 0.31429072   
-U = -0.01563435   
-W = 0.00148791
+omega = 0.29919014  
+v = 0.31311088 
+U = -0.01525637   
+W = 0.00175950
 
 eta = 0.0
 alpha = 0.0
@@ -248,7 +248,7 @@ for ik in range(Nk):
         dHq = dH_q(k,q,dist,V,d0,beta)
 
         # The derivative dH/dm 
-        dHm = dH_m(k,omega,v,W,U,alpha,ro,rv,rW)
+        dHm = dH_m(k,omega,v,U,W,alpha,ro,rv,rW)
 
         # Diagonalize the Hamiltonian 
         E,states = sla.eigh(H)
@@ -324,7 +324,7 @@ plt.show()
 ##### Plot the Berry curvature F_{kq} in the plane k = const 
 ##### ========================================================================
 ### The value of k
-k = 0.05
+k = 0.0
 
 ### The array of mass m
 Nm = 201 
@@ -442,7 +442,7 @@ plt.show()
 ##### Plot the Berry curvature F_{kq} in the plane q = const 
 ##### ========================================================================
 ### The value of q
-q = 0.05
+q = 0.0
 
 ### The array of mass m
 Nm = 201 
@@ -483,7 +483,7 @@ for im in range(Nm):
         dHq = dH_q(k,q,dist,V,d0,beta)
 
         # The derivative dH/dm 
-        dHm = dH_m(k,omega,v,W,U,alpha,ro,rv,rW)
+        dHm = dH_m(k,omega,v,U,W,alpha,ro,rv,rW)
 
         # Diagonalize the Hamiltonian 
         E,states = sla.eigh(H)
