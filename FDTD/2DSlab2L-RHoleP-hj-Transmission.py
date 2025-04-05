@@ -43,7 +43,7 @@ freq_array = np.linspace(fcen-df/2,fcen+df/2,nfreq)
 wvl_array = 1/freq_array 
 
 ### The number of unit cells along the line y = 0
-Ncell = 8
+Ncell = 2
 
 ### Padding block
 pad = 3.0 # 2.0*wvl_array[0] 
@@ -53,12 +53,12 @@ d = np.sqrt(2.0)   # The diagonal of one square unit cell
 h = 0.35           # Thickness of the two layers
 
 # The layer 1 
-b1 = 0.44   # The edge length of the undeformed square hole
-e1 = -0.1    # The deformation parameter 
+b1 = 0.30   # The edge length of the undeformed square hole
+e1 = 0.1    # The deformation parameter 
 
 # The layer 2 
-b2 = 0.34   # The edge length of the undeformed square hole 
-e2 = -0.1    # The deformation parameter 
+b2 = 0.46   # The edge length of the undeformed square hole 
+e2 = 0.1    # The deformation parameter 
 
 # The interlayer distance 
 dist = 0.1

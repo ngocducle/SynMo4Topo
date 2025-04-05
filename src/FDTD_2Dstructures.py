@@ -314,7 +314,7 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                     vertices = vertice1,
                     height = h1,
                     axis = mp.Vector3(0,0,1),
-                    center = mp.Vector3(j*d+0.5*delta,0,0.5*(hbilayer-h1)),
+                    center = mp.Vector3(j*d-0.5*delta,0,0.5*(hbilayer-h1)),
                     material = Envir 
                 )
             )
@@ -327,7 +327,7 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                     vertices = vertice1,
                     height = h1,
                     axis = mp.Vector3(0,0,1),
-                    center = mp.Vector3((j+0.5)*d+0.5*delta,0.5*d,0.5*(hbilayer-h1)),
+                    center = mp.Vector3((j+0.5)*d-0.5*delta,0.5*d,0.5*(hbilayer-h1)),
                     material = Envir 
                 )
             )
@@ -338,7 +338,7 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                     vertices = vertice1,
                     height = h1,
                     axis = mp.Vector3(0,0,1),
-                    center = mp.Vector3((j+0.5)*d+0.5*delta,-0.5*d,0.5*(hbilayer-h1)),
+                    center = mp.Vector3((j+0.5)*d-0.5*delta,-0.5*d,0.5*(hbilayer-h1)),
                     material = Envir 
                 )
             )
@@ -355,7 +355,7 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                     vertices = vertice1,
                     height = h1,
                     axis = mp.Vector3(0,0,1),
-                    center = mp.Vector3((j+0.5)*d+0.5*delta,0,0.5*(hbilayer-h1)),
+                    center = mp.Vector3((j+0.5)*d-0.5*delta,0,0.5*(hbilayer-h1)),
                     material = Envir 
                 )
             )
@@ -368,7 +368,7 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                     vertices = vertice1,
                     height = h1,
                     axis = mp.Vector3(0,0,1),
-                    center = mp.Vector3(j*d+0.5*delta,0.5*d,0.5*(hbilayer-h1)),
+                    center = mp.Vector3(j*d-0.5*delta,0.5*d,0.5*(hbilayer-h1)),
                     material = Envir 
                 )
             )
@@ -379,7 +379,7 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                     vertices = vertice1,
                     height = h1,
                     axis = mp.Vector3(0,0,1),
-                    center = mp.Vector3(j*d+0.5*delta,-0.5*d,0.5*(hbilayer-h1)),
+                    center = mp.Vector3(j*d-0.5*delta,-0.5*d,0.5*(hbilayer-h1)),
                     material = Envir 
                 )
             )
@@ -401,7 +401,7 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                     vertices = vertice2,
                     height = h2,
                     axis = mp.Vector3(0,0,1),
-                    center = mp.Vector3(j*d-0.5*delta,0,-0.5*(hbilayer-h2)),
+                    center = mp.Vector3(j*d+0.5*delta,0,-0.5*(hbilayer-h2)),
                     material = Envir 
                 )
             )
@@ -414,7 +414,7 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                     vertices = vertice2,
                     height = h2,
                     axis = mp.Vector3(0,0,1),
-                    center = mp.Vector3((j+0.5)*d-0.5*delta,0.5*d,-0.5*(hbilayer-h2)),
+                    center = mp.Vector3((j+0.5)*d+0.5*delta,0.5*d,-0.5*(hbilayer-h2)),
                     material = Envir 
                 )
             )
@@ -425,7 +425,7 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                     vertices = vertice2,
                     height = h2,
                     axis = mp.Vector3(0,0,1),
-                    center = mp.Vector3((j+0.5)*d-0.5*delta,-0.5*d,-0.5*(hbilayer-h2)),
+                    center = mp.Vector3((j+0.5)*d+0.5*delta,-0.5*d,-0.5*(hbilayer-h2)),
                     material = Envir 
                 )
             )
@@ -442,7 +442,7 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                     vertices = vertice2,
                     height = h2,
                     axis = mp.Vector3(0,0,1),
-                    center = mp.Vector3((j+0.5)*d-0.5*delta,0,-0.5*(hbilayer-h2)),
+                    center = mp.Vector3((j+0.5)*d+0.5*delta,0,-0.5*(hbilayer-h2)),
                     material = Envir 
                 )
             )
@@ -455,7 +455,7 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                     vertices = vertice2,
                     height = h2,
                     axis = mp.Vector3(0,0,1),
-                    center = mp.Vector3(j*d-0.5*delta,0.5*d,-0.5*(hbilayer-h2)),
+                    center = mp.Vector3(j*d+0.5*delta,0.5*d,-0.5*(hbilayer-h2)),
                     material = Envir 
                 )
             )
@@ -466,7 +466,7 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
                     vertices = vertice2,
                     height = h2,
                     axis = mp.Vector3(0,0,1),
-                    center = mp.Vector3(j*d-0.5*delta,-0.5*d,-0.5*(hbilayer-h2)),
+                    center = mp.Vector3(j*d+0.5*delta,-0.5*d,-0.5*(hbilayer-h2)),
                     material = Envir 
                 )
             )
@@ -491,6 +491,8 @@ def geo_2DSlab2L_RHoleP(d,h1,h2,hbilayer,delta,
 ###     Ncell: number of unit cells along the x-direction (diagonal)
 ###     sx: cell structure along the x-direction
 ###     sy: cell structure along the y-direction
+###
+### The lower layer is shifted by an amount delta with respect to the upper layer
 
 def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                                      vertice1,vertice2,
@@ -550,7 +552,7 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                 vertices = vertice2,
                 height = h,
                 axis = mp.Vector3(0,0,1),
-                center = mp.Vector3(0.25*d+j*d+0.5*delta,0,0.5*(hbilayer-h)),
+                center = mp.Vector3(0.25*d+j*d-0.5*delta,0,0.5*(hbilayer-h)),
                 material = Envir
             )
         )
@@ -561,7 +563,7 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                 vertices = vertice2,
                 height = h,
                 axis = mp.Vector3(0,0,1),
-                center = mp.Vector3(0.75*d+j*d+0.5*delta,0.5*d,0.5*(hbilayer-h)),
+                center = mp.Vector3(0.75*d+j*d-0.5*delta,0.5*d,0.5*(hbilayer-h)),
                 material = Envir
             )
         )
@@ -572,7 +574,7 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                 vertices = vertice2,
                 height = h,
                 axis = mp.Vector3(0,0,1),
-                center = mp.Vector3(0.75*d+j*d+0.5*delta,-0.5*d,0.5*(hbilayer-h)),
+                center = mp.Vector3(0.75*d+j*d-0.5*delta,-0.5*d,0.5*(hbilayer-h)),
                 material = Envir
             )
         )
@@ -585,7 +587,7 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                 vertices = vertice1,
                 height = h,
                 axis = mp.Vector3(0,0,1),
-                center = mp.Vector3(-0.75*d-j*d+0.5*delta,0,0.5*(hbilayer-h)),
+                center = mp.Vector3(-0.75*d-j*d-0.5*delta,0,0.5*(hbilayer-h)),
                 material = Envir
             )
         )
@@ -596,7 +598,7 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                 vertices = vertice1,
                 height = h,
                 axis = mp.Vector3(0,0,1),
-                center = mp.Vector3(-0.25*d-j*d+0.5*delta,0.5*d,0.5*(hbilayer-h)),
+                center = mp.Vector3(-0.25*d-j*d-0.5*delta,0.5*d,0.5*(hbilayer-h)),
                 material = Envir
             )
         )
@@ -607,7 +609,7 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                 vertices = vertice1,
                 height = h,
                 axis = mp.Vector3(0,0,1),
-                center = mp.Vector3(-0.25*d-j*d+0.5*delta,-0.5*d,0.5*(hbilayer-h)),
+                center = mp.Vector3(-0.25*d-j*d-0.5*delta,-0.5*d,0.5*(hbilayer-h)),
                 material = Envir
             )
         )
@@ -621,7 +623,7 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                 vertices = vertice1,
                 height = h,
                 axis = mp.Vector3(0,0,1),
-                center = mp.Vector3(0.25*d+j*d-0.5*delta,0,-0.5*(hbilayer-h)),
+                center = mp.Vector3(0.25*d+j*d+0.5*delta,0,-0.5*(hbilayer-h)),
                 material = Envir
             )
         )
@@ -632,7 +634,7 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                 vertices = vertice1,
                 height = h,
                 axis = mp.Vector3(0,0,1),
-                center = mp.Vector3(0.75*d+j*d-0.5*delta,0.5*d,-0.5*(hbilayer-h)),
+                center = mp.Vector3(0.75*d+j*d+0.5*delta,0.5*d,-0.5*(hbilayer-h)),
                 material = Envir
             )
         )
@@ -643,7 +645,7 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                 vertices = vertice1,
                 height = h,
                 axis = mp.Vector3(0,0,1),
-                center = mp.Vector3(0.75*d+j*d-0.5*delta,-0.5*d,-0.5*(hbilayer-h)),
+                center = mp.Vector3(0.75*d+j*d+0.5*delta,-0.5*d,-0.5*(hbilayer-h)),
                 material = Envir
             )
         )
@@ -656,7 +658,7 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                 vertices = vertice2,
                 height = h,
                 axis = mp.Vector3(0,0,1),
-                center = mp.Vector3(-0.75*d-j*d-0.5*delta,0,-0.5*(hbilayer-h)),
+                center = mp.Vector3(-0.75*d-j*d+0.5*delta,0,-0.5*(hbilayer-h)),
                 material = Envir
             )
         )
@@ -667,7 +669,7 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                 vertices = vertice2,
                 height = h,
                 axis = mp.Vector3(0,0,1),
-                center = mp.Vector3(-0.25*d-j*d-0.5*delta,0.5*d,-0.5*(hbilayer-h)),
+                center = mp.Vector3(-0.25*d-j*d+0.5*delta,0.5*d,-0.5*(hbilayer-h)),
                 material = Envir
             )
         )
@@ -678,7 +680,7 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                 vertices = vertice2,
                 height = h,
                 axis = mp.Vector3(0,0,1),
-                center = mp.Vector3(-0.25*d-j*d-0.5*delta,-0.5*d,-0.5*(hbilayer-h)),
+                center = mp.Vector3(-0.25*d-j*d+0.5*delta,-0.5*d,-0.5*(hbilayer-h)),
                 material = Envir
             )
         )
