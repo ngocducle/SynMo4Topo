@@ -188,7 +188,7 @@ for idelta in range(Ndelta):
     print('sx = '+str(sz))
     print('Shape of eps_data: '+str(np.shape(eps_data)))
 
-     ##### Plot the dielectric function 
+    ##### Plot the dielectric function 
     shape = np.shape(eps_data)
     Nx = shape[0]
     Ny = shape[1]
