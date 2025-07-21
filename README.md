@@ -14,5 +14,5 @@ legume
 
 Tidy3D
 
-## Papers using this code:
+## Paper using this code
 Ngoc Duc Le, D.-H.-Minh Nguyen, Dung Xuan Nguyen, Hai Son Nguyen, Dario Bercioux, Berry Monopole Scattering in the Synthetic Momentum Space of a Bilayer Photonic Crystal Slab, arXiv:2507.11983
