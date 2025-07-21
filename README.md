@@ -7,8 +7,11 @@ This repository contains the programs and functions for simulations of topologic
 This code runs using the following packages and softwares:
 
 MEEP
+
 MPB
+
 legume
+
 Tidy3D
 
 ## Papers using this code:
