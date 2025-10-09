@@ -9,7 +9,7 @@ shift = 0.5
 d = shift/2 # Layer 2 (upper) is shifted by d and layer 1 (lower) by -d 
 comp = mp.Ez    # The field component
 
-resolution =16 # pixels/micrometer 
+resolution =20 # pixels/micrometer
 
 InP = mp.Medium(index = 3.17)
 Sb3S2 = mp.Medium(index = 2.73)
@@ -75,16 +75,26 @@ nonpml_vol = mp.Volume(
 
 #print(sx-2*dabs)
 x_array = np.linspace(-N,N,2*N*resolution+2)
+np.savetxt('x_array.txt',x_array)
 
+y_array = np.linspace(-sy/2+dpml,sy/2+dpml,(sy-2*dpml)*resolution+2)
+np.savetxt('y_array.txt',y_array)
+
+# sim.add_dft_fields(cs,fcen,df,nfreq,freq,where,center,size,yee_grid,decimation,persist)
 dft_obj = sim.add_dft_fields([comp],fcen,0,1,where=nonpml_vol)
 
 sim.run(until_after_sources=mp.stop_when_fields_decayed(300,comp,mp.Vector3(-d-0.2,0.18),1e-7))
 
 eps_data = sim.get_array(vol=nonpml_vol,component=mp.Dielectric)
-ez_data = np.real(sim.get_dft_array(dft_obj,comp,0))
+
+# sim.get_dft_array(dft_obj,component,number of the frequency)
+ez_data = np.real(sim.get_dft_array(dft_obj,comp,0)) # The real and imaginary parts express the field at different time
+print('Size of ez_data: '+str(np.shape(ez_data)))
 
 np.savetxt('dielectric.txt',eps_data)
 np.savetxt('full_field.txt',ez_data)
-np.savetxt('dft_field_along_x.txt',
+np.savetxt('dft_field_along_x_Ez.txt',
            np.column_stack((x_array,np.sum(np.square(ez_data),axis=1)))
            )
+
+np.savetxt('dft_field_xy_Ez.txt',ez_data)
