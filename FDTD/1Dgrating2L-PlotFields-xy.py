@@ -11,6 +11,7 @@ Ez = np.loadtxt('dft_field_xy_Ez.txt')
 print(np.shape(dielectric))
 print(np.shape(Ez))
 
+# Plot figure
 X,Y = np.meshgrid(x_array,y_array)
 
 print(np.shape(X))

@@ -9,7 +9,7 @@ shift = 0.5
 d = shift/2 # Layer 2 (upper) is shifted by d and layer 1 (lower) by -d 
 comp = mp.Ez    # The field component
 
-resolution =20 # pixels/micrometer
+resolution =32 # pixels/micrometer
 
 InP = mp.Medium(index = 3.17)
 Sb3S2 = mp.Medium(index = 2.73)
@@ -25,7 +25,7 @@ dist = 0.1  # distance between layers
 dpml = 2    # PML thickness
 dabs = 6
 
-N = 10  # Number of unit cell per side
+N = 20  # Number of unit cell per side
 
 sx = 2*(dabs+N) # size of cell in x direction 
 print(sx)

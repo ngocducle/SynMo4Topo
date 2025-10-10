@@ -17,7 +17,7 @@ import os
 ##### ===============================================================================
 
 ### Resolution 
-resolution = 20
+resolution = 16
 
 ### Boundary layers 
 dboundary = 3.0  # PML/Absorber thickness 
@@ -45,7 +45,7 @@ df = 0.015      # pulse width
 nfreq = 501     # number of frequencies
 
 ### The number of unit cells along the line y = 0
-Ncell = 8
+Ncell = 2
 
 ### Padding block
 pad = 3 
@@ -55,11 +55,11 @@ d = np.sqrt(2.0)   # The diagonal of one square unit cell
 h = 0.35           # Thickness of the two layers
 
 # The layer 1 
-b1 = 0.41   # The edge length of the undeformed square hole
+b1 = 0.46   # The edge length of the undeformed square hole
 e1 = 0.1    # The deformation parameter 
 
 # The layer 2 
-b2 = 0.35   # The edge length of the undeformed square hole 
+b2 = 0.30   # The edge length of the undeformed square hole
 e2 = 0.1    # The deformation parameter 
 
 # The interlayer distance 
@@ -69,7 +69,7 @@ dist = 0.1
 delta = 0.5
 
 # The total size of the structure along the x-axis
-structurex = 2*Ncell*d 
+structurex = (2*Ncell+1)*d
 
 # The toal size of the structure along the y-axis
 structurey = d 
@@ -121,11 +121,11 @@ sources = [
         mp.GaussianSource(fcen,fwidth=df),
         component = component,
         center = mp.Vector3(-delta/2-0.027,+0.026,0.0),
-        size = mp.Vector3(0,0,0)
+        size = mp.Vector3(0,structurey,hbilayer)
     )
 ]
 
- ##### GEOMETRY
+##### GEOMETRY
 geometry = geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
                                             vertice1,vertice2,
                                             Mater,Envir,Ncell,sx,sy)
@@ -148,7 +148,7 @@ Field_vol = mp.Volume(
 )
 
 ##### The array of x,y,z-direction
-x_array = np.linspace(-Ncell*d,Ncell*d,int(structurex*resolution)+2)
+x_array = np.linspace(structurex/2,structurex/2,int(structurex*resolution)+2)
 y_array = np.linspace(-0.5*d,0.5*d,int(d*resolution)+2)
 z_array = np.linspace(-0.5*Lz,0.5*Lz,int(Lz*resolution)+2)
 

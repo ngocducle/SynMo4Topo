@@ -65,4 +65,14 @@ ax.set_xlabel('x',fontsize=14)
 ax.set_ylabel('y',fontsize=14)
 ax.set_title(f'z = {z1:.4f}',fontsize=14)
 ax.set_aspect('equal')
+
+
+fig,ax = plt.subplots()
+ax.pcolormesh(X,Y,np.real(Field_Ey[:,:,ind1].T),shading='gouraud',cmap='RdBu')
+ax.contour(X,Y,dielectric[:,:,ind1].T,cmap='binary')
+ax.set_xlabel('x',fontsize=14)
+ax.set_ylabel('y',fontsize=14)
+ax.set_title(f'z = {z1:.4f}',fontsize=14)
+ax.set_aspect('equal')
+
 plt.show()
