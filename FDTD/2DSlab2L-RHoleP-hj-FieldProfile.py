@@ -17,7 +17,7 @@ import os
 ##### ===============================================================================
 
 ### Resolution 
-resolution = 16
+resolution = 20
 
 ### Boundary layers 
 dboundary = 3.0  # PML/Absorber thickness 
@@ -45,7 +45,7 @@ df = 0.015      # pulse width
 nfreq = 501     # number of frequencies
 
 ### The number of unit cells along the line y = 0
-Ncell = 2
+Ncell = 8
 
 ### Padding block
 pad = 3 
@@ -121,7 +121,7 @@ sources = [
         mp.GaussianSource(fcen,fwidth=df),
         component = component,
         center = mp.Vector3(-delta/2-0.027,+0.026,0.0),
-        size = mp.Vector3(0,structurey,hbilayer)
+        size = mp.Vector3(0,0,0)
     )
 ]
 
@@ -148,18 +148,17 @@ Field_vol = mp.Volume(
 )
 
 ##### The array of x,y,z-direction
-x_array = np.linspace(structurex/2,structurex/2,int(structurex*resolution)+2)
-y_array = np.linspace(-0.5*d,0.5*d,int(d*resolution)+2)
-z_array = np.linspace(-0.5*Lz,0.5*Lz,int(Lz*resolution)+2)
+#x_array = np.linspace(structurex/2,structurex/2,int(structurex*resolution)+2)
+#y_array = np.linspace(-0.5*d,0.5*d,int(d*resolution)+2)
+#z_array = np.linspace(-0.5*Lz,0.5*Lz,int(Lz*resolution)+2)
 
 ##### The discrete Fourier transform
 dft_obj = sim.add_dft_fields([mp.Ey],fcen,0,1,where=Field_vol)
 
-
 ##### Run the simulation
 sim.run(
     until_after_sources=mp.stop_when_fields_decayed(
-        300,
+        3000,
         mp.Ey,
         mp.Vector3(-d-0.2,0.18),
         1e-7)
@@ -168,6 +167,10 @@ sim.run(
 ##### Get the dielectric and electric field profiles
 eps_data = sim.get_array(vol=Field_vol,component=mp.Dielectric)
 Ey_data = sim.get_dft_array(dft_obj,mp.Ey,0)
+
+x_array = np.linspace(-structurex/2,structurex/2,np.shape(eps_data)[0])
+y_array = np.linspace(-0.5*d,0.5*d,np.shape(eps_data)[1])
+z_array = np.linspace(-0.5*Lz,0.5*Lz,np.shape(eps_data)[2])
 
 ##### Save the x_array, y_array, z_array 
 print('Shape of x_array:')
