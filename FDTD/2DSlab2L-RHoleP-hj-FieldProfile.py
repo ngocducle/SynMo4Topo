@@ -40,8 +40,8 @@ mix_layers = [mp.Absorber(direction = mp.X,
             ]
 
 ### The source 
-fcen = 0.255    # pulse center frequency 
-df = 0.015      # pulse width 
+fcen = 0.25426    # pulse center frequency
+df = 0.00022      # pulse width
 nfreq = 501     # number of frequencies
 
 ### The number of unit cells along the line y = 0
@@ -156,13 +156,20 @@ Field_vol = mp.Volume(
 dft_obj = sim.add_dft_fields([mp.Ey],fcen,0,1,where=Field_vol)
 
 ##### Run the simulation
+#sim.run(
+#    until_after_sources=mp.stop_when_fields_decayed(
+#        3000,
+#        mp.Ey,
+#        mp.Vector3(-d-0.2,0.18),
+#        1e-7)
+#    )
+
 sim.run(
-    until_after_sources=mp.stop_when_fields_decayed(
-        3000,
-        mp.Ey,
-        mp.Vector3(-d-0.2,0.18),
-        1e-7)
-    )
+    until_after_sources = mp.stop_when_dft_decayed(tol=1e-7,
+                      minimum_run_time=0,
+                      maximum_run_time=None)
+)
+
 
 ##### Get the dielectric and electric field profiles
 eps_data = sim.get_array(vol=Field_vol,component=mp.Dielectric)

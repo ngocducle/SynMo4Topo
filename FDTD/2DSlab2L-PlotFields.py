@@ -65,14 +65,49 @@ ax.set_xlabel('x',fontsize=14)
 ax.set_ylabel('y',fontsize=14)
 ax.set_title(f'z = {z1:.4f}',fontsize=14)
 ax.set_aspect('equal')
+plt.savefig('Field_profile_xy_ind1.png')
+
+fig,ax = plt.subplots()
+ax.pcolormesh(X,Y,np.real(Field_Ey[:,:,ind2].T),shading='gouraud',cmap='RdBu')
+ax.set_xlabel('x',fontsize=14)
+ax.set_ylabel('y',fontsize=14)
+ax.set_title(f'z = {z2:.4f}',fontsize=14)
+ax.set_aspect('equal')
+plt.savefig('Field_profile_xy_ind2.png')
 
 
 fig,ax = plt.subplots()
-ax.pcolormesh(X,Y,np.real(Field_Ey[:,:,ind1].T),shading='gouraud',cmap='RdBu')
-ax.contour(X,Y,dielectric[:,:,ind1].T,cmap='binary')
+ax.pcolormesh(X,Y,np.real(Field_Ey[:,:,ind3].T),shading='gouraud',cmap='RdBu')
+ax.contour(X,Y,dielectric[:,:,ind3].T,cmap='binary')
 ax.set_xlabel('x',fontsize=14)
 ax.set_ylabel('y',fontsize=14)
-ax.set_title(f'z = {z1:.4f}',fontsize=14)
+ax.set_title(f'z = {z3:.4f}',fontsize=14)
 ax.set_aspect('equal')
+plt.savefig('Field_profile_xy_ind3.png')
 
+indy = find_nearest(y_array,0)
+
+X,Z = np.meshgrid(x_array,z_array)
+fig,ax = plt.subplots()
+ax.pcolormesh(X,Z,np.real(Field_Ey[:,indy,:].T),shading='gouraud',cmap='RdBu')
+#ax.contour(X,Z,dielectric[:,indy,:].T,cmap='binary')
+ax.set_xlabel('x',fontsize=14)
+ax.set_ylabel('z',fontsize=14)
+ax.set_title('y = 0')
+ax.set_aspect('equal')
+plt.savefig('Field_profile_xz_indy.png')
+
+plt.show()
+
+### Plot the field profile integrated over dydz 
+data = np.loadtxt('dft_field_along_x.txt')
+
+x_array = data[:,0]
+y_array = data[:,1]
+
+fig,ax = plt.subplots()
+ax.plot(x_array,np.log(y_array)/np.log(10))
+ax.set_xlabel('x',fontsize=14)
+ax.set_ylabel('log10(|Ez|)',fontsize=14)
+plt.savefig('Integrated_field.png')
 plt.show()
