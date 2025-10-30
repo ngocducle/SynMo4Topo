@@ -165,7 +165,7 @@ dft_obj = sim.add_dft_fields([mp.Ey],fcen,0,1,where=Field_vol)
 #    )
 
 sim.run(
-    until_after_sources = mp.stop_when_dft_decayed(tol=1e-7,
+    until_after_sources = mp.stop_when_dft_decayed(tol=1e-11,
                       minimum_run_time=0,
                       maximum_run_time=None)
 )
