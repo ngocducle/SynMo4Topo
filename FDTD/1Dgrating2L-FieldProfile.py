@@ -83,7 +83,9 @@ np.savetxt('y_array.txt',y_array)
 # sim.add_dft_fields(cs,fcen,df,nfreq,freq,where,center,size,yee_grid,decimation,persist)
 dft_obj = sim.add_dft_fields([comp],fcen,0,1,where=nonpml_vol)
 
-sim.run(until_after_sources=mp.stop_when_fields_decayed(3000,comp,mp.Vector3(-d-0.2,0.18),1e-7))
+#sim.run(until_after_sources=mp.stop_when_fields_decayed(3000,comp,mp.Vector3(-d-0.2,0.18),1e-7))
+
+sim.run(until = 5000)
 
 eps_data = sim.get_array(vol=nonpml_vol,component=mp.Dielectric)
 
