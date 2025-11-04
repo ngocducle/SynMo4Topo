@@ -45,7 +45,7 @@ df = 0.00022      # pulse width
 nfreq = 501     # number of frequencies
 
 ### The number of unit cells along the line y = 0
-Ncell = 8
+Ncell = 25
 
 ### Padding block
 pad = 3 
@@ -164,12 +164,16 @@ dft_obj = sim.add_dft_fields([mp.Ey],fcen,0,1,where=Field_vol)
 #        1e-7)
 #    )
 
-sim.run(
-    until_after_sources = mp.stop_when_dft_decayed(tol=1e-11,
-                      minimum_run_time=0,
-                      maximum_run_time=None)
-)
+#sim.run(
+#    until_after_sources = mp.stop_when_dft_decayed(tol=1e-11,
+#                      minimum_run_time=0,
+#                      maximum_run_time=None)
+#)
 
+sim.run(
+    until_after_sources=mp.stop_when_energy_decayed(
+        dt = 3000, decay_by= 1e-14)
+)
 
 ##### Get the dielectric and electric field profiles
 eps_data = sim.get_array(vol=Field_vol,component=mp.Dielectric)
