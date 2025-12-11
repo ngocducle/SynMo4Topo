@@ -686,3 +686,60 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
         )
 
     return geometry 
+
+##### ================================================================================
+##### FUNCTION: define the geometry of 2D photonic crystal slab bilayer
+##### square unit cell and rhombus hole. The structure is rotated so that
+##### the source emits the electromagnetic wave along the diagonal direction
+##### that we choose to be the x-direction
+def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
+                                             vertice1,vertice2,
+                                             Mater,Envir,Ncell_x,Ncell_y,sx,sy):
+
+    ### Initialize the geometry with environment
+    geometry = []
+
+    geometry.append(
+        mp.Block(
+            center = mp.Vector3(0,0,0),
+            size = mp.Vector3(mp.inf,mp.inf,mp.inf),
+            material = Envir
+        )
+    )
+
+    ### Add the 2D slabs of thickness 2*h+dist
+    geometry.append(
+        mp.Block(
+            center = mp.Vector3(0,0,0),
+            size = mp.Vector3(mp.inf,mp.inf,hbilayer),
+            material = Mater
+        )
+    )
+
+    dist = hbilayer - 2*h
+
+    geometry.append(
+        mp.Block(
+            center = mp.Vector3(0,0,0),
+            size = mp.Vector3((2*Ncell_x+1)*d,Ncell_y*d,dist),
+            material = Envir
+        )
+    )
+
+    ##### LAYER 1:
+    ### The right-hand side slab
+    for i in range(np.arange(0,Ncell_y)):
+        for j in range(np.arange(0,Ncell_x)):
+            geometry.append(
+                    mp.Prism(
+                        vertices = vertice2,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(0.25*d+j*d-0.5*delta,j*d,0.5*(hbilayer-h)),
+                        material = Envir
+                        )
+            )
+
+
+    ### Return the results
+    return geometry

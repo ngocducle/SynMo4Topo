@@ -11,7 +11,7 @@ from FDTD_2Dstructures import geom_2DSlab2L_RHoleP_hj_sameMater_Defect
 import os
 
 ### Resolution
-resolution = 20
+resolution = 10
 
 ### Boundary layers
 dboundary = 3.0     # PML/Absorber thickness
@@ -172,7 +172,7 @@ for idelta in range(Ndelta):
                 dt = 30,
                 c = component,
                 pt = pt,
-                decay_by = 1e-2
+                decay_by = 1
             )
     )
 
