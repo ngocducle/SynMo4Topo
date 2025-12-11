@@ -43,8 +43,8 @@ freq_array = np.linspace(fcen-df/2,fcen+df/2,nfreq)
 wvl_array = 1/freq_array
 
 ### The number of unit cells along the directions x and y
-Ncell_x = 3
-Ncell_y = 2
+Ncell_x = 6
+Ncell_y = 4
 
 ### Padding block
 pad = 3.0
@@ -172,7 +172,7 @@ for idelta in range(Ndelta):
                 dt = 30,
                 c = component,
                 pt = pt,
-                decay_by = 1
+                decay_by = 0.5
             )
     )
 
