@@ -721,7 +721,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
     geometry.append(
         mp.Block(
             center = mp.Vector3(0,0,0),
-            size = mp.Vector3((2*Ncell_x+1)*d,Ncell_y*d,dist),
+            size = mp.Vector3((2*Ncell_x+1)*d,(Ncell_y+1)*d,dist),
             material = Envir
         )
     )

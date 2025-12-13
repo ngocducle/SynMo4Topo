@@ -68,7 +68,7 @@ dist = 0.1
 structurex = (2*Ncell_x+1)*d
 
 # The total size of the structure along the y-axis
-structurey = Ncell_y*d
+structurey = (Ncell_y+1)*d
 
 # The total thickness of the bilayer (z-direction)
 hbilayer = 2*h + dist
@@ -231,5 +231,20 @@ for idelta in range(Ndelta):
         os.system('mv *.png '+namesave)
 
 
+    ##### ===============================================================================
+    ##### Get the flux
+    trans_flux = np.array(mp.get_fluxes(trans))
+    freq_flux = np.array(mp.get_flux_freqs(trans))
 
+    datasave = np.column_stack((freq_flux,trans_flux))
+
+    print(np.shape(trans_flux))
+    print(np.shape(freq_flux))
+
+    ##### ===============================================================================
+    ##### Save the transmitted flux to file
+    if mp.am_master():
+        filename = namesave + '.txt'
+        with open(filename,'w') as file:
+            np.savetxt(file,datasave,'%.8f')
 
