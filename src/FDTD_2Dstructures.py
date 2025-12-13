@@ -877,7 +877,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
             for j in np.arange(0,Ncell_x):
                 geometry.append(
                     mp.Prism(
-                        vertices = vertice1,
+                        vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
                         center = mp.Vector3(-0.75*d-j*d+0.5*delta,i*d,-0.5*(hbilayer-h)),
@@ -887,7 +887,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
 
                 geometry.append(
                     mp.Prism(
-                        vertices = vertice1,
+                        vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
                         center = mp.Vector3(-0.25*d-j*d+0.5*delta,(i+0.5)*d,-0.5*(hbilayer-h)),
@@ -900,7 +900,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
             for j in np.arange(0,Ncell_x):
                 geometry.append(
                     mp.Prism(
-                        vertices = vertice1,
+                        vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
                         center = mp.Vector3(-0.75*d-j*d+0.5*delta,i*d,-0.5*(hbilayer-h)),
@@ -910,7 +910,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
 
                 geometry.append(
                     mp.Prism(
-                        vertices = vertice1,
+                        vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
                         center = mp.Vector3(-0.25*d-j*d+0.5*delta,(i+0.5)*d,-0.5*(hbilayer-h)),
