@@ -788,6 +788,17 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         material = Envir 
                     )
                 )
+
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice1,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(-0.25*d-j*d-0.5*delta,(i+0.5)*d,0.5*(hbilayer-h)),
+                        material = Envir
+                    )
+                )
+           
     else:
         for i in np.arange((-Ncell_y+1)/2,(Ncell_y+1)/2):
             for j in np.arange(0,Ncell_x):
@@ -798,6 +809,16 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         axis = mp.Vector3(0,0,1),
                         center = mp.Vector3(-0.75*d-j*d-0.5*delta,i*d,0.5*(hbilayer-h)),
                         material = Envir 
+                    )
+                )
+
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice1,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(-0.25*d-j*d-0.5*delta,(i+0.5)*d,0.5*(hbilayer-h)),
+                        material = Envir
                     )
                 )
 

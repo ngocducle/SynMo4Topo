@@ -167,13 +167,17 @@ for idelta in range(Ndelta):
 
     ##### ============================================================================
     ##### Run the simulation
+    #sim.run(
+    #        until_after_sources = mp.stop_when_fields_decayed(
+    #            dt = 30,
+    #            c = component,
+    #            pt = pt,
+    #            decay_by = 0.5
+    #        )
+    #)
+
     sim.run(
-            until_after_sources = mp.stop_when_fields_decayed(
-                dt = 30,
-                c = component,
-                pt = pt,
-                decay_by = 0.5
-            )
+        until = 50
     )
 
     ##### ============================================================================
