@@ -11,7 +11,7 @@ from FDTD_2Dstructures import geom_2DSlab2L_RHoleP_hj_sameMater_Defect
 import os
 
 ### Resolution
-resolution = 10
+resolution = 20
 
 ### Boundary layers
 dboundary = 3.0     # PML/Absorber thickness
@@ -43,7 +43,7 @@ freq_array = np.linspace(fcen-df/2,fcen+df/2,nfreq)
 wvl_array = 1/freq_array
 
 ### The number of unit cells along the directions x and y
-Ncell_x = 7
+Ncell_x = 8
 Ncell_y = 5
 
 ### Padding block
