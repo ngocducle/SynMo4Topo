@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 t1 = -0.81 # intracell hopping integrals along edge
 t2 = -0.74 # intercell hopping integrals
 t3 = -0.33 # intracell hopping integrals along diagonals
-alpha = 0.1  # Symmetry-breaking factor
+alpha = 0.2  # Symmetry-breaking factor
 a = 0.2   # lattice parameter (nm)
 
 # The list of momenta
@@ -39,17 +39,17 @@ for i in range(3*Nk-2):
     # The Hamiltonian
     Hamiltonian = np.zeros((4,4),dtype=complex)
 
-    Hamiltonian[0,1] = t1+2*t2*cmath.exp(-1j*kx*a)
+    Hamiltonian[0,1] = t1+t2*cmath.exp(-1j*kx*a)
     Hamiltonian[0,2] = t3*(1-alpha)
-    Hamiltonian[0,3] = t1+2*t2*cmath.exp(-1j*ky*a)
+    Hamiltonian[0,3] = t1+t2*cmath.exp(-1j*ky*a)
 
     Hamiltonian[1,0] = np.conjugate(Hamiltonian[0,1])
-    Hamiltonian[1,2] = t1+2*t2*cmath.exp(-1j*ky*a)
+    Hamiltonian[1,2] = t1+t2*cmath.exp(-1j*ky*a)
     Hamiltonian[1,3] = t3*(1+alpha)
 
     Hamiltonian[2,0] = np.conjugate(Hamiltonian[0,2])
     Hamiltonian[2,1] = np.conjugate(Hamiltonian[1,2])
-    Hamiltonian[2,3] = t1+2*t2*cmath.exp(1j*kx*a)
+    Hamiltonian[2,3] = t1+t2*cmath.exp(1j*kx*a)
 
     Hamiltonian[3,0] = np.conjugate(Hamiltonian[0,3])
     Hamiltonian[3,1] = np.conjugate(Hamiltonian[1,3])
