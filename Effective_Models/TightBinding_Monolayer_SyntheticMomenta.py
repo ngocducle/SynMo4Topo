@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # The geometrical parameters 
 a = 0.2 # [nm] lattice parameter 
 d = a/2.2 # Size of basis 
-alpha = -0.1   # C4 symmetry breaking parameter 
+alpha = 0.   # C4 symmetry breaking parameter 
 D = 0.25    # interlayer distance 
 
 # Intralayer hopping 
@@ -69,6 +69,9 @@ for i in range(3*Nk-2):
     Evals,Evecs = sla.eigh(Hamiltonian)
 
     E_array[i,:] = Evals 
+
+    print('H = ')
+    print(Hamiltonian)
 
 # Plot the band structure 
 fig,ax = plt.subplots()
