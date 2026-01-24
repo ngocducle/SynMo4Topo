@@ -9,6 +9,8 @@ a = 0.2 # [nm] lattice parameter
 d = a/2.2 # Size of basis 
 alpha = 0 # C4 symmetry breaking parameter 
 D = 0.25  # interlayer distance 
+xAtoms = [0,d,d,0] # arrays of x-coordinates of atoms 
+yAtoms = [0,0,d,d] # arrays of y-coordinates of atoms 
 
 # Tight-binding Minh model for monolayer
 t1 = -np.exp(-d**2/a**2)       # intracell hopping integrals along edge
@@ -77,16 +79,37 @@ for i in range(3*Nk-2):
     Hamiltonian[3,3] = 0.0 
 
     # Block (0,1) 
-    Hamiltonian[0,4] = 0
-    Hamiltonian[1,5] = 0 
-    Hamiltonian[2,6] = 0 
-    Hamiltonian[3,7] = 0 
+    for j in range(0,4):
+        for k in range(0,4):
+            Hamiltonian[j,4+k] = 0
+
+            # The sum over Ri 
+            for nx in range(-3,4):
+                for ny in range(-3,4):
+                    disp_x = nx*a + xAtoms[j] + delta_x - xAtoms[k] 
+                    disp_y = ny*a + yAtoms[j] + delta_y - yAtoms[k]
+
+                    c2 = D**2 / (disp_x**2 + disp_y**2 + D**2)
+                    
+                    if np.sqrt(disp_x**2 + disp_y**2) < 4*a: 
+                        t = np.exp(-(disp_x**2 + disp_y**2 + D**2)/a**2)*(2.5*c2-2)
+                    else:
+                        t = 0 
+                    
+
+                    #print('c2 = '+str(c2))
+                    #print('t = '+str(t))
+
+                    Hamiltonian[j,4+k] = Hamiltonian[4+j,k] + t*cmath.exp(1j*(kx*disp_x+ky*disp_y))
+            
+            print(Hamiltonian[j,4+k])
+            
+                    
 
     # Block (1,0) 
-    Hamiltonian[4,0] = np.conjugate(Hamiltonian[0,4]) 
-    Hamiltonian[5,1] = np.conjugate(Hamiltonian[1,5]) 
-    Hamiltonian[6,2] = np.conjugate(Hamiltonian[2,6]) 
-    Hamiltonian[7,3] = np.conjugate(Hamiltonian[3,7])
+    for j in range(0,4):
+        for k in range(0,4):
+            Hamiltonian[4+j,k] = np.conjugate(Hamiltonian[k,4+j])
 
     # Block (1,1) 
     Hamiltonian[4,4] = 0.0 
