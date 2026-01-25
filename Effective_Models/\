@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # The geometrical parameters 
 a = 0.2 # lattice parameter (nm)
 d = a/2.2 # Size of basis 
-alpha = -0.1 # C4 symmetry breaking parameter 
+alpha = 0 # C4 symmetry breaking parameter 
 D = 0.25  # interlayer distance (nm)
 xAtoms = [0,d,d,0] # arrays of x-coordinates of atoms 
 yAtoms = [0,0,d,d] # arrays of y-coordinates of atoms 
@@ -21,8 +21,8 @@ print('t1 = '+str(t1))
 print('t2 = '+str(t2)) 
 print('t3 = '+str(t3)) 
 
-delta_x = 0 # shift (nm) 
-delta_y = 0 # shift (nm)
+delta_x = 0.5*a # shift (nm) 
+delta_y = 0.5*a # shift (nm)
 dxy = np.sqrt(delta_x*delta_x + delta_y*delta_y) # length of the shift (nm)
 
 # The list of momenta
@@ -81,44 +81,26 @@ for i in range(3*Nk-2):
     # Block (0,1) 
     for j in range(0,4):
         for k in range(0,4):
-            print('j = '+str(j)+', k = '+str(k)+': ')
-            print('atom['+str(j)+']: ('+str(xAtoms[j])+','+str(yAtoms[k])+')')
-            print('atom['+str(k)+']: ('+str(xAtoms[k])+','+str(yAtoms[k])+')')
-            print(' ')
             Hamiltonian[j,4+k] = 0
 
             # The sum over Ri 
-            for nx in range(0,1):
-                for ny in range(0,1):
-                    disp_x = nx*a + a/2 + xAtoms[j] + delta_x - xAtoms[k] 
-                    disp_y = ny*a + a/2 + yAtoms[j] + delta_y - yAtoms[k]
+            for nx in range(-3,4):
+                for ny in range(-3,4):
+                    disp_x = nx*a + xAtoms[j] + delta_x - xAtoms[k] 
+                    disp_y = ny*a + yAtoms[j] + delta_y - yAtoms[k]
 
                     c2 = D**2 / (disp_x**2 + disp_y**2 + D**2)
-                   
-                    if np.sqrt(disp_x**2 + disp_y**2) < 4*a:
-                        t = np.exp(-(disp_x**2 + disp_y**2 + D**2)/a**2)*(2.5*c2-2)
-                    else:
-                        t = 0 
                     
-                    #print('dx = '+str(disp_x)+', dy = '+str(disp_y))
+                    t = np.exp(-(disp_x**2 + disp_y**2 + D**2)/a**2)*(2.5*c2-2)
+                    
+                    print('dx = '+str(disp_x)+', dy = '+str(disp_y))
                     #print('(DD/a)^2 = '+str((disp_x**2+disp_y**2+D**2)/a**2))
                     #print('c2 = '+str(c2))
                     #print('t = '+str(t))
-                    
-                    print('nx = '+str(nx)+', ny = '+str(ny)+': dx = '+str(disp_x)+', dy = '+str(disp_y))
-                    #print('nx*a = '+str(nx*a))
-                    #print('xAtoms[j] - xAtoms[k] = '+str(xAtoms[j]-xAtoms[k]))
-                    #print('disp_x = '+str(nx*a + xAtoms[j] +delta_x - xAtoms[k]))
-                    print('(DD/a)^2 = '+str((disp_x**2+disp_y**2+D**2)/a**2))
-                    #print('c2 = '+str(c2))
-                    print('t = '+str(t))
-
 
                     Hamiltonian[j,4+k] = Hamiltonian[4+j,k] + t*cmath.exp(1j*(kx*disp_x+ky*disp_y))
-           
-            print('Hamiltonian['+str(j)+','+str(4+k)+'] = ')
+            
             print(Hamiltonian[j,4+k])
-            print(' ---- ')
             
                     
 
@@ -153,8 +135,8 @@ for i in range(3*Nk-2):
 
     E_array[i,:] = Evals
 
-    #print('H = ')
-    #print(Hamiltonian)
+    print('H = ')
+    print(Hamiltonian)
     #print('t = '+str(t))
 
 # Plot the band structure
