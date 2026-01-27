@@ -45,7 +45,7 @@ ky_array = np.concatenate( (np.linspace(Gamma_y,X_y,Nk),np.linspace(X_y,M_y,Nk)[
 E_array = np.zeros((3*Nk-2,8))
 
 # We scan the momentum arrays
-for i in range(3*Nk-2):
+for i in range(0,3*Nk-2):
     # The momenta
     kx = kx_array[i]
     ky = ky_array[i]
@@ -88,8 +88,8 @@ for i in range(3*Nk-2):
             Hamiltonian[j,4+k] = 0
 
             # The sum over Ri 
-            for nx in range(0,1):
-                for ny in range(0,1):
+            for nx in range(-3,4):
+                for ny in range(-3,4):
                     disp_x = nx*a + a/2 + xAtoms[j] + delta_x - xAtoms[k] 
                     disp_y = ny*a + a/2 + yAtoms[j] + delta_y - yAtoms[k]
 
@@ -114,7 +114,8 @@ for i in range(3*Nk-2):
                     print('t = '+str(t))
 
 
-                    Hamiltonian[j,4+k] = Hamiltonian[4+j,k] + t*cmath.exp(1j*(kx*disp_x+ky*disp_y))
+                    Hamiltonian[j,4+k] = Hamiltonian[j,4+k] + t*cmath.exp(1j*(kx*disp_x+ky*disp_y))
+                    print('H[j,4+k] = '+str(Hamiltonian[j,4+k]))
            
             print('Hamiltonian['+str(j)+','+str(4+k)+'] = ')
             print(Hamiltonian[j,4+k])
@@ -156,6 +157,10 @@ for i in range(3*Nk-2):
     #print('H = ')
     #print(Hamiltonian)
     #print('t = '+str(t))
+
+print('t1 = '+str(t1)) 
+print('t2 = '+str(t2)) 
+print('t3 = '+str(t3)) 
 
 # Plot the band structure
 fig,ax = plt.subplots()
