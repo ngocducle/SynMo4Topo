@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # The geometrical parameters 
 a = 0.2 # lattice parameter (nm)
 d = a/2.2 # Size of basis 
-alpha = -0.1 # C4 symmetry breaking parameter 
+alpha = 0.1 # C4 symmetry breaking parameter 
 D = 0.25 # interlayer distance (nm) 
 xAtoms = [0,d,d,0] # arrays of x-coordinates of atoms 
 yAtoms = [0,0,d,d] # arrays of y-coordiantes of atoms 
@@ -157,15 +157,15 @@ ax.set_xlim(0,3*(Nk-1))
 ax.set_ylim(-4,4)
 ax.set_ylabel('Energy (eV)')
 ax.set_title(r'$\alpha = $'+str(alpha)) 
-plt.show()
+#plt.show()
 
 ### ==============================================================================================
 ### Plot the 2D band structure 
-Nk = 41 
-k_array = np.linspace(-0.2,0.2,Nk)
+Nk = 101 
+k_array = np.linspace(0.4,0.5,Nk)
 
-Nq = 51
-q_array = np.linspace(-0.5,0.5,Nq) 
+Nq = 121
+q_array = np.linspace(0,0.5,Nq) 
 
 E_array = np.zeros((Nk,Nq,8))
 
@@ -173,6 +173,9 @@ for ik in range(0,Nk):
     for iq in range(0,Nq):
         k = k_array[ik] 
         q = q_array[iq] 
+
+        kx = k*2*np.pi/a
+        ky = k*2*np.pi/a
 
         delta_x = q*a
         delta_y = q*a
@@ -190,4 +193,57 @@ X,Y = np.meshgrid(k_array,q_array)
 fig,ax = plt.subplots(subplot_kw={'projection':'3d'},figsize=(12,10))
 ax.plot_surface(X,Y,E_array[:,:,0].T)
 ax.plot_surface(X,Y,E_array[:,:,1].T)
+"""ax.plot_surface(X,Y,E_array[:,:,2].T)
+ax.plot_surface(X,Y,E_array[:,:,3].T)
+ax.plot_surface(X,Y,E_array[:,:,4].T)
+ax.plot_surface(X,Y,E_array[:,:,5].T)
+ax.plot_surface(X,Y,E_array[:,:,6].T)
+ax.plot_surface(X,Y,E_array[:,:,7].T)"""
+ax.set_xlabel('ka/(2pi)')
+ax.set_ylabel('q')
+ax.set_title(r'$\alpha = $'+str(alpha))
+#plt.show()
+
+### ===============================================================================================
+### Plot the band structure along a path 
+Nq = 1001 
+Nk = 201 
+k_array = np.concatenate( (np.linspace(0,0,Nq),np.linspace(0,-0.1,Nk)[1:Nk] ) )
+q_array = np.concatenate( (np.linspace(-0.5,0,Nq), np.linspace(0,0,Nk)[1:Nk] ))
+
+Nmomentum = len(k_array)
+
+E_array = np.zeros((Nmomentum,8))
+
+for i in range(Nmomentum):
+    k = k_array[i]
+    q = q_array[i] 
+
+    kx = (k+0.5)*2*np.pi/a  
+    ky = (k+0.5)*2*np.pi/a
+
+    delta_x = q*a 
+    delta_y = q*a 
+
+    # The Hamiltonian 
+    Hamiltonian = TightBinding_Bilayer_Hamiltonian(t1,t2,t3,alpha,a,d,D,kx,ky,delta_x,delta_y)
+
+    # Eigenvalues and eigenvectors 
+    Evals,Evecs = sla.eigh(Hamiltonian)
+    E_array[i,:] = Evals 
+
+# Plot the band structure 
+fig,ax = plt.subplots()
+ax.plot(E_array[:,0:4])
+ax.vlines(0,-8,8,color='black')
+ax.vlines(Nq-1,-8,8,color='black')
+ax.vlines(Nq+Nk-1,-8,8,color='black')
+ax.set_xlim(0,Nq+Nk-1)
+ax.set_ylim(-1.5,0)
+tick_locs = [0,Nq-1,Nq+Nk-1]
+tick_labs = ['Q','O','K']
+ax.set_xticks(tick_locs)
+ax.set_xticklabels(tick_labs,size=16)
+ax.set_title(r'$\alpha = $'+str(alpha)) 
 plt.show()
+
