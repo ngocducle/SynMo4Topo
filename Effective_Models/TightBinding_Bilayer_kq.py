@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # The geometrical parameters 
 a = 0.2 # lattice parameter (nm)
 d = a/2.2 # Size of basis 
-alpha = 0 # C4 symmetry breaking parameter 
+alpha = -0.1 # C4 symmetry breaking parameter 
 D = 0.25 # interlayer distance (nm) 
 xAtoms = [0,d,d,0] # arrays of x-coordinates of atoms 
 yAtoms = [0,0,d,d] # arrays of y-coordiantes of atoms 
@@ -67,8 +67,11 @@ def TightBinding_Bilayer_Hamiltonian(t1,t2,t3,alpha,a,d,D,kx,ky,delta_x,delta_y)
             # The sum over R 
             for nx in range(-3,4):
                 for ny in range(-3,4):
-                    disp_x = nx*a + a/2 + xAtoms[j] + delta_x - xAtoms[k] 
-                    disp_y = ny*a + a/2 + yAtoms[j] + delta_y - yAtoms[k] 
+                    #disp_x = nx*a + a/2 + xAtoms[j] + delta_x - xAtoms[k] 
+                    #disp_y = ny*a + a/2 + yAtoms[j] + delta_y - yAtoms[k] 
+
+                    disp_x = xAtoms[k] - xAtoms[j] - a/2 - delta_x + nx*a 
+                    disp_y = yAtoms[k] - yAtoms[j] - a/2 - delta_y + ny*a 
 
                     c2 = D**2 / (disp_x**2 + disp_y**2 + D**2) 
 
@@ -107,3 +110,84 @@ def TightBinding_Bilayer_Hamiltonian(t1,t2,t3,alpha,a,d,D,kx,ky,delta_x,delta_y)
 
 
     return Hamiltonian 
+
+### ======================================================================########################
+# The list of momenta 
+Gamma_x = 0 
+Gamma_y = 0 
+X_x = np.pi/a 
+X_y = 0 
+M_x = np.pi/a 
+M_y = np.pi/a 
+
+Nk = 1001 
+
+kx_array = np.concatenate( (np.linspace(Gamma_x,X_x,Nk), np.linspace(X_x,M_x,Nk)[1:Nk],np.linspace(M_x,Gamma_x,Nk)[1:Nk]) )
+ky_array = np.concatenate( (np.linspace(Gamma_y,X_y,Nk), np.linspace(X_y,M_y,Nk)[1:Nk],np.linspace(M_y,Gamma_y,Nk)[1:Nk]) )
+
+# Arrays of energy 
+E_array = np.zeros((3*Nk-2,8)) 
+
+# We scan the momentum arrays 
+for i in range(0,3*Nk-2):
+    # The momenta 
+    kx = kx_array[i]
+    ky = ky_array[i]
+
+    # The Hamiltonian 
+    Hamiltonian = TightBinding_Bilayer_Hamiltonian(t1,t2,t3,alpha,a,d,D,kx,ky,delta_x,delta_y)
+
+    # Eigenvalues and eigenvectors 
+    Evals,Evecs = sla.eigh(Hamiltonian)
+
+    E_array[i,:] = Evals 
+
+# Plot the band structure 
+fig,ax = plt.subplots()
+ax.plot(E_array[:,0:8],color='purple') 
+ax.vlines(0,-8,8,color='black')
+ax.vlines(Nk-1,-8,8,color='black')
+ax.vlines(2*(Nk-1),-8,8,color='black')
+ax.vlines(3*(Nk-1),-8,8,color='black')
+tick_locs = [i*(Nk-1) for i in range(4)]
+tick_labs = [r'$\Gamma$','X','M',r'$\Gamma$']
+ax.set_xticks(tick_locs)
+ax.set_xticklabels(tick_labs,size=16)
+ax.set_xlim(0,3*(Nk-1))
+ax.set_ylim(-4,4)
+ax.set_ylabel('Energy (eV)')
+ax.set_title(r'$\alpha = $'+str(alpha)) 
+plt.show()
+
+### ==============================================================================================
+### Plot the 2D band structure 
+Nk = 41 
+k_array = np.linspace(-0.2,0.2,Nk)
+
+Nq = 51
+q_array = np.linspace(-0.5,0.5,Nq) 
+
+E_array = np.zeros((Nk,Nq,8))
+
+for ik in range(0,Nk):
+    for iq in range(0,Nq):
+        k = k_array[ik] 
+        q = q_array[iq] 
+
+        delta_x = q*a
+        delta_y = q*a
+
+        # The Hamiltonian 
+        Hamiltonian = TightBinding_Bilayer_Hamiltonian(t1,t2,t3,alpha,a,d,D,kx,ky,delta_x,delta_y)
+
+        # Eigenvalues and eigenvectors 
+        Evals,Evecs = sla.eigh(Hamiltonian)
+        E_array[ik,iq,:] = Evals 
+
+# Plot the band structure 
+X,Y = np.meshgrid(k_array,q_array)
+
+fig,ax = plt.subplots(subplot_kw={'projection':'3d'},figsize=(12,10))
+ax.plot_surface(X,Y,E_array[:,:,0].T)
+ax.plot_surface(X,Y,E_array[:,:,1].T)
+plt.show()

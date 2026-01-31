@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # The geometrical parameters 
 a = 0.2 # lattice parameter (nm)
 d = a/2.2 # Size of basis 
-alpha = 0 # C4 symmetry breaking parameter 
+alpha = -0.1 # C4 symmetry breaking parameter 
 D = 0.25  # interlayer distance (nm)
 xAtoms = [0,d,d,0] # arrays of x-coordinates of atoms 
 yAtoms = [0,0,d,d] # arrays of y-coordinates of atoms 
