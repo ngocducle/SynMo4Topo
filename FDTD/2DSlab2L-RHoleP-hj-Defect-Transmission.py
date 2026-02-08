@@ -17,6 +17,8 @@ resolution = 20
 dboundary = 3.0     # PML/Absorber thickness
 pml_layers = [mp.PML(direction = mp.X,
                      thickness = dboundary),
+              mp.PML(direction = mp.Y,
+                     thickness = dboundary),
               mp.PML(direction = mp.Z,
                      thickness = dboundary)
     ]
@@ -35,7 +37,7 @@ mix_layers = [mp.Absorber(direction = mp.X,
 
 ### The source
 fcen = 0.260 # pulse center frequency
-df = 0.010   # pulse width
+df = 0.020   # pulse width
 nfreq = 2001 # number of frequencies
 
 # The array of frequencies and wavelengths
@@ -247,4 +249,8 @@ for idelta in range(Ndelta):
         filename = namesave + '.txt'
         with open(filename,'w') as file:
             np.savetxt(file,datasave,'%.8f')
+
+    ##### ================================================================================
+    ##### Reset MEEP
+    sim.reset_meep()
 
