@@ -36,7 +36,7 @@ mix_layers = [mp.Absorber(direction = mp.X,
 ### The source 
 fcen = 0.260    # pulse center frequency 
 df = 0.020      # pulse width 
-nfreq = 1001     # number of frequencies
+nfreq = 2001     # number of frequencies
 
 # The array of frequencies and wavelength
 freq_array = np.linspace(fcen-df/2,fcen+df/2,nfreq)
@@ -54,11 +54,11 @@ h = 0.35           # Thickness of the two layers
 
 # The layer 1 
 b1 = 0.30   # The edge length of the undeformed square hole
-e1 = 0.1    # The deformation parameter 
+e1 = 0.0    # The deformation parameter 
 
 # The layer 2 
 b2 = 0.46   # The edge length of the undeformed square hole 
-e2 = 0.1    # The deformation parameter 
+e2 = 0.0    # The deformation parameter 
 
 # The interlayer distance 
 dist = 0.1

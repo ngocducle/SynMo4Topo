@@ -729,7 +729,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
     ##### LAYER 1:
     ### The right-hand side slab
     if Ncell_y % 2 == 0:
-        for i in np.arange(-Ncell_y/2,Ncell_y/2):
+        for i in np.arange(-Ncell_y//2,Ncell_y//2):
             for j in np.arange(0,Ncell_x):
                 geometry.append(
                     mp.Prism(
@@ -752,7 +752,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         )
                 )
     else:
-        for i in np.arange((-Ncell_y+1)/2,(Ncell_y+1)/2):
+        for i in np.arange((-Ncell_y+1)//2,(Ncell_y+1)//2):
             for j in np.arange(0,Ncell_x):
                 geometry.append(
                     mp.Prism(
@@ -777,7 +777,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
 
     ### The left-hand side slab
     if Ncell_y % 2 == 0:
-        for i in np.arange(-Ncell_y/2,Ncell_y/2):
+        for i in np.arange(-Ncell_y//2,Ncell_y//2):
             for j in np.arange(0,Ncell_x):
                 geometry.append(
                     mp.Prism(
@@ -800,7 +800,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                 )
            
     else:
-        for i in np.arange((-Ncell_y+1)/2,(Ncell_y+1)/2):
+        for i in np.arange((-Ncell_y+1)//2,(Ncell_y+1)//2):
             for j in np.arange(0,Ncell_x):
                 geometry.append(
                     mp.Prism(
@@ -825,7 +825,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
     ##### LAYER 2:
     ### The right-hand side slab
     if Ncell_y % 2 == 0:
-        for i in np.arange(-Ncell_y/2,Ncell_y/2):
+        for i in np.arange(-Ncell_y//2,Ncell_y//2):
             for j in np.arange(0,Ncell_x):
                 geometry.append(
                     mp.Prism(
@@ -848,7 +848,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         )
                 )
     else:
-        for i in np.arange((-Ncell_y+1)/2,(Ncell_y+1)/2):
+        for i in np.arange((-Ncell_y+1)//2,(Ncell_y+1)//2):
             for j in np.arange(0,Ncell_x):
                 geometry.append(
                     mp.Prism(
@@ -873,7 +873,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
 
     ### The left-hand side slab
     if Ncell_y % 2 == 0:
-        for i in np.arange(-Ncell_y/2,Ncell_y/2):
+        for i in np.arange(-Ncell_y//2,Ncell_y//2):
             for j in np.arange(0,Ncell_x):
                 geometry.append(
                     mp.Prism(
@@ -896,7 +896,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                 )
            
     else:
-        for i in np.arange((-Ncell_y+1)/2,(Ncell_y+1)/2):
+        for i in np.arange((-Ncell_y+1)//2,(Ncell_y+1)//2):
             for j in np.arange(0,Ncell_x):
                 geometry.append(
                     mp.Prism(
