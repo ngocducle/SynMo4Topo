@@ -692,7 +692,7 @@ def geo_2DSlab2L_RHoleP_hj_sameMater(d,h,hbilayer,delta,
 ##### square unit cell and rhombus hole. The structure is rotated so that
 ##### the source emits the electromagnetic wave along the diagonal direction
 ##### that we choose to be the x-direction
-def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
+def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle(d,h,hbilayer,delta,
                                              vertice1,vertice2,
                                              Mater,Envir,Ncell_x,Ncell_y,sx,sy):
 
@@ -736,7 +736,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(0.25*d+j*d-0.5*delta,i*d,0.5*(hbilayer-h)),
+                        center = mp.Vector3(0.25*d+j*d-0.5*delta,(i+0.25)*d,0.5*(hbilayer-h)),
                         material = Envir
                         )
                 )
@@ -747,7 +747,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(0.75*d+j*d-0.5*delta,(i+0.5)*d,0.5*(hbilayer-h)),
+                        center = mp.Vector3(0.75*d+j*d-0.5*delta,(i+0.75)*d,0.5*(hbilayer-h)),
                         material = Envir
                         )
                 )
@@ -759,7 +759,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(0.25*d+j*d-0.5*delta,i*d,0.5*(hbilayer-h)),
+                        center = mp.Vector3(0.25*d+j*d-0.5*delta,(i+0.25)*d,0.5*(hbilayer-h)),
                         material = Envir
                         )
                 )
@@ -770,7 +770,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(0.75*d+j*d-0.5*delta,(i+0.5)*d,0.5*(hbilayer-h)),
+                        center = mp.Vector3(0.75*d+j*d-0.5*delta,(i+0.75)*d,0.5*(hbilayer-h)),
                         material = Envir
                         )
                 )
@@ -784,7 +784,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice1,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(-0.75*d-j*d-0.5*delta,i*d,0.5*(hbilayer-h)),
+                        center = mp.Vector3(-0.75*d-j*d-0.5*delta,(i+0.25)*d,0.5*(hbilayer-h)),
                         material = Envir 
                     )
                 )
@@ -794,7 +794,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice1,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(-0.25*d-j*d-0.5*delta,(i+0.5)*d,0.5*(hbilayer-h)),
+                        center = mp.Vector3(-0.25*d-j*d-0.5*delta,(i+0.75)*d,0.5*(hbilayer-h)),
                         material = Envir
                     )
                 )
@@ -807,7 +807,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice1,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(-0.75*d-j*d-0.5*delta,i*d,0.5*(hbilayer-h)),
+                        center = mp.Vector3(-0.75*d-j*d-0.5*delta,(i+0.25)*d,0.5*(hbilayer-h)),
                         material = Envir 
                     )
                 )
@@ -817,7 +817,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice1,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(-0.25*d-j*d-0.5*delta,(i+0.5)*d,0.5*(hbilayer-h)),
+                        center = mp.Vector3(-0.25*d-j*d-0.5*delta,(i+0.75)*d,0.5*(hbilayer-h)),
                         material = Envir
                     )
                 )
@@ -832,7 +832,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice1,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(0.25*d+j*d+0.5*delta,i*d,-0.5*(hbilayer-h)),
+                        center = mp.Vector3(0.25*d+j*d+0.5*delta,(i+0.25)*d,-0.5*(hbilayer-h)),
                         material = Envir
                         )
                 )
@@ -843,7 +843,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice1,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(0.75*d+j*d+0.5*delta,(i+0.5)*d,-0.5*(hbilayer-h)),
+                        center = mp.Vector3(0.75*d+j*d+0.5*delta,(i+0.75)*d,-0.5*(hbilayer-h)),
                         material = Envir
                         )
                 )
@@ -855,7 +855,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice1,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(0.25*d+j*d+0.5*delta,i*d,-0.5*(hbilayer-h)),
+                        center = mp.Vector3(0.25*d+j*d+0.5*delta,(i+0.25)*d,-0.5*(hbilayer-h)),
                         material = Envir
                         )
                 )
@@ -866,7 +866,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice1,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(0.75*d+j*d+0.5*delta,(i+0.5)*d,-0.5*(hbilayer-h)),
+                        center = mp.Vector3(0.75*d+j*d+0.5*delta,(i+0.75)*d,-0.5*(hbilayer-h)),
                         material = Envir
                         )
                 )
@@ -880,7 +880,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(-0.75*d-j*d+0.5*delta,i*d,-0.5*(hbilayer-h)),
+                        center = mp.Vector3(-0.75*d-j*d+0.5*delta,(i+0.25)*d,-0.5*(hbilayer-h)),
                         material = Envir 
                     )
                 )
@@ -890,7 +890,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(-0.25*d-j*d+0.5*delta,(i+0.5)*d,-0.5*(hbilayer-h)),
+                        center = mp.Vector3(-0.25*d-j*d+0.5*delta,(i+0.75)*d,-0.5*(hbilayer-h)),
                         material = Envir
                     )
                 )
@@ -903,7 +903,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(-0.75*d-j*d+0.5*delta,i*d,-0.5*(hbilayer-h)),
+                        center = mp.Vector3(-0.75*d-j*d+0.5*delta,(i+0.25)*d,-0.5*(hbilayer-h)),
                         material = Envir 
                     )
                 )
@@ -913,7 +913,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Defect(d,h,hbilayer,delta,
                         vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(-0.25*d-j*d+0.5*delta,(i+0.5)*d,-0.5*(hbilayer-h)),
+                        center = mp.Vector3(-0.25*d-j*d+0.5*delta,(i+0.75)*d,-0.5*(hbilayer-h)),
                         material = Envir
                     )
                 )
