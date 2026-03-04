@@ -759,7 +759,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle(d,h,hbilayer,delta,
                         vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(0.25*d+j*d-0.5*delta,(i+0.25)*d,0.5*(hbilayer-h)),
+                        center = mp.Vector3(0.25*d+j*d-0.5*delta,(i-0.25)*d,0.5*(hbilayer-h)),
                         material = Envir
                         )
                 )
@@ -770,7 +770,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle(d,h,hbilayer,delta,
                         vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(0.75*d+j*d-0.5*delta,(i+0.75)*d,0.5*(hbilayer-h)),
+                        center = mp.Vector3(0.75*d+j*d-0.5*delta,(i+0.25)*d,0.5*(hbilayer-h)),
                         material = Envir
                         )
                 )
@@ -807,7 +807,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle(d,h,hbilayer,delta,
                         vertices = vertice1,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(-0.75*d-j*d-0.5*delta,(i+0.25)*d,0.5*(hbilayer-h)),
+                        center = mp.Vector3(-0.75*d-j*d-0.5*delta,(i-0.25)*d,0.5*(hbilayer-h)),
                         material = Envir 
                     )
                 )
@@ -817,7 +817,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle(d,h,hbilayer,delta,
                         vertices = vertice1,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(-0.25*d-j*d-0.5*delta,(i+0.75)*d,0.5*(hbilayer-h)),
+                        center = mp.Vector3(-0.25*d-j*d-0.5*delta,(i+0.25)*d,0.5*(hbilayer-h)),
                         material = Envir
                     )
                 )
@@ -855,7 +855,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle(d,h,hbilayer,delta,
                         vertices = vertice1,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(0.25*d+j*d+0.5*delta,(i+0.25)*d,-0.5*(hbilayer-h)),
+                        center = mp.Vector3(0.25*d+j*d+0.5*delta,(i-0.25)*d,-0.5*(hbilayer-h)),
                         material = Envir
                         )
                 )
@@ -866,7 +866,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle(d,h,hbilayer,delta,
                         vertices = vertice1,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(0.75*d+j*d+0.5*delta,(i+0.75)*d,-0.5*(hbilayer-h)),
+                        center = mp.Vector3(0.75*d+j*d+0.5*delta,(i+0.25)*d,-0.5*(hbilayer-h)),
                         material = Envir
                         )
                 )
@@ -903,7 +903,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle(d,h,hbilayer,delta,
                         vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(-0.75*d-j*d+0.5*delta,(i+0.25)*d,-0.5*(hbilayer-h)),
+                        center = mp.Vector3(-0.75*d-j*d+0.5*delta,(i-0.25)*d,-0.5*(hbilayer-h)),
                         material = Envir 
                     )
                 )
@@ -913,7 +913,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle(d,h,hbilayer,delta,
                         vertices = vertice2,
                         height = h,
                         axis = mp.Vector3(0,0,1),
-                        center = mp.Vector3(-0.25*d-j*d+0.5*delta,(i+0.75)*d,-0.5*(hbilayer-h)),
+                        center = mp.Vector3(-0.25*d-j*d+0.5*delta,(i+0.25)*d,-0.5*(hbilayer-h)),
                         material = Envir
                     )
                 )
