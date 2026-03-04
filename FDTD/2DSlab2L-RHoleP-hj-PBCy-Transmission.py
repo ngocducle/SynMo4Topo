@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.insert(0,'../src')
 from Materials import *
-from FDTD_2Dstructures import geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle
+from FDTD_2Dstructures import geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle_PBCy
 
 import os
 
@@ -146,7 +146,7 @@ for idelta in range(Ndelta):
 
     ##### ===========================================================================
     ##### GEOMETRY
-    geometry = geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle(d,h,hbilayer,delta,
+    geometry = geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle_PBCy(d,h,hbilayer,delta,
                                              vertice1,vertice2,
                                              Mater,Envir,Ncell_x,Ncell_y,sx,sy)
 

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.insert(0,'../src')
 from Materials import *
-from FDTD_2Dstructures import geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle
+from FDTD_2Dstructures import geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle_PMLy
 
 import os
 
@@ -116,8 +116,8 @@ vertice2 = [
 
 ##### The array of shift
 ### ATTENTION! Here is the fraction of the shift/d
-Ndelta = 1
-delta_array = np.linspace(0.00,0.00,Ndelta)
+Ndelta = 11
+delta_array = np.linspace(0.00,0.10,Ndelta)
 
 ##### The source
 component = mp.Ey # the component
@@ -150,7 +150,7 @@ for idelta in range(Ndelta):
 
     ##### ===========================================================================
     ##### GEOMETRY
-    geometry = geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle(d,h,hbilayer,delta,
+    geometry = geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle_PMLy(d,h,hbilayer,delta,
                                              vertice1,vertice2,
                                              Mater,Envir,Ncell_x,Ncell_y,sx,sy)
 
