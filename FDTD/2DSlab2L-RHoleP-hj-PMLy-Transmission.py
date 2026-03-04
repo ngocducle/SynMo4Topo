@@ -11,7 +11,7 @@ from FDTD_2Dstructures import geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle
 import os
 
 ### Resolution
-resolution = 16
+resolution = 20
 
 ### Boundary layers
 dboundary = 3.0     # PML/Absorber thickness
@@ -48,7 +48,7 @@ wvl_array = 1/freq_array
 
 ### The number of unit cells along the directions x and y
 Ncell_x = 8
-Ncell_y = 4
+Ncell_y = 5
 
 ### Padding block
 pad = 3.0
@@ -171,18 +171,18 @@ for idelta in range(Ndelta):
 
     ##### ============================================================================
     ##### Run the simulation
-    """sim.run(
+    sim.run(
             until_after_sources = mp.stop_when_fields_decayed(
                 dt = 3000,
                 c = component,
                 pt = pt,
-                decay_by = 1e-4
+                decay_by = 1e-3
             )
-    )"""
-
-    sim.run(
-        until = 50
     )
+
+    """sim.run(
+        until = 50
+    )"""
 
     ##### ============================================================================
     ### Get the dielectric function into array
@@ -255,4 +255,3 @@ for idelta in range(Ndelta):
     ##### ================================================================================
     ##### Reset MEEP
     sim.reset_meep()
-
