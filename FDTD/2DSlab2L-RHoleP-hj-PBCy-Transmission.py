@@ -44,7 +44,7 @@ wvl_array = 1/freq_array
 
 ### The number of unit cells along the directions x and y
 Ncell_x = 8
-Ncell_y = 2
+Ncell_y = 5
 
 ### Padding block
 pad = 3.0

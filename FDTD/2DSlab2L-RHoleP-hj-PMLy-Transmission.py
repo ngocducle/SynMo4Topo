@@ -38,8 +38,8 @@ mix_layers = [mp.Absorber(direction = mp.X,
 ]
 
 ### The source
-fcen = 0.260 # pulse center frequency
-df = 0.020   # pulse width
+fcen = 0.250 # pulse center frequency
+df = 0.040   # pulse width
 nfreq = 2001 # number of frequencies
 
 # The array of frequencies and wavelengths
