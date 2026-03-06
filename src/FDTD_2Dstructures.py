@@ -1652,17 +1652,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle_CircleDefect_PMLy(d,h,hbilayer,d
     if Ncell_y % 2 == 0:
         for i in np.arange(-Ncell_y//2,Ncell_y//2):
             for j in np.arange(0,Ncell_x):
-                if ( (i != 1) and (j != 3) ):
-                    geometry.append(
-                        mp.Prism(
-                            vertices = vertice2,
-                            height = h,
-                            axis = mp.Vector3(0,0,1),
-                            center = mp.Vector3(0.25*d+j*d-0.5*delta,(i+0.25)*d,0.5*(hbilayer-h)),
-                            material = Envir
-                            )
-                    )
-                else:
+                if ( (i == 1) and (j == 3) ):
                     geometry.append(
                         mp.Cylinder(
                                 center = mp.Vector3(0.25*d+j*d-0.5*delta,(i+0.25)*d,0.5*(hbilayer-h)),
@@ -1672,6 +1662,16 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle_CircleDefect_PMLy(d,h,hbilayer,d
                                 material = Envir
                             )
                         )
+                else:
+                    geometry.append(
+                        mp.Prism(
+                            vertices = vertice2,
+                            height = h,
+                            axis = mp.Vector3(0,0,1),
+                            center = mp.Vector3(0.25*d+j*d-0.5*delta,(i+0.25)*d,0.5*(hbilayer-h)),
+                            material = Envir
+                            )
+                    )
 
             for j in np.arange(0,Ncell_x):
                 geometry.append(
@@ -1686,7 +1686,17 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle_CircleDefect_PMLy(d,h,hbilayer,d
     else:
         for i in np.arange((-Ncell_y+1)//2,(Ncell_y+1)//2):
             for j in np.arange(0,Ncell_x):
-                if ( (i != 1) and (j != 3) ):
+                if ( (i == 1) and (j == 3) ):
+                    geometry.append(
+                        mp.Cylinder(
+                                center = mp.Vector3(0.25*d+j*d-0.5*delta,(i-0.25)*d,0.5*(hbilayer-h)),
+                                radius = radius,
+                                height = h,
+                                axis = mp.Vector3(0,0,1),
+                                material = Envir
+                            )
+                        )
+                else:
                     geometry.append(
                         mp.Prism(
                             vertices = vertice2,
@@ -1696,16 +1706,6 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle_CircleDefect_PMLy(d,h,hbilayer,d
                             material = Envir
                             )
                     )
-                else:
-                    geometry.append(
-                        mp.Cylinder(
-                                center = mp.Vector3(0.25*d+j*d-0.5*delta,(i+0.25)*d,0.5*(hbilayer-h)),
-                                radius = radius,
-                                height = h,
-                                axis = mp.Vector3(0,0,1),
-                                material = Envir
-                            )
-                        )
 
             for j in np.arange(0,Ncell_x):
                 geometry.append(
