@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.insert(0,'../src')
 from Materials import * 
-from FDTD_2Dstructures import geo_2DSlab2L_RHoleP_hj_sameMater_CircleDefect_PBCy
+from FDTD_2Dstructures import geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle_CircleDefect_PBCy
 
 import os 
 
@@ -34,8 +34,8 @@ mix_layers = [mp.Absorber(direction = mp.X,
             ]
 
 ### The source 
-fcen = 0.260    # pulse center frequency 
-df = 0.020      # pulse width 
+fcen = 0.250    # pulse center frequency 
+df = 0.040      # pulse width 
 nfreq = 2001     # number of frequencies
 
 # The array of frequencies and wavelength
@@ -43,7 +43,8 @@ freq_array = np.linspace(fcen-df/2,fcen+df/2,nfreq)
 wvl_array = 1/freq_array 
 
 ### The number of unit cells along the line y = 0
-Ncell = 8
+Ncell_x = 8
+Ncell_y = 5
 
 ### Padding block
 pad = 3.0 # 2.0*wvl_array[0] 
@@ -67,10 +68,10 @@ radius = b1
 dist = 0.1
 
 # The total size of the structure along the x-axis
-structurex = (2*Ncell+1)*d 
+structurex = (2*Ncell_x+1)*d 
 
 # The toal size of the structure along the y-axis
-structurey = d 
+structurey = Ncell_y*d 
 
 # The total thickness of the bilayer (z-direction)
 hbilayer = 2*h + dist 
@@ -80,7 +81,7 @@ Lz = 3*hbilayer
 
 ### Size of the simulation cell 
 sx = structurex + 2*(pad + dboundary)
-sy = d      # no PML, no pad, PBC 
+sy = structurey      # no PML, no pad, PBC 
 sz = Lz + 2*dboundary
 
 ### Define the simulation cell 
@@ -115,8 +116,8 @@ vertice2 = [
 
 ##### The array of shift 
 ### ATTENTION! Here is the fraction of the shift/d
-Ndelta = 1 
-delta_array = np.linspace(0.5,0.5,Ndelta)
+Ndelta = 11 
+delta_array = np.linspace(0.00,0.10,Ndelta)
 
 ##### The source
 component = mp.Ey   # the component 
@@ -148,10 +149,10 @@ for idelta in range(Ndelta):
 
     ##### ==================================================================================
     ##### GEOMETRY
-    geometry = geo_2DSlab2L_RHoleP_hj_sameMater_CircleDefect_PBCy(d,h,hbilayer,delta,
-                                                vertice1,vertice2,
-                                                Mater,Envir,Ncell,sx,sy,
-						radius)
+    geometry = geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle_CircleDefect_PBCy(d,h,hbilayer,delta,
+                                             vertice1,vertice2,
+                                             Mater,Envir,Ncell_x,Ncell_y,sx,sy,
+                                             radius)
 
     ##### ==================================================================================
     ##### Define the simulation 
@@ -161,7 +162,7 @@ for idelta in range(Ndelta):
         geometry = geometry,
         sources = sources,
         k_point = mp.Vector3(0,0,0), # PBC
-	ensure_periodicity = True,   # PBC
+	    ensure_periodicity = True,   # PBC
         resolution = resolution
     )
 
@@ -181,6 +182,10 @@ for idelta in range(Ndelta):
             decay_by = 1e-4
         )
     )
+
+    """sim.run(
+        until = 5 
+    )"""
 
     ##### ===================================================================================
     ### Get the dielectric function into array 
@@ -205,7 +210,7 @@ for idelta in range(Ndelta):
     if mp.am_master():
         os.system('mkdir '+namesave)
 
-        for i in range(Nx):
+        """for i in range(Nx):
             plt.figure()
             plt.imshow(eps_data[i,:,:].transpose(),interpolation='spline36',cmap='coolwarm')
             plt.xlabel('y')
@@ -219,7 +224,7 @@ for idelta in range(Ndelta):
             plt.xlabel('x')
             plt.ylabel('z')
             plt.savefig('y-'+str(j)+'.png')
-            plt.close()
+            plt.close()"""
 
         for k in range(Nz):
             plt.figure()

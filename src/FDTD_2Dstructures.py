@@ -1176,7 +1176,7 @@ def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle_PMLy(d,h,hbilayer,delta,
 ###
 ### The lower layer is shifted by an amount delta with respect to the upper layer
 
-def geo_2DSlab2L_RHoleP_hj_sameMater_CircleDefect_PBCy(d,h,hbilayer,delta,
+def geo_2DSlab2L_RHoleP_hj_sameMater_CircleDefectEdge_PBCy(d,h,hbilayer,delta,
                                      vertice1,vertice2,
                                      Mater,Envir,Ncell,sx,sy,
                                      radius):
@@ -1606,6 +1606,264 @@ def geo_2DSlab2L_RHoleP_hj_sameMater_CircleDefectBulk_PBCy(d,h,hbilayer,delta,
         )
 
     return geometry
+
+##### ================================================================================
+##### FUNCTION: define the geometry of 2D photonic crystal slab bilayer
+##### square unit cell and rhombus hole. The structure is rotated so that
+##### the source emits the electromagnetic wave along the diagonal direction
+##### that we choose to be the x-direction
+def geom_2DSlab2L_RHoleP_hj_sameMater_Rectangle_CircleDefect_PBCy(d,h,hbilayer,delta,
+                                             vertice1,vertice2,
+                                             Mater,Envir,Ncell_x,Ncell_y,sx,sy,
+                                             radius):
+
+    ### Initialize the geometry with environment
+    geometry = []
+
+    geometry.append(
+        mp.Block(
+            center = mp.Vector3(0,0,0),
+            size = mp.Vector3(mp.inf,mp.inf,mp.inf),
+            material = Envir
+        )
+    )
+
+    ### Add the 2D slabs of thickness 2*h+dist
+    geometry.append(
+        mp.Block(
+            center = mp.Vector3(0,0,0),
+            size = mp.Vector3(mp.inf,mp.inf,hbilayer),
+            material = Mater
+        )
+    )
+
+    dist = hbilayer - 2*h
+
+    geometry.append(
+        mp.Block(
+            center = mp.Vector3(0,0,0),
+            size = mp.Vector3((2*Ncell_x+1)*d,Ncell_y*d,dist),
+            material = Envir
+        )
+    )
+
+    ##### LAYER 1:
+    ### The right-hand side slab
+    if Ncell_y % 2 == 0:
+        for i in np.arange(-Ncell_y//2,Ncell_y//2):
+            for j in np.arange(0,Ncell_x):
+                if ( (i == 0) and (j == 3) ):
+                    geometry.append(
+                        mp.Cylinder(
+                            center = mp.Vector3(0.25*d+j*d-0.5*delta,i*d,0.5*(hbilayer-h)),
+                            radius = radius,
+                            height = h,
+                            axis = mp.Vector3(0,0,1),
+                            material = Envir
+                        )
+                    )
+                else:
+                    geometry.append(
+                        mp.Prism(
+                            vertices = vertice2,
+                            height = h,
+                            axis = mp.Vector3(0,0,1),
+                            center = mp.Vector3(0.25*d+j*d-0.5*delta,i*d,0.5*(hbilayer-h)),
+                            material = Envir
+                        )
+                    )
+
+            for j in np.arange(0,Ncell_x):
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice2,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(0.75*d+j*d-0.5*delta,(i+0.5)*d,0.5*(hbilayer-h)),
+                        material = Envir
+                        )
+                )
+    else:
+        for i in np.arange((-Ncell_y+1)//2,(Ncell_y+1)//2):
+            for j in np.arange(0,Ncell_x):
+                if ( (i == 1) and (j == 3) ):
+                    geometry.append(
+                        mp.Cylinder(
+                                center = mp.Vector3(0.25*d+j*d-0.5*delta,i*d,0.5*(hbilayer-h)),
+                                radius = radius,
+                                height = h,
+                                axis = mp.Vector3(0,0,1),
+                                material = Envir
+                            )
+                        )
+                else:
+                    geometry.append(
+                        mp.Prism(
+                            vertices = vertice2,
+                            height = h,
+                            axis = mp.Vector3(0,0,1),
+                            center = mp.Vector3(0.25*d+j*d-0.5*delta,i*d,0.5*(hbilayer-h)),
+                            material = Envir
+                            )
+                    )
+
+            for j in np.arange(0,Ncell_x):
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice2,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(0.75*d+j*d-0.5*delta,(i+0.5)*d,0.5*(hbilayer-h)),
+                        material = Envir
+                        )
+                )
+
+    ### The left-hand side slab
+    if Ncell_y % 2 == 0:
+        for i in np.arange(-Ncell_y//2,Ncell_y//2):
+            for j in np.arange(0,Ncell_x):
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice1,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(-0.75*d-j*d-0.5*delta,i*d,0.5*(hbilayer-h)),
+                        material = Envir
+                    )
+                )
+
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice1,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(-0.25*d-j*d-0.5*delta,(i+0.5)*d,0.5*(hbilayer-h)),
+                        material = Envir
+                    )
+                )
+
+    else:
+        for i in np.arange((-Ncell_y+1)//2,(Ncell_y+1)//2):
+            for j in np.arange(0,Ncell_x):
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice1,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(-0.75*d-j*d-0.5*delta,i*d,0.5*(hbilayer-h)),
+                        material = Envir
+                    )
+                )
+
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice1,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(-0.25*d-j*d-0.5*delta,(i+0.5)*d,0.5*(hbilayer-h)),
+                        material = Envir
+                    )
+                )
+
+    ##### LAYER 2:
+    ### The right-hand side slab
+    if Ncell_y % 2 == 0:
+        for i in np.arange(-Ncell_y//2,Ncell_y//2):
+            for j in np.arange(0,Ncell_x):
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice1,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(0.25*d+j*d+0.5*delta,i*d,-0.5*(hbilayer-h)),
+                        material = Envir
+                        )
+                )
+
+            for j in np.arange(0,Ncell_x):
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice1,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(0.75*d+j*d+0.5*delta,(i+0.5)*d,-0.5*(hbilayer-h)),
+                        material = Envir
+                        )
+                )
+    else:
+        for i in np.arange((-Ncell_y+1)//2,(Ncell_y+1)//2):
+            for j in np.arange(0,Ncell_x):
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice1,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(0.25*d+j*d+0.5*delta,i*d,-0.5*(hbilayer-h)),
+                        material = Envir
+                        )
+                )
+
+            for j in np.arange(0,Ncell_x):
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice1,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(0.75*d+j*d+0.5*delta,(i+0.5)*d,-0.5*(hbilayer-h)),
+                        material = Envir
+                        )
+                )
+
+    ### The left-hand side slab
+    if Ncell_y % 2 == 0:
+        for i in np.arange(-Ncell_y//2,Ncell_y//2):
+            for j in np.arange(0,Ncell_x):
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice2,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(-0.75*d-j*d+0.5*delta,i*d,-0.5*(hbilayer-h)),
+                        material = Envir
+                    )
+                )
+
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice2,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(-0.25*d-j*d+0.5*delta,(i+0.5)*d,-0.5*(hbilayer-h)),
+                        material = Envir
+                    )
+                )
+
+    else:
+        for i in np.arange((-Ncell_y+1)//2,(Ncell_y+1)//2):
+            for j in np.arange(0,Ncell_x):
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice2,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(-0.75*d-j*d+0.5*delta,i*d,-0.5*(hbilayer-h)),
+                        material = Envir
+                    )
+                )
+
+                geometry.append(
+                    mp.Prism(
+                        vertices = vertice2,
+                        height = h,
+                        axis = mp.Vector3(0,0,1),
+                        center = mp.Vector3(-0.25*d-j*d+0.5*delta,(i+0.5)*d,-0.5*(hbilayer-h)),
+                        material = Envir
+                    )
+                )
+
+    ### Return the results
+    return geometry
+
 
 ##### ================================================================================
 ##### FUNCTION: define the geometry of 2D photonic crystal slab bilayer
