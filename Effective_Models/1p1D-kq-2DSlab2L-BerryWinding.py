@@ -160,6 +160,17 @@ dist = 0.1
 V = 0.038
 beta = -0.3
 
+### Alternative parameters (from the former BerryWinding-Determinant script): 
+### bands 1 and 2 touch at k = +-0.032, q = 0, each with Berry phase pi. 
+### That script passed V = 0.038*exp(-dist/d0), so exp(-dist/d0) was applied twice.
+#eta = 0.0032
+#alpha = -0.062
+#V = 0.038*np.exp(-dist/d0)
+#eta1 = eta 
+#eta2 = eta 
+#alpha1 = alpha 
+#alpha2 = alpha 
+
 ##### ================================================================================
 ##### The arrays of k and q 
 ### The array of intrinsic momenta k
@@ -235,73 +246,77 @@ for ik in range(Nk):
 #    np.savetxt(file,F_array[:,:,0],fmt='%.8f')
 
 ##### ========================================================================
+#####       Locate the touching points of bands 1 and 2
+##### ========================================================================
+### The gap between bands 1 and 2 on the (k,q) grid 
+gap_array = Energy_array[:,:,1] - Energy_array[:,:,0]
+
+### A touching point is a local minimum of the gap below gap_threshold 
+gap_threshold = 1e-3 
+
+touching_points = []
+
+for ik in range(1,Nk-1):
+    for iq in range(1,Nq-1):
+        if (gap_array[ik,iq] < gap_threshold and 
+            gap_array[ik,iq] == gap_array[ik-1:ik+2,iq-1:iq+2].min()):
+            touching_points.append((k_array[ik],q_array[iq],gap_array[ik,iq]))
+
+print('Touching points of bands 1 and 2:')
+for (k0,q0,g0) in touching_points:
+    print(f'   k = {k0:+.4f}, q = {q0:+.4f}, gap = {g0:.2e}')
+
+##### ========================================================================
 #####       Calculate the Berry winding
 ##### ========================================================================
-### The center of the circular contour 
-center_k = 0.0
-center_q = 0.0 
+##### FUNCTION: the Berry phase of band 1 (divided by pi) along the ellipse 
+###   of center (center_k,center_q) and semi-axes contour_kaxis, contour_qaxis
+###
+###   The Berry phase is the argument of the product of the overlaps 
+###   <u_j|u_{j+1}> along the closed contour. Each eigenvector returned by 
+###   sla.eigh has an arbitrary phase, so only the product is gauge invariant:
+###   the sum of the arguments of the individual overlaps is only defined 
+###   modulo 2*pi. The result lies in (-1,1], i.e. the Berry phase modulo 2*pi.
+def Berry_winding(center_k,center_q,contour_kaxis,contour_qaxis,Ntheta):
+    ### The array of angles 
+    theta_array = np.linspace(0,2*np.pi,Ntheta,endpoint=False)
 
-### The radius of the contour
-contour_kaxis = 0.05 #0.1*Kmax 
-contour_qaxis = 0.05 #0.1*Qmax
+    ### The array of k and q of the contour 
+    contour_k_array = center_k + contour_kaxis * np.cos(theta_array)
+    contour_q_array = center_q + contour_qaxis * np.sin(theta_array)
 
-### The array of angles 
+    ### The list of eigenstates of the lowest band 
+    U_list = []
+
+    for j in range(Ntheta):
+        H = Hamiltonian(contour_k_array[j],contour_q_array[j],
+                        omega1,eta1,v1,U1,W1,alpha1,omega2,eta2,v2,U2,W2,alpha2,
+                        V,beta,dist,d0)
+        E,states = sla.eigh(H)
+        U_list.append(states[:,0])
+
+    ### The product of the overlaps along the closed contour 
+    product = 1.0 
+
+    for j in range(Ntheta):
+        product = product * np.vdot(U_list[j],U_list[(j+1) % Ntheta])
+
+    return np.angle(product)/np.pi, contour_k_array, contour_q_array 
+
+### The semi-axes of the contour around each touching point 
+### (smaller than half the distance between two touching points)
+contour_kaxis = 0.01
+contour_qaxis = 0.01
+
+### The number of points on the contour 
 Ntheta = 200 
-dtheta = 2*np.pi/Ntheta 
-theta_array = np.arange(0,2*np.pi,dtheta)
-#print('theta_array = ')
-#print(theta_array)
 
-### The array of q and p of the contour 
-contour_k_array = center_k + contour_kaxis * np.cos(theta_array)
-contour_q_array = center_q + contour_qaxis * np.sin(theta_array)
+windings = []
 
-### The list of eigenstate
-U_list = []
-
-### We scan the array theta_array 
-for j in range(Ntheta):
-    # The genuine momentum 
-    k = contour_k_array[j]
-
-    # The synthetic momentum 
-    q = contour_q_array[j]
-
-    # The Hamiltonian
-    H = Hamiltonian(k,q,omega1,eta1,v1,U1,W1,alpha1,omega2,eta2,v2,U2,W2,alpha2,
-                 V,beta,dist,d0)
-    
-    ### Diagonalize the Hamiltonian
-    E,states = sla.eigh(H)
-
-    ### The eigenstate of the lowest band
-    U_list.append(states[:,0])
-
-#print('The list of eigenstates of band 1:')
-#print(U_list)    
-
-### Calculate the Berry winding
-Berry_winding = 0
-
-#for j in range(Ntheta-1):
-#    Berry_winding = Berry_winding + np.angle( np.vdot(U_list[j],U_list[j+1]) )
-
-#Berry_winding = Berry_winding + np.angle( np.vdot(U_list[Ntheta-1],U_list[0]) )
-
-for j in range(Ntheta-1):
-    Berry_winding = Berry_winding + np.angle( np.vdot(U_list[j],U_list[j+1]) )
-
-Berry_winding = Berry_winding + np.angle( np.vdot(U_list[Ntheta-1],U_list[0]) )
-
-for j in range(Ntheta-1):
-    print(f'j = {j:d}: {np.vdot(U_list[j],U_list[j+1]):.16f}')
-
-print(f'j = {Ntheta-1:d}: {np.vdot(U_list[Ntheta-1],U_list[0]):.16f}')
-
-Berry_winding = Berry_winding / np.pi 
-
-print('Berry winding = ')
-print(Berry_winding)
+for (k0,q0,g0) in touching_points:
+    w,ck,cq = Berry_winding(k0,q0,contour_kaxis,contour_qaxis,Ntheta)
+    windings.append((k0,q0,w,ck,cq))
+    print(f'Berry winding around k = {k0:+.4f}, q = {q0:+.4f}: {w:+.4f}')
 
 ##### ========================================================================
 ###         Plot the Berry curvature map for bands 1 
@@ -315,11 +330,15 @@ norm = colors.Normalize(
 )
 
 fig,ax = plt.subplots(figsize=(8,8))
-ax.plot(contour_k_array,contour_q_array,'o',markersize=1)
 ax.pcolormesh(X,Y,F_array[:,:,0].T,shading='gouraud',cmap='coolwarm',norm=norm)
+
+for (k0,q0,w,ck,cq) in windings:
+    ax.plot(ck,cq,'k-',linewidth=1)
+    ax.annotate(f'{w:+.2f}',(k0+contour_kaxis,q0+contour_qaxis),fontsize=14)
+
 ax.set_xlabel('k',fontsize=20)
 ax.set_ylabel('q',fontsize=20)
-ax.set_title(r'Band 1, $\alpha = $'+str(alpha)+r', $\eta = $'+str(eta)+f', \n Berry winding = {Berry_winding:.4f}',fontsize=20)
+ax.set_title(r'Band 1, $\alpha = $'+str(alpha)+r', $\eta = $'+str(eta)+'\n'+r'Berry winding / $\pi$ around each touching point',fontsize=18)
 fig.colorbar(cm.ScalarMappable(norm=norm,cmap='coolwarm'),
              orientation='vertical',
              shrink=1.0,
@@ -368,6 +387,3 @@ ax.set_ylabel('q',fontsize=14)
 ax.set_zlabel(r'Berry curvature (a.u.)',fontsize=14)
 #plt.savefig('BCur-'+namesave)
 plt.show()
-
-### 
-print(F_array[:,:,0])
