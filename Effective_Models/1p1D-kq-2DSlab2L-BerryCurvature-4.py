@@ -332,8 +332,7 @@ axs[0].set_yticks([0,50,100,150,200])
 axs[0].set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
 axs[1].set_yticks([0,50,100,150,200])
 axs[1].set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
-#axs[0].set_title(r'$\alpha=$'+str(alpha)+r', $\eta = $'+str(eta),fontsize=15)
-axs[0].set_title('e = 0.1',fontsize=24)
+axs[0].set_title(r'$\alpha=$'+str(alpha)+r', $\eta = $'+str(eta),fontsize=15)
 
 plt.xlabel('k',fontsize=16)
 #plt.ylabel('q',fontsize=16)
@@ -377,8 +376,7 @@ ax.set_yticks([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax])
 ax.set_yticklabels([Qmax,0.5*Qmax,0,-0.5*Qmax,-Qmax],fontsize=15)
 ax.set_xlabel('k',fontsize=20)
 ax.set_ylabel('q',fontsize=20)
-#ax.set_title(r'Band 2, $\alpha = $'+str(alpha)+r', $\eta = $'+str(eta),fontsize=20)
-ax.set_title('e = -0.1',fontsize=20)
+ax.set_title(r'Band 2, $\alpha = $'+str(alpha)+r', $\eta = $'+str(eta),fontsize=20)
 fig.colorbar(cm.ScalarMappable(norm=norm,cmap='coolwarm'),
              orientation='vertical',
              shrink=1.0,

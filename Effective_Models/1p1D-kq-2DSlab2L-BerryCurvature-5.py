@@ -340,3 +340,6 @@ for i0 in range(21):
              ax=ax)
     #plt.savefig('Band2.png')
     #plt.show()
+
+    ### Close the figures of this value of m before the next one
+    plt.close('all')
