@@ -1,213 +1,227 @@
-%%% Solve for the edge states of the effective model
+%%% Solve for the edge states of the effective model 
 %%% of 1D grating bilayer 
 %%% OCTAVE version 
 
 %%%%% ================================================================================
 %%%%% FUNCTION: Ha 
-%%%%% The zero order of the Hamiltonian 
-function Ha = H_a(q,omega0,U,Delta,V)
+%%%%% The zeroth degree of the Hamiltonian 
+function Ha = H_a(q,omega1,U1,omega2,U2,V)
+    Ha = [omega1,U1,V*exp(-i*pi*q),0;
+          U1,omega1,0,V*exp(i*pi*q);
+          V*exp(i*pi*q),0,omega2,U2;
+          0,V*exp(-i*pi*q),U2,omega2];
+end % function H_a 
 
-    Ha = [omega0,U+Delta,V*exp(-i*pi*q),0;
-        U+Delta,omega0,0,V*exp(i*pi*q);
-        V*exp(i*pi*q),0,omega0,U-Delta;
-        0,V*exp(-i*pi*q),U-Delta,omega0 
-        ]; 
-
-end % FUNCTION: Ha 
+%%%%% =================================================================================
+%%%%% FUNCTION: H1 
+%%%%% The first degree of the Hamiltoian 
+function H1 = H_1(v1,v2)
+    H1 = diag([v1,-v1,v2,-v2]);
+end % function H_1 
 
 %%%%% ==================================================================================
-%%%%% FUNCTION: H1 
-%%%%% The linear order of the Hamiltonian 
-function H1 = H_1(v)
-    H1 = diag([v,-v,v,-v]);
-end % FUNCTION: H1 
-
-%%%%% ===================================================================================
 %%%%% FUNCTION: Hamiltonian 
 %%%%% The Hamiltonian 
-function H = Hamiltonian(k,q,omega0,v,U,Delta,V)
-    Ha = H_a(q,omega0,U,Delta,V);
-    H1 = H_1(v);
+function H = Hamiltonian(k,q,omega1,v1,U1,omega2,v2,U2,V)
+    Ha = H_a(q,omega1,U1,omega2,U2,V);
+    H1 = H_1(v1,v2);
     H = Ha + H1*k;
-end % FUNCTION: Hamiltonian
+end % function Hamiltonian 
 
-%%%%% ====================================================================================
+%%%%% ===================================================================================
 %%%%% FUNCTION: kPolyEig 
-function [kvecs,kvals] = kPolyEig(E,q,omega0,v,U,Delta,V)
-    %%% The matrix alpha 
-    Ha = H_a(q,omega0,U,Delta,V); 
+function [kvecs,kvals] = kPolyEig(E,q,omega1,v1,U1,omega2,v2,U2,V)
+    %%% The matrix H0 
+    Ha = H_a(q,omega1,U1,omega2,U2,V);
     H0 = Ha - E*eye(4);
+    %H0 = [omega1-E,U1,V*exp(-i*pi*q),0;
+    %      U1,omega1-E,0,V*exp(i*pi*q);
+    %      V*exp(i*pi*q),0,omega2-E,U2;
+    %      0,V*exp(-i*pi*q),U2,omega2-E];
 
     %%% The matrix H1 
-    H1 = H_1(v); 
+    H1 = H_1(v1,v2);
 
     %%% Solve the polynomial eigenvalue problem 
     [kvecs,kvals] = polyeig(H0,H1); 
+    kvals = kvals*exp(1e-9*i);
 
-    %%% Move the arguments to the range 0 <= argument <= 2*pi 
-    arg_array = zeros(4,1);
+    %%% Rearrange kvals with increasing order of argument 
+    args = zeros(4,1);
 
     for j = 1:4 
-        arg_array(j) = arg(kvals(j));
+        args(j) = arg(kvals(j));
 
-        if (arg_array(j) < 0)
-            arg_array(j) = arg_array(j) + 2*pi;  
+        if (args(j)<0) 
+            args(j) = args(j) + 2*pi;
         end % IF 
-    end % j-loop
+    end % j-loop 
 
-    %%% Rearrange kvecs and kvals in increasing ordre of arguments 
-    [arg_list,ind] = sort(arg_array);
+    args; 
+
+    [arg_list,ind] = sort(args);
+    arg_list; 
+    ind; 
     kvals = kvals(ind);
     kvecs = kvecs(:,ind);
-    kvecs = kvecs./norm(kvecs,'Fro','cols'); % Frobenius norm summed over columns  
-end % FUNCTION: kPolyEig 
+    kvecs = kvecs./norm(kvecs,'Fro','cols'); % Frobenius norm summed over columns 
+end % function kPolyEig 
 
-%%%%% ====================================================================================
-%%%%% Parameters 
-omega0 = 0.25 
-v = 0.30
-U = 0.02
-V = 0.05 
-Delta = 0.2*U 
+%%%%% ===================================================================================
+%%%%% The parameters 
+omega0 = 0.27815
+v0 = 0.37602 
+U0 = 0.02232 
 
-%%%%% Array of k 
-Kmax = 0.05
-Nk = 101 
-k_array = linspace(-Kmax,Kmax,Nk);
+omega1 = 0.27999
+v1 = 0.40590
+U1 = 0.02621 
+V1 = 0.04511 
 
-%%%%% Array of q 
-Qmax = 1.0 
-Nq = 101 
-q_array = linspace(-Qmax,Qmax,Nq); %+0.5;
+omega2 = 0.28010
+v2 = 0.40454
+U2 = 0.02142 
+V2 = 0.04728 
 
-%%% The gap we calculate the edge states 
-gap = 1
+%%% Gap where we calculate the edge states 
+gap = 1 
 
 %%% Criterion for 0 
 epsilon = 1e-3
 
-%%% Number of E values to scan 
-NE = 201 
+%%% Increment of band edge 
+epsilonE = 1e-4
 
-%%% Small increment in band edge 
-epsilonE = 1e-4 
+%%% Array of synthetic momenta 
+Nq = 1001
+q_array = linspace(0.0,1.0,Nq);
 
-%%% Intialize the edge states to be empty 
-edge_state = []
+%%% Array of genuine momenta 
+Nk = 101
+k_array = linspace(-0.12,0.12,Nk);
 
-%%% The arrays of obstructed and bulk bands 
-allEmax = zeros(Nq,1);
-allEmin = zeros(Nq,1);
+%%% Number of energy values 
+NE = 251
+
+%%% Arrays of left and right bands 
+EL = zeros(Nk,4);
+ER = zeros(Nk,4);
+
+%%% Arrays of bulk bands 
 bulk1 = zeros(Nq,1);
 bulk2 = zeros(Nq,1);
 
-%%%%% ===================================================================================
-%%%%% Scan over the q_array 
+%%% Edge state 
+Edge_state = []
+
+
+%%%%% =================================================================================
+%%%%% Scan the array of synthetic momenta 
 for iq = 1:Nq 
-    %%%%% The synthetic momentum 
+    %%% The synthetic momentum 
     q = q_array(iq);
 
-    %%%%% The arrays of left and right bands
-    EL = zeros(Nk,4);
-    ER = zeros(Nk,4);
-
-    %%%%% ===============================================================================
-    %%%%% Scan the k_array 
+    %%% Scan the k_array 
     for ik = 1:Nk 
-        %%%%% The genuine momenta 
+        %%% The genuine momentum 
         k = k_array(ik);
 
-        %%%%% ============================================================================
-        %%%%% The left-hand side 
+        %%% ============================================================================
+        %%% The left-hand side 
         %%% The Hamiltonian 
-        H = Hamiltonian(k,q,omega0,v,U,Delta,V);
+        HL = Hamiltonian(k,q,omega0,v0,U0,omega1,v1,U1,V1);
 
-        %%% Diagonalize the Hamiltonian
-        [Vec,D] = eig(H);
+        %%% Diagonalize the Hamiltonian 
+        [Vec,D] = eig(HL);
         [eigval,ind] = sort(diag(D));
         eigval = real(eigval);
         Ds = D(ind,ind);
         eigvec = Vec(:,ind);
 
         %%% Save the energy eigenvalues to the array EL 
-        EL(ik,:) = eigval;
+        EL(ik,:) = eigval; 
 
-        %%%%% ===========================================================================
-        %%%%% The right-hand side 
+        %%% ============================================================================
+        %%% The left-hand side 
         %%% The Hamiltonian 
-        H = Hamiltonian(k,q,omega0,v,U,-Delta,V);
+        HR = Hamiltonian(k,q,omega0,v0,U0,omega2,v2,U2,V2);
 
         %%% Diagonalize the Hamiltonian 
-        [Vec,D] = eig(H);
+        [Vec,D] = eig(HR);
         [eigval,ind] = sort(diag(D));
         eigval = real(eigval);
         Ds = D(ind,ind);
         eigvec = Vec(:,ind);
 
-        %%% Save the energy eigenvalues to the array ER
-        ER(ik,:) = eigval;
+        %%% Save the energy eigenvalues to the array EL 
+        ER(ik,:) = eigval; 
 
-    end % ik-loop
+    end % ik-loop 
 
-    %%%%% ===============================================================================
-    %%% Calculate the obstructed bands 
-    allEmax(iq) = max( min(EL(:,gap+1)), min(ER(:,gap+1)) );
-    allEmin(iq) = min( max(EL(:,gap)), max(ER(:,gap)) );
-
+    %%%%% ==============================================================================
     %%% Calculate the bulk bands 
-    bulk1(iq) = min( min(EL(:,gap+1)), min(ER(:,gap+1)) );
-    bulk2(iq) = max( max(EL(:,gap)), max(ER(:,gap)) );
+    bulk1(iq) = min(min(EL(:,gap+1)),min(ER(:,gap+1)));
+    bulk2(iq) = max(max(EL(:,gap)),max(ER(:,gap)));
 
     %%%%% ===============================================================================
-    %%%%% Calculate the edge states at the synthetic momentum q 
     %%% Array of energies 
-    E_array = linspace(bulk2(iq)-epsilonE,bulk1(iq)+epsilon,NE);
+    E_array = linspace(bulk2(iq)+epsilonE,bulk1(iq)-epsilonE,NE);
 
-    %%% Scan the energy array E_array 
+    %%% Array of determinants 
+    %S = zeros(NE,1);
+
     for iE = 1:NE 
-        % The energy 
+
+        % The value of the energy 
         E = E_array(iE);
 
         % The matrix of eigenstates 
-        W = zeros(4);
+        WW = zeros(4);
 
-        % Left-hand Hamiltonian 
-        printf("Left-hand Hamiltonian \n");
-        [WL,kL] = kPolyEig(E,q,omega0,v,U,Delta,V); 
+        % The left-hand side 
+        [WL,kL] = kPolyEig(E,q,omega0,v0,U0,omega1,v1,U1,V1);
 
-        % Right-hand Hamiltonian 
-        printf("Right-hand Hamiltonian \n");
-        [WR,kR] = kPolyEig(E,q,omega0,v,U,-Delta,V); 
+        % The right-hand side 
+        [WR,kR] = kPolyEig(E,q,omega0,v0,U0,omega2,v2,U2,V2);
 
-        %%% Combine WL and WR to the matrix of eigenstates 
-        %W(:,1:2) = WL(:,3:4);
-        %W(:,3:4) = -WR(:,1:2);
+        % Combine WL and WR to the matrix of eigenstates 
+        WW(:,1:2) = WR(:,1:2);
+        WW(:,3:4) = -WL(:,3:4);
+        WW; 
 
-        W(:,1:2) = WR(:,1:2);
-        W(:,3:4) = -WL(:,3:4);
+        %WW = cat(2,WR(:,1:2),-WL(:,3:4))
 
-        %%% The determinant of W 
-        S = abs(det(W))
+        % The determinant 
+        %S(iE) = abs(det(WW));
+
+        S = abs(det(WW));
 
         if (S < epsilon)
-            edge_state = [edge_state;[q,E]];
+            Edge_state = [Edge_state;[q,E]];
         end % IF 
 
-        
+
     end % iE-loop 
+
+    %%% Scan E_array again 
+    %for iE = 1:NE 
+    %    if (S(iE)<epsilon)
+    %        Edge_state = [Edge_state;[q,E_array(iE)]]; 
+    %    end % IF 
+    %end % iE-loop 
 
 end % iq-loop 
 
-%%%%% ===================================================================================
+%Edge_state
+%S 
+
+%%%%% ================================================================================
 %%%%% Plot the figure 
 figure(1)
-plot(q_array,allEmin,color='red'); hold on;
-plot(q_array,allEmax,color='blue');
-plot(q_array,bulk1,color='red');
+plot(q_array,bulk1,color='red'); hold on; 
 plot(q_array,bulk2,color='blue');
-scatter(edge_state(:,1),edge_state(:,2));
-hold off; 
-%xlim([-Qmax,Qmax]);
+plot(Edge_state(:,1),Edge_state(:,2),'o');
+hold off;
 xlabel('q');
 ylabel('E');
 saveas(1,'transmission.png')
