@@ -169,21 +169,21 @@ Nq = 101
 Qmax = 0.5
 Kmax = 0.05 
 
-k_array = [linspace(0,0,Nq),linspace(Kmax/Nq,Kmax,Nk)]
-q_array = [linspace(-Qmax,0,Nq),linspace(0,0,Nk)]
+k_array = [linspace(0,0,Nq),linspace(Kmax/Nq,Kmax,Nk)];
+q_array = [linspace(-Qmax,0,Nq),linspace(0,0,Nk)];
 
 %%%%% ===================================================================================
 %%%%% The array of energy 
-E_array = zeros(Nq+Nk,8)
+E_array = zeros(Nq+Nk,8);
 
 %%%%% ===================================================================================
 %%%%% Scan the hybrid momenta
 for i = 1:(Nq+Nk)
     %%% The genuine momentum 
-    k = k_array(i)
+    k = k_array(i);
 
     %%% The synthetic momentum 
-    q = q_array(i)
+    q = q_array(i);
 
     %%% The Hamiltonian 
     H = Hamiltonian(k,q,omega1,eta1,v1,U1,W1,alpha1,omega2,eta2,v2,U2,W2,alpha2,V,beta,dist,d0);
