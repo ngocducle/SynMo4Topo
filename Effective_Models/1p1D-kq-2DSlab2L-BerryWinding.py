@@ -305,8 +305,8 @@ def Berry_winding(center_k,center_q,contour_kaxis,contour_qaxis,Ntheta):
 
 ### The semi-axes of the contour around each touching point 
 ### (smaller than half the distance between two touching points)
-contour_kaxis = 0.01
-contour_qaxis = 0.01
+contour_kaxis = 0.05
+contour_qaxis = 0.05
 
 ### The number of points on the contour 
 Ntheta = 200 
