@@ -1,8 +1,14 @@
-%%%%% Solve for the  edge states of the effective model 
-%%%%% of 2D slab 2L, omit all quadratic terms 
+%%%%% Solve for the edge states of the effective model 
+%%%%% of 2D slab 2L 
 %%%%% OCTAVE version 
+%%%%%
+%%%%% The inputs of this code are: 
+%%%%% Mean values of U and W 
+%%%%% Difference in U and W: dU and dW 
+%%%%% 
+%%%%% The functions take U, W, dU and dW as inputs 
 
-%%%%% =================================================================================
+%%%%% ===================================================================================
 %%%%% FUNCTION: Ha 
 %%%%% The zero order of the Hamiltonian 
 function Ha = H_a(q,omega,domega,eta,U,dU,W,dW,alpha,V,dist,d0)
@@ -98,14 +104,45 @@ function H1 = H_1(q,v1,v2,beta,dist,d0)
 
 end % function H1
 
+%%%%% ===================================================================================
+%%%%% FUNCTION: The coefficient of k^2
+function H2 = H_2(q,v1,v2,beta,dist,d0)
+    H2 = zeros(8,8);
+
+    B = beta*exp(-dist/d0)/sqrt(2);
+
+    K = 2*pi; 
+
+    H2(1,1) = v1/sqrt(2);
+    H2(2,2) = v1/sqrt(2);
+    H2(3,3) = v1/sqrt(2);
+    H2(4,4) = v1/sqrt(2);
+
+    H2(1,5) = -beta*exp(-i*K*q-dist/d0)/sqrt(2);
+    H2(2,6) = beta*exp(-dist/d0)/sqrt(2); 
+    H2(3,7) = beta*exp(-dist/d0)/sqrt(2);
+    H2(4,8) = -beta*exp(i*K*q-dist/d0)/sqrt(2);
+
+    H2(5,1) = -beta*exp(i*K*q-dist/d0)/sqrt(2);
+    H2(6,2) = beta*exp(-dist/d0)/sqrt(2); 
+    H2(7,3) = beta*exp(-dist/d0)/sqrt(2);
+    H2(8,4) = -beta*exp(-i*K*q-dist/d0)/sqrt(2);
+
+    H2(5,5) = v2/sqrt(2);
+    H2(6,6) = v2/sqrt(2);
+    H2(7,7) = v2/sqrt(2);
+    H2(8,8) = v2/sqrt(2);
+end % function H2 
+
 %%%%% ==============================================================================
 %%%%% FUNCTION: Hamiltonian 
 function H = Hamiltonian(k,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,beta,dist,d0)
 
     Ha = H_a(q,omega,domega,eta,U,dU,W,dW,alpha,V,dist,d0);
     H1 = H_1(q,v1,v2,beta,dist,d0);
+    H2 = H_2(q,v1,v2,beta,dist,d0);
 
-    H = Ha + H1*k;
+    H = Ha + H1*k + H2*k*k;
 
 end % function Hamiltonian
 
@@ -113,16 +150,27 @@ end % function Hamiltonian
 %%%%% FUNCTION: Solve the polynomial eigenvalue problem 
 function [kvecs,kvals] = kPolyEig(E,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,beta,dist,d0)
 
+    %%% Establish the matrices H0, H1 and H2 
     Ha = H_a(q,omega,domega,eta,U,dU,W,dW,alpha,V,dist,d0);
     H0 = Ha-E*eye(8);
     H1 = H_1(q,v1,v2,beta,dist,d0);
+    H2 = H_2(q,v1,v2,beta,dist,d0);
 
-    [kvecs,kvals] = polyeig(H0,H1);
+    %%% Polynomial diagonalization 
+    [kvecs,kvals] = polyeig(H0,H1,H2);
+
+    %%% We move the real eigenvalues to have infinitely small positive imaginary parts,
+    %%% phase and argument, so we multiply kvals by exp(i*1e-9)
+    %%% In MATLAB/OCTAVE, the POSITIVE REAL eigenvalues are given by 
+    %%% a - {small value}*i and have phase 6.28... 
+    %%% We need to convert their argument/phase to infinitisemal positive value 
+    %%% Otherwise, the program will be wrong 
+    kvals = kvals*exp(i*1e-9);
 
     %%% Move the arguments to the range 0 <= argument <= 2*pi 
-    arg_array = zeros(8,1);
+    arg_array = zeros(16,1);
 
-    for j = 1:8
+    for j = 1:16
         arg_array(j) = arg(kvals(j));
 
         if (arg_array(j) < 0) 
@@ -136,26 +184,58 @@ function [kvecs,kvals] = kPolyEig(E,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,b
     kvecs = kvecs(:,ind);
     kvecs = kvecs./norm(kvecs,'Fro','cols'); % Frobenius norm summed over columns
     
-    ind; 
-    kvals;
-    kvecs;
+    %ind; 
+    %kvals;
+    %kvecs;
 
-end % function kPolyEig
+end % function kPolyEig 
 
-%%%%% ===============================================================================
+%%%%% ==================================================================================
+%%%%% FUNCTION: Derivative of electric field 
+function DE = FieldDerivative(k)
+    DE = diag([sqrt(2)+2*k; ... 
+               2*k; ... 
+               2*k; ... 
+               -sqrt(2)+2*k; ... 
+               -sqrt(2)-2*k; ... 
+               2*k; ... 
+               2*k; ... 
+               sqrt(2)-2*k]);
+end % function FieldDerivative 
+
+%%%%% ==================================================================================
+%%%%% FUNCTION: 16x16 Coefficient matrix 
+function WW = CoefficientMatrix(WL,kL,WR,kR)
+    WW = zeros(16);
+
+    WW(1:8,1:8) = WL(:,9:16);
+
+    WW(1:8,9:16) = -WR(:,1:8);
+
+    for j = 1:8 
+        WW(9:16,j) = FieldDerivative(kL(j+8))*WL(:,j+8);
+    end % j-loop 
+
+    for j = 1:8 
+        WW(9:16,j+8) = -FieldDerivative(kR(j))*WR(:,j);
+    end % j-loop
+
+end % function CoefficientMatrix  
+
+%%%%% ==================================================================================
 %%%%% Parameters 
-omega = 0.2978
-domega = 0.015*omega 
-eta = -0.003 
+omega = 0.297935225
+domega = 0.004078865 
+eta = -0.0032
 v = 0.317 
-U = -0.01537 
-dU = 0.1*U 
-W = 0.001466 
-dW = -0.1*W 
-alpha = 0.05 
+U = -0.01530998
+dU = -0.00192594
+W = 0.00142098
+dW = 0.00048395
+alpha = 0.05
 
-v1 = v 
-v2 = v 
+v1 = 0.31480478 
+v2 = 0.30891336
 
 d0 = 0.35 
 dist = 0.1 
@@ -166,28 +246,31 @@ beta = -0.3
 gap = 1
 
 %%% The array of genuine momenta 
-Nk = 101 
-Kmax = 0.05
+Nk = 501 
+Kmax = 0.10
 k_array = linspace(-Kmax,Kmax,Nk);
 
 %%% The array of synthetic momenta 
-Nq = 101 
-Qmax = 0.3
+Nq = 5001 
+Qmax = 0.20
 q_array = linspace(-Qmax,Qmax,Nq);
 
 %%% Criterion for 0 
-epsilon = 1e-10; 
+epsilon = 1e-2; 
 
-%%% Number of E values to scan 
-NE = 101 
+%%% Array of energy
+Emin = 0.256
+Emax = 0.258
+NE = 10001 
+E_array = linspace(Emin,Emax,NE);
 
 %%% Small increment in band edge 
-epsilonE = 1e-4
+epsilonE = 1e-5
 
 %%% Initialize the edge states to be empty 
 edge_state = [];
 
-%%%%% ===================================================================================
+%%%%% ===============================================================================
 %%%%% Scan the q_array 
 for iq = 1:Nq 
     %%%%% The synthetic momenta 
@@ -197,7 +280,7 @@ for iq = 1:Nq
     EL = zeros(Nk,8);
     ER = zeros(Nk,8);
 
-    %%%%% ================================================================================
+    %%%%% ============================================================================
     for ik = 1:Nk 
         %%%%% The genuine momenta 
         k = k_array(ik);
@@ -232,16 +315,7 @@ for iq = 1:Nq
         %%% Save the energy eigenvalues to the array EL 
         ER(ik,:) = eigval;
 
-        %%%%% =============================================================================
-        %%% Calculate the obstructed bands 
-        allEmax(iq) = max( min(EL(:,gap+1)), min(ER(:,gap+1)) );
-        allEmin(iq) = min( max(EL(:,gap)), max(ER(:,gap)) );
-
-        %%% Calculate the bulk bands 
-        bulk1(iq) = min( min(EL(:,gap+1)), min(ER(:,gap+1)) );
-        bulk2(iq) = max( max(EL(:,gap)), max(ER(:,gap)) );
-
-    end % ik-loop 
+    end % ik-loop   
 
     %%%%% =============================================================================
     %%% Calculate the obstructed bands 
@@ -255,45 +329,77 @@ for iq = 1:Nq
     %%%%% ==============================================================================
     %%%%% Calculate the edge states at the synthetic momentum q 
     %%% Array of energy 
-    E_array = linspace(bulk2(iq)+epsilonE, bulk1(iq)-epsilonE,NE);
+    %E_array = linspace(bulk2(iq)+epsilonE, bulk1(iq)-epsilonE,NE);
+    %bulk1(iq)
+    %bulk2(iq)
+    S = zeros(NE,1);
 
     %%% Scan the energy array E_array 
-    for iE = 1:NE 
+    for iE = 1:NE
         % The energy 
         E = E_array(iE);
 
         % Left-hand Hamiltonian 
-        printf("Left-hand Hamiltonian \n");
+        %printf("Left-hand Hamiltonian \n");
         [WL,kL] = kPolyEig(E,q,omega,domega,eta,v1,v2,U,dU,W,dW,alpha,V,beta,dist,d0);
 
         % Right-hand Hamiltonian 
-        printf("Right-hand Hamiltonian \n");
+        %printf("Right-hand Hamiltonian \n");
         [WR,kR] = kPolyEig(E,q,omega,-domega,eta,v1,v2,U,-dU,W,-dW,alpha,V,beta,dist,d0);
 
-        % Combine WL and WR to the matrix of eigenstates 
-        WW(:,1:4) = WL(:,5:8);
-        WW(:,5:8) = -WR(:,1:4);
+        %%% Assembly to the coefficient matrix 
+        WW = CoefficientMatrix(WL,kL,WR,kR);
 
-        % The determinant of WW 
-        S = abs(det(WW))
+        %%% Calculate the absolute value of the determinant of WW 
+        S(iE) = abs(det(WW)); 
 
-        % Filter the edge states 
-        if (S < epsilon) 
-            edge_state = [edge_state;[q,E]];
+        %%% If S<epsilon then add (k,E) to the edge state 
+        if (S(iE) < epsilon) 
+            edge_state = [edge_state;[q,E,S(iE)]];
         end % IF 
+
     end % iE-loop 
 
+    %%% The minimum of S for each q 
+    %[minS,imin] = min(S);
+    %if (minS<epsilon)
+    %    edge_state = [edge_state;[q,E_array(imin)]];
+    %end % IF 
+
+    %for iE = 2:NE-1 
+    %    if (S(iE)<epsilon)
+    %        if ((S(iE-1)>S(iE)) & (S(iE+1)>S(iE)))
+    %            edge_state = [edge_state;[q,E_array(iE)]];
+    %        end % IF 
+    %    end % IF 
+    %end % iE-loop 
+
 end % iq-loop 
+
+%edge_state
+
+
+%%%%% ====================================================================================
+%%%%% Print the data to file 
+%writematrix('EdgeState.txt',edge_state,'Delimiter','tab'); % MATLAB
+dlmwrite('EdgeState.txt',edge_state,'Delimiter','\t');
+dlmwrite('q_array.txt',q_array,'Delimiter','\n');
+dlmwrite('allEmin.txt',allEmin,'Delimiter','\n');
+dlmwrite('allEmax.txt',allEmax,'Delimiter','\n');
+dlmwrite('bulk1.txt',bulk1,'Delimiter','\n');
+dlmwrite('bulk2.txt',bulk2,'Delimiter','\n');
 
 %%%%% ===================================================================================
 %%%%% Plot the figure 
 figure(1)
-plot(q_array,allEmin,color='red'); hold on; 
-plot(q_array,allEmax,color='blue');
+plot(q_array,allEmin,'k'); hold on; 
+plot(q_array,allEmax,'m');
 plot(q_array,bulk1,color='red');
 plot(q_array,bulk2,color='blue');
 scatter(edge_state(:,1),edge_state(:,2));
 hold off; 
+xlim([-Qmax,Qmax]);
+ylim([Emin,Emax]);
 xlabel('q');
 ylabel('E');
-saveas(1,'transmission-linear.png')
+saveas(1,'transmission4.png')
