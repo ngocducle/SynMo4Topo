@@ -6,5 +6,31 @@ authors:
   orcid: "https://orcid.org/0000-0001-9080-9556"
 title: "SynMo4Topo"
 version: 1.0.0
-date-released: 21/07/2025
+date-released: 2025-07-21
 url: "https://github.com/ngocducle/SynMo4Topo"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Le"
+    given-names: "Ngoc Duc"
+    orcid: "https://orcid.org/0000-0001-9080-9556"
+  - family-names: "Nguyen"
+    given-names: "D.-H.-Minh"
+  - family-names: "Nguyen"
+    given-names: "Dung Xuan"
+  - family-names: "Nguyen"
+    given-names: "Hai Son"
+  - family-names: "Bercioux"
+    given-names: "Dario"
+  title: "Chiral edge-state signatures of Berry monopole merging and splitting in a bilayer photonic crystal slab with synthetic momentum"
+  journal: "Physical Review Research"
+  volume: 8
+  issue: 3
+  start: "033338"
+  year: 2026
+  doi: "10.1103/6ync-5qb9"
+  identifiers:
+  - type: doi
+    value: "10.1103/6ync-5qb9"
+  - type: other
+    value: "arXiv:2507.11983"
