@@ -1,206 +1,155 @@
 import numpy as np 
 import scipy 
-import scipy.linalg as sla
+import scipy.linalg as sla 
 import matplotlib.pyplot as plt 
 from cmath import exp 
 
-##### =========================================================================
+##### ======================================================================
 ##### FUNCTION: Hamiltonian 
-def Hamiltonian(k,q,omega0,v,U,Delta,V):
-    H = np.array([[omega0+v*k,U+Delta,V*exp(-1j*np.pi*q),0],
-                     [U+Delta,omega0-v*k,0,V*exp(1j*np.pi*q)],
-                     [V*exp(1j*np.pi*q),0,omega0+v*k,U-Delta],
-                     [0,V*exp(-1j*np.pi*q),U-Delta,omega0-v*k]])
+def Hamiltonian(k,q,omega1,v1,U1,omega2,v2,U2,V):
+    H = np.array([[omega1+v1*k,U1,V*exp(-1j*np.pi*q),0],
+                     [U1,omega1-v1*k,0,V*exp(1j*np.pi*q)],
+                     [V*exp(1j*np.pi*q),0,omega2+v2*k,U2],
+                     [0,V*exp(-1j*np.pi*q),U2,omega2-v2*k]])
 
     return H 
 
-##### =========================================================================-
-##### FUNCTION: keig 
-def keig(E,q,omega0,v,U,Delta,V):
-    H0 = np.zeros((4,4),dtype=complex)
-    H0[0,0] = omega0 - E 
-    H0[0,1] = U+Delta 
-    H0[0,2] = V*exp(-1j*np.pi*q)
-    H0[0,3] = 0 
-    H0[1,1] = omega0 - E 
-    H0[1,2] = 0 
-    H0[1,3] = V*exp(1j*np.pi*q)
-    H0[2,2] = omega0 - E 
-    H0[2,3] = U-Delta
-    H0[3,3] = omega0 - E 
+##### =======================================================================
+##### FUNCTION: PlaneWaves 
+def keig(q,E,omega1,v1,U1,omega2,v2,U2,V):
+    H0 = np.array(
+        [
+            [omega1-E,U1,V*exp(-1j*np.pi*q),0],
+            [U1,omega1-E,0,V*exp(1j*np.pi*q)],
+            [V*exp(1j*np.pi*q),0,omega2-E,U2],
+            [0,V*exp(-1j*np.pi*q),U2,omega2-E]
+        ]
+    )
 
-    for i in range(1,4):
-        for j in range(i):
-            H0[i,j] = np.conj(H0[j,i])
-    
-    H1 = np.diag([-v,v,-v,v])
+    H1 = np.diag([-v1,v1,-v2,v2])
 
     kvals,kvecs = sla.eig(H0,H1)
 
-    #print(kvals)
-    #print(kvecs)
+    args = np.angle(kvals*exp(1e-9*1j))
+    args[args<0] += 2*np.pi 
 
-    ### Move the arguments to the range 0 <= argument <= 2*pi 
-    arg_array = np.angle(kvals)+1e-9*1j
-    arg_array[arg_array<0] += 2*np.pi 
+    GH = kvecs[:,np.argsort(args)]
 
-    #print(arg_array)
-
-    #print(np.argsort(arg_array))
-
-    kvals = kvals[np.argsort(arg_array)]
-    #print(kvals)
-
-    kvecs = kvecs[:,np.argsort(arg_array)]
-    kvecs = kvecs/np.linalg.norm(kvecs,axis=0)
-    #print(kvecs)
-
-    return kvals,kvecs 
+    return GH/np.linalg.norm(GH,axis=0)
 
 ##### Parameters 
-omega0 = 0.25 
-v = 0.30 
-U = 0.02 
-V = 0.05 
-Delta = 0.2*U 
+omega0 = 0.27815 
+v0 = 0.37602 
+U0 = 0.02232 
 
-### Array of k 
-Kmax = 0.05 
-Nk = 101 
-k_array = np.linspace(-Kmax,Kmax,Nk)
+omega1 = 0.27999
+v1 = 0.40590 
+U1 = 0.02621 
+V1 = 0.04511 
 
-### Array of q 
-Qmax = 1.0 
-Nq = 101 
-q_array = np.linspace(-Qmax,Qmax,Nq)
+omega2 = 0.28010 
+v2 = 0.40454 
+U2 = 0.02142 
+V2 = 0.04728 
 
-### The gap we calculate the edge states 
+### Gap where we calculate the edge states 
 gap = 0 
 
 ### Criterion for 0 
 epsilon = 1e-3 
 
-### Number of E values to scan 
-NE = 501 
-
-### Small increment in band edge 
+### Increment of band edge 
 epsilonE = 1e-4 
 
-### Initialize the edge states to be empty 
-edge_state = []
+### Array of synthetic momenta 
+Nq = 101 
+q_array = np.linspace(0.45,0.55,Nq)
 
-### The arrays of obstructed and bulk bands 
-allEmax = np.zeros(Nq)
-allEmin = np.zeros(Nq)
+### Array of genuine momenta 
+Nk = 251 
+k_array = np.linspace(-0.12,0.12,Nk)
+
+### Number of energy values 
+NE = 501 
+
 bulk1 = np.zeros(Nq)
 bulk2 = np.zeros(Nq)
 
-S_array = np.zeros((NE,Nq))
+EdgeStates = []
+Qedge = []
 
-##### ==================================================================================
-##### Scan over the q_array 
-for iq in range(Nq): 
+##### =================================================================================
+for iq in range(Nq):
     ### The synthetic momentum 
     q = q_array[iq]
 
-    ### Calculate the bulk band structure 
-    EL = np.zeros((Nk,4))
-    ER = np.zeros((Nk,4))
+    ### HL: 1D array of size (Nk) whose elements are the (4,4) Hamiltonians 
+    ### Shape of HL = (Nk,4,4)
+    ### => SIMD style
+    HL = np.array([Hamiltonian(k,q,omega0,v0,U0,omega1,v1,U1,V1) for k in k_array])
 
-    for ik in range(Nk):
-        ### Genuine momentum 
-        k = k_array[ik]
+    #print(np.shape(HL_array)) 
 
-        ### The bulk band structure 
-        ### The left-hand Hamiltonian 
-        eigvals = sla.eigvalsh(Hamiltonian(k,q,omega0,v,U,Delta,V))
-        EL[ik,:] = eigvals 
+    # 1D array of size (Nk) of eigvals of HL 
+    # Shape of EL = (Nk,4)  
+    EL = np.linalg.eigvalsh(HL)
+    #print(np.shape(EL))
 
-        ### The right-hand Hamiltonian 
-        eigvals = sla.eigvalsh(Hamiltonian(k,q,omega0,v,U,-Delta,V))
-        ER[ik,:] = eigvals 
+    ### HR: 1D array of size (Nk) whose elements are the (4,4) Hamiltonians 
+    ### Shape of HR = (Nk,4,4)
+    ### => SIMD style 
+    HR = np.array([Hamiltonian(k,q,omega0,v0,U0,omega2,v2,U2,V2) for k in k_array])
 
-    #HL = [Hamiltonian(k,q,omega0,v,U,Delta,V) for k in k_array]
-    #print(np.shape(HL))
+    # 1D array of size (Nk) of eigvals of HR 
+    # Shape of ER = (Nk,4)
+    ER = np.linalg.eigvalsh(HR)
 
-    # Left-hand Hamiltonian eigenvalues: shape(EL) = (Nk,4)
-    #EL = sla.eigvalsh([Hamiltonian(k,q,omega0,v,U,Delta,V) for k in k_array])
-    #EL = eigvals 
-
-    # Right-hand Hamiltonian eigenvalues: shape(ER) = (Nk,4)
-    #ER = sla.eigvalsh([Hamiltonian(k,q,omega0,v,U,-Delta,V) for k in k_array]) 
-    #ER = eigvals  
-
-    ### Calculate the obstructed bands 
-    #allEmax[iq] = min(min(EL[:,gap+1]),min(ER[:,gap+1]))
-    #allEmin[iq] = max(max(EL[:,gap]),max(ER[:,gap]))
-
-    ### Calculate the bulk bands 
+    ### Calculate the closest bands 
     bulk1[iq] = min(np.amin(EL[:,gap+1]),np.amin(ER[:,gap+1]))
     bulk2[iq] = max(np.amax(EL[:,gap]),np.amax(ER[:,gap]))
 
-    ##### ==============================================================================
-    ##### Calculate the edge states at the synthetic momentum q 
     ### Array of energies 
-    E_array = np.linspace(bulk2[iq]-epsilonE,bulk1[iq]+epsilonE,NE)
-    #print(E_array) 
+    E_array = np.linspace(bulk2[iq]-epsilonE,bulk1[iq]+epsilonE,NE) 
 
-    #S_array = np.zeros(NE)
+    ### Arrays of k-eigenstates 
+    #Wa = np.array([keig(q,E,omega0,v0,U0,omega1,v1,U1,V1) for E in E_array])
+    #Wb = np.array([keig(q,E,omega0,v0,U0,omega2,v2,U2,V2) for E in E_array])
 
-    ### Scan the energy array E_array 
+    #WW = np.concatenate((Wb[:,:,0:2],-Wa[:,:,2:4]),axis=2)
+    #S = np.abs(np.linalg.det(WW))
+
+    ### Array of determinants 
+    S = np.zeros(NE)
+
     for iE in range(NE):
-        # The energy 
+        # The value of the energy 
         E = E_array[iE]
-        print(E)
 
-        # The matrix of eigenstates 
-        W = np.zeros((4,4))
+        # The left-hand side 
+        Wa = keig(q,E,omega0,v0,U0,omega1,v1,U1,V1)
 
-        # The left-hand Hamiltonian 
-        print('Left-hand Hamiltonian')
-        kL,WL = keig(E,q,omega0,v,U,Delta,V)
+        # The right-hand side 
+        Wb = keig(q,E,omega0,v0,U0,omega2,v2,U2,V2)
 
-        #print(WL)
+        # Concatentate to the determinant 
+        WW = np.concatenate((Wb[:,0:2],-Wa[:,2:4]),axis=1)
 
-        # The right-hand Hamiltonian 
-        print('Right-hand Hamiltonian')
-        kR,WR = keig(E,q,omega0,v,U,-Delta,V)
+        # The determinant 
+        S[iE] = np.abs(np.linalg.det(WW))
 
-        ### Combine WL and WR to the matrix of eigenstates 
-        W[:,0] = WL[:,2]
-        W[:,1] = WL[:,3]
-        W[:,2] = -WR[:,0]
-        W[:,3] = -WR[:,1]
+    ### Scan E_array again 
+    for iE in range(NE):
+        if (S[iE]<epsilon):
+            EdgeStates.append(E_array[iE])
+            Qedge.append(q)
 
-        ### The determinant of W 
-        S = np.abs(np.linalg.det(W))
-
-        S_array[iE,iq] = S 
-
-        print('S = '+str(S))
-
-        print(E)
-
-    ### If S == 0 then add to the list of edge states 
-    #for iE in range(1,NE-1):
-    #    if ((S_array[iE] < epsilon) and (S_array[iE-1]>=S_array[iE]) and (S_array[iE+1]>=S_array[iE])):
-    #        edge_state.append([q,E])
-
-#edge_state = np.array(edge_state)
-#print(edge_state)
-
+##### =================================================================================
 ##### Plot the figure 
-fig,ax = plt.subplots(figsize=(8,10))
-#ax.plot(q_array,allEmax)
-#ax.plot(q_array,allEmin)
-ax.plot(q_array,bulk1)
-ax.plot(q_array,bulk2)
-#ax.plot(edge_state[:,0],edge_state[:,1],'o',markerfacecolor='red',markeredgecolor='red')
-ax.set_xlabel('q',fontsize=16)
-ax.set_ylabel(r'$\omega$',fontsize=16)
-plt.show()
-
-##### Plot the map of S 
-fig,ax = plt.subplots(figsize=(8,10))
-ax.pcolormesh(S_array)
+fig,ax = plt.subplots(figsize=(9,12))
+ax.plot(q_array,bulk1,color='darkgrey',linewidth=4)
+ax.plot(q_array,bulk2,color='darkgrey',linewidth=4)
+#ax.plot(Qedge,EdgeStates,color='orange',linewidth=4)
+ax.plot(Qedge,EdgeStates,'o')
+ax.set_xlabel(r'q',fontsize=32)
+ax.set_ylabel(r'$\omega (2\pi c /\lambda)$',fontsize=32)
 plt.show()
